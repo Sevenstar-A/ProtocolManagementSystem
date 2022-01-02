@@ -1,0 +1,50 @@
+{% load static %}
+<div role="tabpanel" class="tab-pane " id="acceptance_page" aria-labelledby="general_pill" aria-expanded="true"> 
+    <div class="card-body col-lg-12">
+        <div class="form-body" >
+            <h4 class="form-section">Proposal Information : '{{prop.protocol_number}}' </h4>
+            <h5> Status :- <strong>{{prop.status}}</strong>
+            <h5> Latest Version :- <strong>{{prop.latest_version_num}}</strong></h5>
+
+            </h5>
+                
+            <div >
+                <form action= "{% url 'proposal:accept_prop' pk=prop.id %}" method="POST" enctype="multipart/form-data">
+                    <div class="card-body">
+                        
+                            {% csrf_token %}
+                            <div class="col-lg-12">
+                                <h5 class="col-md-12">Review Type</h5>
+                                <div class="row">
+                                    {% for r in accept_form.review_type %} 
+                                        <div class="col-md-4">
+                                            {{r}}
+                                        </div>
+                                    {% endfor %}
+                                    <p class="text-danger">{{accept_form.errors.review_type}}</p>
+
+                                </div>
+                                <br>
+                                <br>
+                                <h5>Sepecial Note</h5>
+                                <br>
+                                {{accept_form.special_note}}
+                                <p class="text-danger">{{accept_form.errors.special_note}}</p>
+                            </div>
+                    </div>
+
+                    <div class="card-footer col-md-12">
+                        <fieldset class="form-group" style="float:right" >
+                            <button type="submit"  onclick= "return confirm('Are you sure you want to accept this protocol?')"   class="btn btn-success px-3 " >
+                                <i class="fa fa-paper-plane-o d-lg-none"></i>
+                               Accept
+                            </button>
+                        </fieldset>
+                        
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

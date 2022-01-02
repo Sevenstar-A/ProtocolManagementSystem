@@ -1,0 +1,92 @@
+{% extends "blacklion/base.html" %}
+{% load static %}
+
+{% block title %} {{ news.title }} {% endblock %}
+
+{% block content %}
+<main id="main">
+
+    <!-- ======= Blog Section ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>NEWS</h2>
+
+          <ol>
+            <!-- <li><a href="{% url 'news-feed' %}">Home</a></li> -->
+            <li><a href="{% url 'news-feed' %}">News</a></li>
+            <li>{{ news.title }}</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Blog Section -->
+
+    <!-- ======= Blog Single Section ======= -->
+    <section id="blog" class="blog">
+      <div class="container" data-aos="fade-up">
+
+        <div class="row">
+
+          <div class="col-lg-8 entries">
+
+            <article class="entry entry-single">
+
+              <div class="entry-img">
+                <img src="/media/{{news.image}}" alt="" class="img-fluid">
+              </div>
+
+              <h2 class="entry-title">
+                <a href="#"> {{ news.title }} </a>
+              </h2>
+
+              <div class="entry-meta">
+                <ul>
+                  <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="#">{{ news.created_by }}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="#"><time datetime="2020-01-01">{{ news.date_created }}</time></a></li>
+                </ul>
+              </div>
+
+              <div class="entry-content">
+                <p>
+                    {{ news.content }}
+                </p>
+
+              </div>
+
+              <div class="entry-footer">
+                <i class="bi bi-tags"></i>
+                <ul class="tags">
+                    {% for tag in news.tags.all  %}
+                        <li><a href="{% url 'filter-news' tag.name %}">{{ tag.name }}</a></li>
+                    {% endfor %}
+                </ul>
+              </div>
+
+            </article><!-- End blog entry -->
+
+            <div class="blog-author d-flex align-items-center">
+                <img src="/media/{{user.profile_image}}" class="rounded-circle float-left" alt="">
+              <div>
+                <h4>{{ news.created_by }}</h4>
+                <div class="social-links">
+                  <a href="https://twitters.com/#"><i class="bi bi-twitter"></i></a>
+                  <a href="https://facebook.com/#"><i class="bi bi-facebook"></i></a>
+                  <a href="https://instagram.com/#"><i class="biu bi-instagram"></i></a>
+                </div>
+                <p>
+                  Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.
+                </p>
+              </div>
+            </div><!-- End blog author bio -->
+
+          </div><!-- End blog entries list -->
+
+          {% include "connect/news/news_sidebar.html" %}
+
+      </div>
+    </section><!-- End Blog Single Section -->
+
+  </main><!-- End #main -->
+{% endblock %}

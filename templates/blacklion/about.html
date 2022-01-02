@@ -1,0 +1,178 @@
+{% extends 'blacklion/base.html' %}
+{% load static %}
+{% block about %} class = "active" {% endblock %}
+{% block content %}
+  
+    <!-- ======= About Us Section ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>About Us</h2>
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li>About Us</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End About Us Section -->
+
+    <!-- ======= About Section ======= -->
+    <section class="about" data-aos="fade-up">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-6">
+            <img src="{% static 'customer/img/about.jpg' %}" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0">
+            <h3>About Addis Ababa University College of Health Science Inititutional Review Board</h3>
+            <br>
+            <p>
+              The College of Health Sciences-Institutional review Board (CHS-IRB), has a mission in safeguarding the rights, safety and wellbeing of all human participants involved in research. It facilitatesthe conduct of ethically sound research of 
+              the highest qualityfor advancement of scientific knowledge.  The IRB evolved from the then Faculty research & publication committee (FRPC) and following the restructuring of CHS, it was elevated to the College IRB in 2011. The IRB provides 
+              review, approval and follow-up of all research involving human participants that are conducted within the College of Health Sciences, Addis Ababa University. It currently gives service to the four Schools under CHS, and occasionally to other 
+              Institutionswithin Addis Ababa University only under special circumstances. The CHS-IRB is one of the first IRBs in Africa that received international recognition from WHO/SIDCER/FERCAP. 
+            </p>
+          </div>
+        </div>
+
+        <p class="mt-2">
+          The IRB adheres to specific policies for ethical reviewand follow up as per its standard operating procedure (SOP).In addition to its daily activities, the IRB has provided trainings for its members, 
+          members of Departmental Research Ethics Committees, and other academic staff and make efforts in research ethics capacity building. Researchers (staff or postgraduate students) 
+          are responsible to submit their proposals for review and approval by the IRB, before initiating any research activities.
+        </p>
+        <br>
+        <p class="mb-1"><b>Our Services Include</b></p>
+        <div class="row">
+          <ul >
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Review Initial Protocol Submissions </li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Review Protocol Amendments </li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Review Renewals</li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Host Seminars </li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Training </li>
+            
+          </ul>
+        </div>
+        
+
+      </div>
+    </section><!-- End About Section -->
+
+   
+    <!-- ======= Facts Section ======= -->
+    <div class="section-title">
+      <h2>We Receive huge number of protocol requests each year</h2>
+      <p>Every year we receive huge number of protocol related requests. The following figures show the number of requests from last year.</p>
+    </div>
+    <section class="facts section-bg" data-aos="fade-up">
+      <div class="container">
+
+        <div class="row counters">
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-purecounter-start="0" data-purecounter-end="113" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Initial Submissions</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-purecounter-start="0" data-purecounter-end="87" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Amendments</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            
+            <span data-purecounter-start="0" data-purecounter-end="157" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Renewals</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-purecounter-start="0" data-purecounter-end="4" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Seminarts</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Facts Section -->
+
+   <section style="margin-bottom:50px ;">
+
+   </section>
+
+    <!-- ======= Tetstimonials Section ======= -->
+    <!-- <section class="testimonials" data-aos="fade-up">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Tetstimonials</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="testimonials-carousel swiper-container">
+          <div class="swiper-wrapper">
+            <div class="testimonial-item swiper-slide">
+              <img src="{% static 'customer/img/testimonials/testimonials-1.jpg' %}" class="testimonial-img" alt="">
+              <h3>Saul Goodman</h3>
+              <h4>Ceo &amp; Founder</h4>
+              <p>
+                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
+                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+              </p>
+            </div>
+
+            <div class="testimonial-item swiper-slide">
+              <img src="{% static 'customer/img/testimonials/testimonials-2.jpg'  %}" class="testimonial-img" alt="">
+              <h3>Sara Wilsson</h3>
+              <h4>Designer</h4>
+              <p>
+                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
+                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+              </p>
+            </div>
+
+            <div class="testimonial-item swiper-slide">
+              <img src="{% static 'customer/img/testimonials/testimonials-3.jpg'  %}" class="testimonial-img" alt="">
+              <h3>Jena Karlis</h3>
+              <h4>Store Owner</h4>
+              <p>
+                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
+                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+              </p>
+            </div>
+
+            <div class="testimonial-item swiper-slide">
+              <img src="{% static 'customer/img/testimonials/testimonials-4.jpg'  %}" class="testimonial-img" alt="">
+              <h3>Matt Brandon</h3>
+              <h4>Freelancer</h4>
+              <p>
+                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.
+                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+              </p>
+            </div>
+
+            <div class="testimonial-item swiper-slide">
+              <img src="{% static 'customer/img/testimonials/testimonials-5.jpg'  %}' %}" class="testimonial-img" alt="">
+              <h3>John Larson</h3>
+              <h4>Entrepreneur</h4>
+              <p>
+                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.
+                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+              </p>
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+
+      </div>
+    </section> -->
+    <!-- End Ttstimonials Section -->
+
+
+{% endblock %}

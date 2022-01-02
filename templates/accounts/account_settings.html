@@ -1,0 +1,105 @@
+{% extends "staff/base.html" %}
+{% block title %} Account Setting {% endblock %}
+{% block breadcrumb %} 
+<div class="row breadcrumbs-top">
+    <div class="breadcrumb-wrapper col-12">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item "></li>
+       
+        {% if my_profile %}
+            <li class="breadcrumb-item active"><a href="">My Profile</a></li>
+        {% else %}
+            <li class="breadcrumb-item"><a href="{% url 'accounts:users_list' %}">Users List</a></li>
+            <li class="breadcrumb-item active"><a href="">User Account Setting</a></li>
+        {% endif %}
+        </li>
+      </ol>
+    </div>
+  </div>
+{% endblock %} 
+
+{% block content %}
+
+        <!-- BEGIN: Content-->
+        <div class="content-overlay"></div>
+            <div class="content-wrapper">
+              
+              <div class="content-body">
+                <!-- account setting page start -->
+                  <section id="page-account-settings">
+                      <div class="row">
+                          <!-- left menu section -->
+                          <div class="col-md-3 mb-2 mb-md-0 round height-200" style="background-color: white;">
+                                <h4 class="mt-2 mb-2">Management Tabs</h4>
+                              <ul class="nav nav-pills flex-column mt-md-0 mt-2">
+                                  <li class="nav-item">
+                                      <a class="nav-link d-flex active" id="account-pill-general" data-toggle="pill"
+                                          href="#account-general" aria-expanded="true">
+                                          <i class="fa fa-globe"></i>
+                                          General
+                                      </a>
+                                  </li>
+                                  <li class="nav-item">
+                                      <a class="nav-link d-flex" id="account-pill-password" data-toggle="pill" 
+                                        href="#account-password"   aria-expanded="false">
+                                          <i class="fa fa-lock"></i>
+                                          Change Password
+                                      </a>
+                                  </li>
+                                  <li class="nav-item">
+                                      <a class="nav-link d-flex" id="account-pill-notifications" 
+                                          href="{% url 'noti:notifications' %}" aria-expanded="false">
+                                          <i class="fa fa-bell"></i>
+                                          Notifications
+                                      </a>
+                                  </li>
+                              </ul>
+                          </div>
+                          <!-- right content section -->
+                          <div class="col-md-9">
+                              <div class="card">
+                                  <div class="card-content">
+                                      <div class="card-body">
+                                          <div class="tab-content">
+                                              {% include "accounts/account_general.html" %}
+                                              {% include "accounts/account_password.html" %}
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </section>
+                <!-- account setting page end -->
+              </div>
+            </div>
+          <!-- END: Content-->
+{% endblock %}
+
+{% block js%}
+    <script>
+        $("#account-upload").change(function () {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.readAsDataURL(this.files[0])    
+                reader.onload = function (e) {document.getElementById('image_display').src = e.target.result
+                }
+            }
+    })
+
+
+
+        $("#changePassword").submit(function (event){
+            inputBoxes = $("#changePassword input")
+            for (var i=1;i<inputBoxes.length;i++) {
+                if (inputBoxes[i].value.length < 8 ) {
+                    return false;
+                }
+            }
+        });
+
+    
+    
+    </script>
+
+{% endblock %}

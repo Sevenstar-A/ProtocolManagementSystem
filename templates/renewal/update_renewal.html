@@ -1,0 +1,130 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %}Updating Renewal Request {% endblock %}
+{% block breadcrumb %} 
+    <li class="breadcrumb-item "><a href="{% url 'renewal:check_prot_num' %}">Check Protocol Number</a></li>
+    <li class="breadcrumb-item active "><a href="">Update Renewal </a></li>
+    
+{% endblock %}
+{% block content %}
+<div class="card" style="padding: 10px;">
+    <div class="card-header">
+        
+        <h4 class="card-title text-center" id="basic-layout-form">Updating Renewal Request Form</h4>
+        <a class="heading-elements-toggle"><i class=""></i></a>
+    </div>
+    <div class="card-content "  style="padding:0px, 20px;">
+        <div id = "card_body" class="card-body pt-0" >
+
+            <form  action ="" method="POST" enctype="multipart/form-data" class="form" >
+               {% csrf_token %}
+                <div class="form-body "  >
+                    <h5 id="prop_detail_h4" class="text-center form-section" > 
+                        Updating renewal for protocol number <strong>{{prot_num}}</strong> :
+                        <br> 
+                    </h5>
+                    <div >
+                        <div class="form-group">
+                            <div class = "col-md-12">
+                                <h5 >Proposal Title:</h5>
+                                <textarea  cols="40" rows="5" class="form-control ml-2 round" >{{title}}</textarea>
+                                
+                            </div>
+                        </div>
+
+                        <div class = "row col-md-10">
+                            <div class="col-md-4">
+                                    <h5 >Protocol Version : <strong>{{prop_ver}}</strong> </h5>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <h5 >Renewal Number : <strong>{{renewal_num}}</strong> </h5>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <h5 >PI Full Name : 
+                                        {% if pi_name %}
+                                            <strong>{{pi_name}}</strong> </h5>
+                                        {% else %} 
+                                            {{form.pi_name}}
+                                        {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                      
+                    </div>
+
+                    <br>
+                    <h4 class="form-section"><i class="fa fa-paperclip"></i> Update required documents *</h4>
+                    
+                    <div id="docs_div" class="px-2">
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group ">
+                                <label style="display:block">Request Letter</label>
+                                <div class = "custom-file col-md-10">
+                                        {{form.request_letter}}
+                                        <label class = "custom-file-label" for="id_request_letter">Choose File</label>
+                                        {{form.errors.request_letter}}
+                                        {% if renewal.request_letter %}
+                                            <a href="{{renewal.request_letter.url}}" download="" >Current Request Letter Document</a>
+                                        {% endif %}
+                                    
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 form-group ">
+                                <label style="display:block">Progress Report Document</label>
+                                <div class ="custom-file col-md-10">
+                                    {{form.progress_report}}
+                                    <label class="custom-file-label" for = "id_progress_report" >Choose File</label> 
+                                    {{form.errors.progress_report}}
+                                    {% if renewal.progress_report %}
+                                        <a href="{{renewal.progress_report.url}}" download="" >Current Progress Report Document</a>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <br>
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group">
+                                <label style="display:block">Last Approval Letter *</label>
+                                <!--if last approval letter is found, use it else let the user upload it.  -->
+                                {% if app_letter %} 
+                                    <p>
+                                        Your latest approval letter is found, so you don't have to submit it again. We will use from our archive. 
+                                        <strong>You Can Download it if you want:</strong> 
+                                        <a class="ml-1" href="{{app_letter.url}}" download="" >Download Document</a>
+                                    </p>
+                                {% else %}
+                                    <div class="custom-file col-md-10">
+                                        {{form.last_approval_letter}}
+                                        <label class="custom-file-label" for = "id_last_approval_letter" >Choose File</label> 
+                                        {{form.errors.last_approval_letter}}
+                                    </div>
+                                {% endif %}
+                               
+                            </div>
+                        </div>
+                        
+                    </div>
+                   
+                </div>
+
+                <div class="form-actions right " >
+                    <a  href="{% url 'renewal:my_renewals' %}" onclick="return confirm('Are you sure you want to cancel updating ?')" class="btn btn-light right pl-5 pr-5 mr-5">
+                        Cancel
+                    </a>
+                    <button type="submit" onclick="return confirm('Have you finished updating?')" class="btn btn-success right pl-5 pr-5 mr-5">
+                        <i class="fa fa-check-square-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

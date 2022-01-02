@@ -1,0 +1,96 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %} Approve Amendment Request {% endblock %} 
+{% block breadcrumb %} 
+    <li class="breadcrumb-item "><a href="{% url 'amendment:amendment_list' %}">Amendment List</a></li> 
+    <li class="breadcrumb-item active"><a href="">Approve Amendment</a></li> 
+{% endblock %} 
+{% block content %}
+
+<div class="content-body">
+         
+    <section id="html5">
+        <div class="row ">
+            <div class="col-12 d-flex align-items-center justify-content-center">
+                <div class="col-12">
+                    <div class="card box-shadow-2 border-grey border-lighten-3 px-1 py-2 m-0 round">
+                        <div class="card-header">
+                            <h4 class="card-title"></h4>
+                            
+                        </div>
+                        <div class="card-content ">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="card-body card-dashboard">
+                                    <div class="form-group">
+                                        <div class="text-bold-600 text-center font-medium-2 mb-2">
+                                            {% if amend.has_been_approved %} 
+                                                Update Approval Letter for 
+                                            {% else %}
+                                                Approving 
+                                            {% endif %} 
+                                            '{{amend.protocol_number}}'
+                                        </div>
+                                    </div>
+                                    <div class="row col-10">
+                                        <div class="col-4">
+                                            <label>Protocol Number : <strong>{{amend.protocol_number}}</strong></label>
+                                        </div>
+                                        <div class="col-4">
+                                            <label>Protocol Version : <strong>{{amend.proposal_version}}</strong></label>
+                                        </div>
+                                        <div class="col-4">
+                                            <label>Amendment Number : <strong>{{amend.amend_num}}</strong></label>
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                    <div class="row col-10">
+                                        <div class="col-5">
+                                            <label>Investigator : <strong>{{amend.created_by}}</strong></label>
+                                        </div>
+                                        <div class="col-2"></div>
+                                        <div class="col-5">
+                                            <label>PI Full Name : <strong>{{amend.pi_name}}</strong></label>
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <div class="col-10 pl-2">
+                                            <label>Attach approval letter document</label>
+                                            <div class="custom-file">
+                                                <input type="file" accept="images/*,.pdf,.docx" id="id_approval_letter" name ="approval_letter" class="custom-file-input" required="" />
+                                                <label for="" class="custom-file-label">Choose file </label>
+                                            </div>
+                                            <br><br>
+                                            {% if last_approval_document %} 
+                                                <a href="{{last_approval_document.approval_letter.url}}" download=""  >Download Last Approval Document</a>    
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                                
+                                </div>
+                                <div class="card-footer text-right">
+                                    <div>
+                                        <a href="{% url 'amendment:amendment_list' %}"  onclick="return confirm('Are you sure you want to cancel approval?')" class="btn btn-light mr-2 mb-2 col-lg-2 col-12 ">Cancel</a>
+                                        <button type="submit" onclick="return confirm('Are you sure you want to approve the request?')" class="btn btn-success mb-2 col-lg-2 col-12 " >Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <!--/ HTML5 export buttons table -->
+
+
+</div>
+
+
+{% endblock %}

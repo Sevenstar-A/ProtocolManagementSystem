@@ -1,0 +1,262 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+
+{% block content %}
+<div class="card" style="padding: 10px;">
+    <div class="card-header">
+        <h4 class="card-title text-center" id="basic-layout-form">Requesting Renewal </h4>
+        <a class="heading-elements-toggle"><i class=""></i></a>
+    </div>
+    <div class="card-content "  style="padding: 20px;">
+        <div id= "search_div">
+            <h5 for="search_prot_num" class="ml-4">Please enter proposal protocol number</h5>
+            <div class=" row col-md-8 ml-5">
+                <input type="text"  id="search_prot_num" name="search_prot_num" oninput="" class="form-control col-md-5 round" placeholder='---/--/-----' >
+                <button type="button" id="search_prot_num_btn" onclick="fetch_proposal()" class="btn btn-info round btn-min-width mr-1 mb-1 ml-1"><i class="fa fa-search"></i> Check</button>
+            </div>
+            <code   class="ml-5 round" id="error-area" style="display: none;"></code>
+        </div>
+        <button type="button" id="new_btn" style="display: none;" onclick="search_new()" class="btn btn-info round btn-min-width mr-1 mb-1 ml-1"><i class="fa fa-search"></i> New Check</button>
+        
+        <div id = "card_body" class="card-body" style="display: none;" >
+
+            <form action ="{% url 'renewal:request_renewal' %}" method="POST" enctype="multipart/form-data" class="form" >
+               {% csrf_token %}
+                <div class="form-body "  >
+                    {{form.proposal}}
+                    {{form.parent}}
+                    
+                    <h4 id="prop_detail_h4" class="form-section" > </h4>
+                   
+                    <div >
+                        <label for="id_prop_title">Proposal Title</label>
+                        <div class = "col-md-7">
+                            {{form.prop_title}}
+                        </div>
+                        
+                        
+                        <div class = "row mt-2">
+                            <div class="col-md-4">  
+                                <label for="id_prot_num">Protocol Number</label>
+                                {{form.prot_num}}
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="id_prop_ver">Proposal Version</label>
+                                {{form.prop_ver}}
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label for="id_icf_no">ICF Number</label>
+                                {{form.icf_no}}    
+                            </div>
+
+                        </div>
+                        
+                        <br>
+                        
+                        <div class = "row">
+                            <div class="col-md-6">
+                                <label for="">PI Full Name</label>
+                                {{form.pi_name}}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">PI Email</label>
+                                {{form.pi_email}}
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <h4 class="form-section"><i class="fa fa-paperclip"></i> Attach required documents *</h4>
+                    
+                    <div id="docs_div">
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group ">
+                                <label>Request Letter</label>
+                                <br>
+                               <div class = "custom-file col-md-10">
+                                    {{form.req_letter}}
+                                    <label class = "custom-file-label" for="id_req_letter">Attach Request Letter</label>
+                               </div>
+                            </div>
+
+                            <div class="col-md-6 form-group ">
+                                <label >Progress Report Document</label>
+                                <br>
+                                <div class ="custom-file col-md-10">
+                                    {{form.progress_report}}
+                                    <label class="custom-file-label" for = "id_progress_report" >Attach Progress Report</label>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <br>
+
+                        <div class = "row">
+                            <div class="col-md-12 ">
+                                <label style="display: block;">Last Approval Letter</label>
+
+                                <!-- if  -->
+                                <div id="checkbox_div" style="display: none;">
+                                    <fieldset>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" name="last_letter_chbox" id="usefile_chbox" value ="" onchange="chbox_clicked()">
+                                            <label class="custom-control-label" for="usefile_chbox">Use my last renewal approval letter. (We have your last renewal request approval letter, Use can use view it.) 
+                                                <a id="last_file_doc" target="blank" href  ="" >View Doc</a> </label>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" name="last_letter_chbox" value="" onchange="chbox_clicked()" id="upload_chbox" >
+                                            <label class="custom-control-label" for="upload_chbox">Upload New (Upload a new document)</label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="custom-file col-md-5">
+                                    {{form.last_approval_letter}}
+                                    <label class="custom-file-label" id='id_label' for = "id_last_approval_letter" >Attach Approval Letter</label>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                                
+                    </div>
+                   
+                </div>
+
+                <div class="form-actions right " >
+                    <button type="submit" class="btn btn-success right">
+                        <i class="fa fa-check-square-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %} 
+<script>
+   
+    $('form').submit(function(e) { $(':disabled').each(function(e) {$(this).removeAttr('disabled');})});
+
+    var search_input = document.getElementById('search_prot_num'),  search_btn =document.getElementById('search_prot_num_btn');
+    var prop = document.getElementById('id_proposal'),              parent = document.getElementById('id_parent')
+    var prop_title = document.getElementById('id_prop_title'),      prot_num = document.getElementById('id_prot_num')
+    var prop_ver = document.getElementById('id_prop_ver'),          icf_no  = document.getElementById('id_icf_no')
+    var pi_email = document.getElementById('id_pi_email'),          pi_name = document.getElementById('id_pi_name')
+    var usefile_chbox= document.getElementById('usefile_chbox'),    upload_chbox = document.getElementById('upload_chbox')
+    var last_approval_letter = document.getElementById('id_last_approval_letter')
+    
+    var last_app_name = "", last_app_url = "";
+    
+    function chbox_clicked(){   
+        if (usefile_chbox.checked == true ){
+                last_approval_letter.required = false
+                last_approval_letter.value = last_app_url
+                document.getElementById('last_file_doc').href = last_app_url
+                document.getElementById('id_label').innerHTML = last_app_name
+            }
+        else{
+            last_approval_letter.required = true
+            last_approval_letter.value = ""
+            document.getElementById('last_file_doc').href = ""
+            document.getElementById('id_label').innerHTML  ="No file choosen"
+        }
+    }
+
+
+
+    function clean_all()
+    {search_input.value = ''; prop.value = ''; parent.value = ''; prop_title.value = '';prot_num.value = '';prop_ver.value = ''; icf_no.value = '';pi_email.value = '';
+      pi_name.value = ''; last_app_name =""; last_app_url= ""; last_approval_letter.required = true; usefile_chbox.checked =false; upload_chbox.checked = false;
+    }
+    
+    function fetch_proposal(){
+        p_no = search_input.value.replaceAll('/', '-');
+        fetch( "/renewal/get_renewal/"+p_no+"/").then(e=>e.json()).then(result =>
+                {   
+                    clean_all()
+                    if (result['error'] == false)
+                    {
+                        text = "" ; prot_num.value = result['prot_num']; prot_num.disabled = true
+
+                        if (result['renewal'] != false || result['prop'] != false)
+                        {
+                                prop_title.value = result['prop_title']
+                                prop_ver.value = result['prop_ver']
+                                prop_title.disabled = true
+                                // if previous renewal is found
+                                if (result['renewal'] == true){
+                                    parent.value = result['parent']
+                                    icf_no.value = result['icf_no']
+                                    pi_email.value = result['pi_email'] 
+                                    pi_name.value = result['pi_name']
+                                    parent.disabled = true
+
+                                    text = "" //clearing
+                                    text = "Renewal request for protocol number '"+result['prot_num']+"'. (Previous renewal found"
+                                    if (result['prop']){ text += ", Proposal registered on this system!)"}
+                                    else{text += ", Proposal NOT registered on this system!)"}
+                                }
+                                // if proposal is found
+                                if ( result['prop'] == true ){
+                                    prop.value = result['prop']
+                                    prop.disabled = true
+                                    text = "" //clearing
+                                    text ="Renewal request for protocol number '"+result['prot_num']+"'."
+                                    if(result['parent']){ text+="Previous renewal found, Proposal registered on this system!"}
+                                    else{text += " NO previous renewal found, Proposal registered on this system!)"}
+                                } 
+
+                                // if last renewal req approval letter is found, no need to upload it again (4 db optimization)
+                                if (result['last_app_let_name'] != false){
+                                    last_app_name  = result['last_app_let_name']
+                                    last_app_url = result['last_app_let_url']
+                                    usefile_chbox.value = last_app_url
+                                    usefile_chbox.checked = true // this will make last_approval_letter.required = false throught a custom js
+                                    // show z user z previous file
+                                    document.getElementById('last_file_doc').href = last_app_url
+                                    document.getElementById('id_label').innerHTML = last_app_name
+                                    last_approval_letter.required = false
+                                    document.getElementById('checkbox_div').style['display'] = 'block'     
+                                }
+                                else{
+                                    document.getElementById('checkbox_div').style['display'] = 'none'
+                                    last_approval_letter.required = true
+                                }                               
+                        }
+                        
+                        // if there is no renewal or proposal, i.e. new renewal
+                        else{   
+                            text = ""; text ="Renewal request for a New proposal.";
+                        }
+
+                        document.getElementById('prop_detail_h4').innerHTML = text
+                        document.getElementById('search_div').style['display'] = 'none'
+                        document.getElementById('card_body').style['display'] = 'block'
+                        document.getElementById('new_btn').style['display'] = 'block'                   
+                    }
+                    
+                    else{
+                        window.alert("error "+result['msg'])
+                    }
+                });   
+    }
+   
+    function search_new(){
+        prop_title.disabled = false; prot_num.disabled = false; clean_all();
+        document.getElementById('new_btn').style['display'] = 'none'; document.getElementById('card_body').style['display'] = 'none'
+        document.getElementById('search_div').style['display'] = 'block';
+    }
+    
+
+</script>
+{% endblock %}

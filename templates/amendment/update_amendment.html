@@ -1,0 +1,195 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %}Create New Amendment Request {% endblock %}
+{% block breadcrumb %} 
+    <li class="breadcrumb-item "><a href="{% url 'amendment:my_amendments' %}">My Amendments</a></li>
+    <li class="breadcrumb-item active "><a href="">Request Amendment </a></li>
+    
+{% endblock %}
+{% block content %}
+<div class="card" style="padding: 10px;">
+    <div class="card-header">
+        
+        <h4 class="card-title text-center" id="basic-layout-form">Updating Amendment Request Form</h4>
+        <a class="heading-elements-toggle"><i class=""></i></a>
+        <!-- <div class="heading-elements"></div> -->
+    </div>
+    <div class="card-content "  style="padding:0px, 20px;">
+        <div id = "card_body" class="card-body pt-0" >
+
+            <form  action ="" method="POST" enctype="multipart/form-data" class="form" >
+               {% csrf_token %}
+                <div class="form-body "  >
+                    <h5 id="prop_detail_h4" class="text-center form-section" > 
+                        Updating amendment request for protocol number <strong>{{prot_num}}</strong> :
+                        <br> 
+                        {% if code == 1 %}
+                            (There is a proposal related with this protocol number but no amendment was requested before.)
+                        {% elif code == 2 %} 
+                            (There is a proposal and amendement request related with this protocol number.)
+                        {% else %} 
+                        <!-- code 4 -->
+                            (We found a previous amendment request related with this protocol number, but the initial submission was not submitted through this web system. ) 
+                        {% endif %}
+                    </h5>
+                    <div >
+                        <div class="form-group">
+                            <label for="">Proposal Title</label>
+                            <div class = "col-md-10">
+                                {{form.proposal_title}}
+                                <p>You can update the title if you want for the new amendment request</p>
+                            </div>
+                        </div>
+
+                        <div class = "row col-md-10">
+                            <div class="col-md-4">
+                                    <h5 for="">Protocol Version : <strong>{{prop_ver}}</strong> *</h5>
+                                    {% if last_ver_num %}
+                                        <p class="grey">(Last amendment has : {{last_ver_num}})</p>
+                                    {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <h5 for="">Amendment Number : <strong>{{amend_num}}</strong> *</h5>
+                                    {% if last_amend_num %}
+                                        <p>(Last amendment has : {{last_amend_num}})</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <h5 for="">PI Full Name *</h5>
+                                    {{form.pi_name}}
+                                    {{form.errors.pi_name}}
+                                    <p class="grey">You can update the PI Full Name if you want for the new amendment request</p>
+                                </div>
+                            </div>
+                        </div>
+                      
+                    </div>
+
+                    <br>
+                    <h4 class="form-section"><i class="fa fa-paperclip"></i> Attach required documents *</h4>
+                    
+                    <div id="docs_div">
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group ">
+                                <p>Update Request Letter</p>
+                               <div class = "custom-file col-md-10">
+                                    {{form.request_letter}}
+                                    <label class = "custom-file-label" for="id_request_letter">Choose File</label>
+                                    {{form.errors.request_letter}}
+                                    {% if amend.request_letter %}
+                                        <a href="{{amend.request_letter.url}}" download="" >current request letter document</a>
+                                    {% endif %}
+                               </div>
+                            </div>
+
+                            <div class="col-md-6 form-group ">
+                                <p>Update Progress Report Document</p>
+                                <div class ="custom-file col-md-10">
+                                    {{form.progress_report}}
+                                    <label class="custom-file-label" for = "id_progress_report" >Choose File</label> 
+                                    {{form.errors.progress_report}}
+                                    {% if amend.progress_report %}
+                                        <a href="{{amend.progress_report.url}}" download="" >current Progress report document</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <br>
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group">
+                                <p>Update New proposal with track change</p>
+                                <div class="custom-file col-md-10">
+                                    {{form.track_change}}
+                                    <label class="custom-file-label" for = "id_track_change" >Choose File</label> 
+                                    {{form.errors.track_change}}
+                                    {% if amend.track_change %}
+                                        <a href="{{amend.track_change.url}}" download="" >current track change document</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <p>Update Amendment Form</p>
+                                <div class="custom-file col-md-10">
+                                    {{form.amend_form}}
+                                    <label class="custom-file-label" for = "id_amend_form" >Choose File</label>
+                                    {{form.errors.amend_form}}
+                                    {% if amend.amend_form %}
+                                        <a href="{{amend.amend_form.url}}" download="" >current amendment form document</a>
+                                    {% endif %}
+                                    
+                                </div>
+                                {% if amend_req_form.0 %}
+                                    <label>You can <a href= "{{amend_req_form.0.url}}" download >Click here</a> to download the form document, if you don't have it.</label>
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                        <br>
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group">
+                                <label>Update Last Approval Letter *</label>
+                                {% if app_letter %}
+                                <p>
+                                    {% if code == 1 %} 
+                                       We found the approval letter of your protocol. So you don't have to submit it again! 
+                                    {% else %} 
+                                        We found the approval letter of your last amendment request. So you don't have to submit it again! 
+                                    {% endif %} 
+                                    <strong>You Can Download it if you want:</strong> 
+                                    <a class="ml-1" href="{{app_letter.url}}" download="" >Download Document</a>
+                                </p>
+                                {% else %}
+                                <div class="custom-file col-md-10">
+                                    {{form.last_approval_letter}}
+                                    <label class="custom-file-label" for = "id_last_approval_letter" >Choose File</label> 
+                                    {{form.errors.app_letter}}
+                                </div>
+                                {% endif %}
+                               
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <label>Update Clean Protocol</label>
+                                <div class="custom-file col-md-10">
+                                    {{form.clean_protocol}}
+                                    <label class="custom-file-label" for = "id_clean_protocol" >Choose File</label>
+                                    {{form.errors.clean_protocol}}
+                                    {% if amend.clean_protocol %}
+                                        <a href="{{amend.clean_protocol.url}}" download="" >current clean protocol document</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                   
+                </div>
+                <strong for="id_send_notification " class="mt-2 mb-0 mr-2" style="float: right;"
+                    title="If you updated your request based on correction comment from the irb, select the checkbox, so that responsible irb staffs can be notified that you have corrected your issues.">
+                    <input type="checkbox" name="send_notification" value="true" class="mb-1" id="id_send_notification">
+                    
+                        Send notification to IRB staffs about my update.
+                </strong>
+                
+                <br>
+
+                <div class="form-actions right " >
+                    <a href="{% url 'amendment:my_amendments' %}" onclick="return confirm('Are you sure you want to cancel updating?')"   class="btn btn-light mr-2" >Cancel</a>
+                    <button type="submit" onclick="return confirm('Are you sure you want to update this amendment? ')" class="btn btn-success right pl-5 pr-5 mr-5">
+                        <i class="fa fa-check-square-o"></i> Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

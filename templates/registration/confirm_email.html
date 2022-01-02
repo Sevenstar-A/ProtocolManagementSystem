@@ -1,0 +1,48 @@
+{% extends 'registration/reg_base.html' %} 
+{% load static %} 
+{% block content %}
+    <section class="row flexbox-container">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+            <div class=" col-7 box-shadow-2 p-0">
+                <div class="card border-grey border-lighten-3 px-1 py-1 m-0 round">
+                    <div class="card-header border-0 pb-0">
+                        <h3 class="card-subtitle line-on-side text-muted text-center  pt-2"><span>Confirm Your Email Address To Continue...</span></h3>
+                    </div>
+                    <div class="card-content">
+                        <!-- <h5 class="text-danger ml-3">Please re-check your inputs!</h5> -->
+                        <br>
+                        <p  style="margin: auto;" class="text-center  col-7 ">Check your mailbox and simply click the link in the email we just sent to <strong>'{{user.email}}'</strong></p>
+                        <br>
+                        <div class="card-body ">
+                            <div class="col-5" style="margin: auto;">
+                               
+                                
+                                <br>
+                                <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1">
+                                    <span>You did not receive the email? 
+                                        <form action="" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name ="uid" value="{{user.id}}" />
+                                            <button id="reg_btn"  type="submit" class="btn btn-outline-success btn-block">
+                                                <h4>Resend</h4>
+                                            </button> 
+                                        </form>
+                                    </span>
+                                </p>
+                                <div class="text-center">
+                                    <a href="" id="reload_btn"   class="text-center mr-3">
+                                        <span>Reload</span>
+                                    </a>
+                                    <a href="{% url 'accounts:login' %}" id="reload_btn"   class="text-center">
+                                        <span>Login Page</span>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% load static %}
+<div role="tabpanel" class="tab-pane " id="account-permission" aria-labelledby="account-pill-permission" aria-expanded="false">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div>
+        {{user_account_form.permissions}}
+        </div>
+        
+        
+        
+   
+    </form>
+</div>

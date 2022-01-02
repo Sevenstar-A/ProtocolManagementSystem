@@ -1,0 +1,100 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %} Submit version {{prop.latest_version_num|add:1}} {% endblock %}
+
+{% block breadcrumb %}
+        <li class="breadcrumb-item "><a href="{% url 'proposal:my_proposals' %}">My Proposals </a></li> 
+        <li class="breadcrumb-item active"><a href=""> Submit Another Version</a></li> 
+{% endblock %}
+
+{% block content %}
+    <div class="card p-5" >
+        <div class="card-header">
+            <h4 class="card-title form-section text-center" id="basic-layout-form">Submitting next version for <strong> '{{prop.protocol_number}}'</strong> </h4>
+            <a class="heading-elements-toggle"><i class=""></i></a>
+        </div>
+        <div class="card-content "  >
+
+            <div id = "card_body" class="card-body"  >
+                <form action ="{% url 'proposal:versioned_create' pk=prop.id %}" method="POST" enctype="multipart/form-data" class="form" >
+                    {% csrf_token %}
+                    <div class="form-body "  >
+                        <h4 class="form-section"><i class="fa fa-paperclip"></i> Attach required documents *</h4>
+                        
+                        <div id="docs_div">
+
+                            <div class = "row">
+                                <div class="col-md-6 form-group ">
+                                    <label>Point by point response</label>
+                                    <div class = "custom-file col-12">
+                                            {{form.response_doc}}
+                                            <label class = "custom-file-label" for="id_response_doc">Attach file</label>
+                                            {{form.errors.response_doc}}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 form-group ">
+                                    <label >Clean Document</label>
+                                    <div class ="custom-file col-12">
+                                        {{form.clean_doc}}
+                                        <label class="custom-file-label" for = "id_clean_doc" >Attach file</label>
+                                       {{form.errors.clean_doc}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            
+                            <div class = "row">
+                                <div class="col-md-6 form-group ">
+                                    <label>Track Change</label><br>
+                                    <div class = "custom-file col-md-12">
+                                        {{form.track_change}}
+                                        <label class = "custom-file-label" for="id_track_change">Attach file</label>
+                                        {{form.errors.track_change}}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Other Related Documents</h4>
+                                            <p class="card-title-desc">If you have any other related files, click the button below and select the files( one or multiple files) you to upload. </p>
+                                            <div>
+                                                {{other_docs_form.file_docs}}
+                                                <p class="text-danger">{{other_docs_form.errors.file_docs}}</p>
+                                                <br>
+                                            </div>        
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div> <!-- end row -->
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-actions right " >
+                        <a href="{% url 'proposal:my_proposals' %}"  onclick="return confirm('Are you sure you want to cancel submiting?')" class="btn btn-light white mr-2 right">
+                             Cancel
+                        </a>
+                        <button type="submit" onclick="return confirm('Are you sure you want to submit?')" class="btn btn-success right">
+                            <i class="fa fa-check-square-o"></i> Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+
+        </div>
+    </div>
+
+
+
+  
+    
+
+{% endblock %}
+

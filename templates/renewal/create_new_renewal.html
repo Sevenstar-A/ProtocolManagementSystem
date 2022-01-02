@@ -1,0 +1,111 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %}Request New Renewal{% endblock %}
+{% block breadcrumb %} 
+    <li class="breadcrumb-item "><a href="{% url 'renewal:check_prot_num' %}">Check Protocol Number</a></li>
+    <li class="breadcrumb-item active "><a href="">Request New Renewal</a></li>
+    
+{% endblock %}
+{% block content %}
+<div class="card" style="padding: 10px;">
+    <div class="card-header">
+        
+        <h4 class="card-title text-center" id="basic-layout-form">Renewal Request Form</h4>
+        <a class="heading-elements-toggle"><i class=""></i></a>
+       
+    </div>
+    <div class="card-content "  style="padding:0px, 20px;">
+        <div id = "card_body" class="card-body pt-0" >
+
+            <form  action ="" method="POST" enctype="multipart/form-data" class="form" >
+               {% csrf_token %}
+                <div class="form-body "  >
+                    <h5 id="prop_detail_h4" class="text-center form-section" >
+                         Requesting renewal for protocol number <strong>{{prot_num}}</strong> :<br> (There was no proposal or previous renewal request related with this protocol number found on this system.)
+                    </h5>
+                    <div >
+                        <div class="form-group">
+                            <label for="">Proposal Title</label>
+                            <div class = "col-md-10">
+                                {{form.proposal_title}}
+                                {{form.errors.proposal_title}}
+                            </div>
+                        </div>
+
+                        <div class = "row col-md-10">
+                            <div class="col-md-4">
+                                    <label for="">Proposal Version *</label>
+                                    {{form.proposal_version}}
+                                    {{form.errors.proposal_version}}
+                             
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Renewal Number *</label>
+                                    {{form.renewal_num}}
+                                    {{form.errors.renewal_num}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">PI Full Name *</label>
+                                    <p>{{form.pi_name}}</p>
+                                    {{form.errors.pi_name}}
+                                </div>
+                            </div>
+                        </div>
+                      
+                    </div>
+
+                    <br>
+                    <h4 class="form-section"><i class="fa fa-paperclip"></i> Attach required documents *</h4>
+                    <div id="docs_div">
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group ">
+                                <p>Request Letter *</p>
+                               <div class = "custom-file col-md-10">
+                                    {{form.request_letter}}
+                                    <label class = "custom-file-label" for="id_request_letter">Choose File</label>
+                                    {{form.errors.request_letter}}
+                               </div>
+                            </div>
+
+                            <div class="col-md-6 form-group ">
+                                <p>Progress Report Document *</p>
+                                <div class ="custom-file col-md-10">
+                                    {{form.progress_report}}
+                                    <label class="custom-file-label" for = "id_progress_report" >Choose File</label> 
+                                    {{form.errors.progress_report}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <br>
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group">
+                                <p>Last Approval Letter *</p>
+                                <div class="custom-file col-md-10">
+                                    {{form.last_approval_letter}}
+                                    <label class="custom-file-label" for = "id_last_approval_letter" >Choose File</label> 
+                                    {{form.errors.last_approval_letter}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                   
+                </div>
+
+                <div class="form-actions right " >
+                    <button type="reset" class="btn btn-light mr-2" onclick="return confirm('Do you want to clear all input fields?')">Cancel</button>
+                    <button type="submit" onclick="return confirm('Are you sure you are done? ')" class="btn btn-success right pl-5 pr-5 mr-5">
+                        <i class="fa fa-check-square-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

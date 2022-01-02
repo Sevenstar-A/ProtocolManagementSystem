@@ -1,0 +1,241 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% load core_templatetags %}
+{% block title %} 
+    My Notifications
+ {% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active "><a href="{% url 'amendment:my_amendments' %}">My Notifications </a></li> 
+    
+{% endblock %}
+
+{% block content %} 
+
+                        
+<div class="content-body">
+    <!-- account setting page start -->
+    <section id="page-account-settings">
+        <br>
+        {% if n %}
+            <a href="#heading_{{n.id}}"  type="hidden" id = "scroller_tag" ></a>
+        {% endif %}
+            
+        <div class="row">
+              <!-- left menu section -->
+            <div class="col-md-2 mb-2 mb-md-0 pt-1 round" style="background-color: white;">
+                <h5>Notification Filtering </h5>
+                <ul class="nav nav-pills flex-column mt-md-0 mt-1">
+                    <li class="nav-item ">
+                        <a   class="btn btn-success mt-1 py-1 nav-link d-flex" href="{% url 'noti:notifications' %}" >
+                            <i class="fa fa-list"></i>
+                            All
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item ">
+                        <a   class="btn mt-1 nav-link d-flex" href="{% url 'noti:notifications' status='read' %}" style="background-color: #ede8e8;" >
+                            <i class="fa fa-envelope-open font-medium-2 " style="color: rgb(65, 218, 65);"></i>
+                            <strong >Read Only </strong>
+                        </a>
+                        
+                    </li>
+                    <li class="nav-item ">
+                        <a   class="btn btn-light mt-1 nav-link d-flex" href="{% url 'noti:notifications' status='unread' %}" >
+                            <i class="fa fa-envelope font-medium-2 red"></i>
+                            <strong >Unread Only</strong>
+                        </a>
+                    </li>
+                                                         
+                </ul>
+                <br>
+                <hr></hr>
+               
+            </div>
+              <!-- right content section -->
+            <div class="col-md-10 round">
+                <div class="card px-2 py-3">
+                  
+                    {% if status == "unread"  %}
+                        <div class="right">
+                                <div id="buttons_div" class="col-md-6 " style="float: right;">
+                                    {% if notis|length > 0 %}
+                                        <button  onclick="markallread()"  type="button " style ="float:right; "
+                                            class=" btn btn-success ">Mark All As Read</button>
+                                    {% else %}
+                                        <button disabled  type="button" title="You have no unread messages!" style ="float:right; "
+                                            class=" btn btn-light ">Mark All As Read</button>
+                                    {% endif %}
+                                </div>
+                        </div>
+                    {% endif %}
+
+                   
+                    <div role="tabpanel" class="tab-pane " id="ver_{{cur_ver}}_panel" aria-labelledby="ver_{{cur_ver}}_pill" aria-expanded="true">
+                        <div class="card-body" id = "card_body">
+                                <div class="form-body" >
+                                    
+                                    <div >
+                                        <div class="col-lg-12 col-xl-12">
+                                            <div class="mb-2 mt-2">
+                                                {% if notis|length > 0 %}
+                                                    <h5 class="mb-0 text-uppercase">Your latest <strong>'{{status}}'</strong> notifications</h5>
+                                                {% else %} 
+                                                    <h5 class="mb-0 text-uppercase">You have no notifications yet! </h5>
+                                                {% endif %}
+                                                
+                                            </div>
+                                            <div id="accordionWrap" role="tablist" aria-multiselectable="true">
+                                                <div class="card accordion ">
+                                                    {% if notis|length > 0 %}
+                                                        {% for n in notis %}
+                                                            {% if n.read %}
+                                                                <div class="box-shadow-1 border-grey border-lighten-2 mt-1 px-1 pt-1" style="background-color: #ede8e8 ;" >
+                                                                    <div  id="heading_{{n.id}}" class="card-header primary p-0  px-1"  data-toggle="collapse" href="#desc_{{n.id}}"
+                                                                            aria-expanded="true"  style="background-color: #ede8e8 ;" >
+                                                                        <i class="fa fa-envelope-open green"></i>
+                                                                        
+                                                                        <a class="card-title lead mb-0 py-0 px-1 "  style="color: rgb(61, 60, 60);">
+                                                                            {{n.noti.noti}} <span class="blue"> <small> Read More</small></span>
+
+                                                                        </a>
+                                                                        <div class="media-body " style="background-color: #ede8e8 ;" {%>
+                                                                                <span class="list-group-item-text  px-2 badge badge-{{n.noti.tag}}">
+                                                                                    {{n.noti.tag}} 
+                                                                                </span>
+                                                                                <i class="fa fa-clock-o ml-2"></i>
+                                                                                <span class="text-muted mb-1">{{n.noti.created_date}} ({{n.noti.timesince}})</span>
+                                                                                <p style="color: rgb(141, 138, 138);">{{n.noti.desc|truncatechars_html:40}}</p>
+                                                                                
+                                                                                <!-- <span class="float-right mb-1 ">Read More>> </span> -->
+                                                                                
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                
+                                                                    <div id="desc_{{n.id}}" role="tabpanel" style="background-color: rgb(233, 231, 231); border-radius: 3px;" data-parent="#accordionWrap"
+                                                                        aria-labelledby="heading11" class="collapse box-shadow-1 border-grey border-lighten-2 mb-1 mt-1">
+                                                                        <div class="card-content">
+                                                                            <div class="card-body">
+                                                                                <p>{{n.noti.desc}}</p>
+                                                                                {% if n.noti.link != '' %}
+                                                                                    <p style ="float:right"><a class="btn btn-info" href="{{n.noti.link}}">Redirect</a></p>
+                                                                                {% endif %}
+
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+
+
+                                                            {% else %}
+                                                                <div id="noti_div_{{n.id}}" class="box-shadow-1 border-grey border-lighten-2 mt-1 px-1 pt-1  ">
+                                                                    <div  id="heading_{{n.id}}" class="card-header primary p-0  px-1" onclick="mark_as_read('{{n.id}}')" data-toggle="collapse" href="#desc_{{n.id}}" aria-expanded="true" >
+                                                                        <i id="env_{{n.id}}" class="fa fa-envelope red"></i>
+                                                                        <a class="card-title lead mb-0 py-0 px-1 "  style="color: rgb(61, 60, 60);"> 
+                                                                        {{n.noti.noti}} <span class="blue"><small> Read More</small></span>
+
+                                                                        </a>
+                                                                        <div class="media-body " >
+                                                                                <span class="list-group-item-text  px-2 badge badge-{{n.noti.tag}}">
+                                                                                    {{n.noti.tag}} 
+                                                                                </span>
+                                                                                <i class="fa fa-clock-o ml-2"></i>
+                                                                                <span class="text-muted mb-1">{{n.noti.created_date}} ({{n.noti.timesince}})</span>
+                                                                                <p style="color: rgb(141, 138, 138);">{{n.noti.desc|truncatechars_html:40}}</p>
+                                                                                
+                                                                                <!-- <span class="float-right mb-1 ">Read More>> </span> -->
+                                                                                
+                                                                        </div>
+                                                                
+                                                                    </div>
+                                                    
+                                                                    <div id="desc_{{n.id}}" role="tabpanel" style="background-color: rgb(233, 231, 231); border-radius: 3px;" data-parent="#accordionWrap"
+                                                                        aria-labelledby="heading11" class="collapse box-shadow-1 border-grey border-lighten-2 mb-1 mt-1">
+                                                                        <div class="card-content">
+                                                                            <div class="card-body">
+                                                                                <p>{{n.noti.desc}}</p>
+                                                                            
+                                                                                {% if n.noti.link != '' %}
+                                                                                    <p style ="float:right"><a class="btn btn-info" href="{{n.noti.link}}">Redirect</a></p>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            {% endif %}
+                                                                
+                                                        {% endfor %}
+                                                    {% endif %}
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- account setting page end -->
+</div>
+
+{% endblock %}
+
+
+
+{% block js %} 
+<script>
+    if ("{{detail}}"=="{{True}}"){
+        try {
+            document.getElementById('scroller_tag').click(); //to scroll down to the specific notification
+            document.getElementById('heading_{{n.id}}').click(); //open the detail, so mark as read
+        } catch (error) {}
+       
+    }
+
+
+    function mark_as_read(id){
+        fetch("/noti/mark_user_notification_as_read/"+id+"/").then(e=>e.json()).then(data =>{
+            if (data['error']==false){
+                document.getElementById('env_'+id).className = "fa fa-envelope-open green"; //open the envelop
+                document.getElementById('noti_div_'+id).style="background-color: #ede8e8 ;" ; //change color of main_div
+                document.getElementById('heading_'+id).style = "background-color: #ede8e8 ;"; //change color of body
+                
+                // remove the notification from top and decreament the number of unread numbers
+                var top_noti = document.getElementById('noti_'+id); //
+                top_noti.remove();
+                var num_area = document.getElementById("noti_count_span");
+                num_area.innerHTML = parseInt( num_area.innerHTML) - 1
+                document.getElementById("noti_count_span2").innerHTML = num_area.innerHTML
+                
+
+            }
+        });
+    }
+
+
+    function markallread(){
+      if (confirm('You are updating all unread messages As Read! Do you want Continue? '))
+          fetch( " {% url 'noti:api_mark_all_as_read'  %}").then(e=>e.json()).then(data =>
+              {   update_num = data['update_num']
+                  if (update_num >= 0){ 
+                      window.open('/noti/notifications/','_self')
+                    }
+                  else {
+                    alert("Sorry! an exception occured, please try again later")
+                  }    
+              });
+    }
+    
+</script>
+    
+{% endblock %}

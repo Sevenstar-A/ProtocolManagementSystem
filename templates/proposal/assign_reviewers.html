@@ -1,0 +1,95 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block style %} 
+ <!-- BEGIN: Vendor CSS-->
+ <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/forms/selects/select2.min.css' %}">
+ <!-- END: Vendor CSS-->
+ 
+{% endblock %}
+{% block title %} Assign Reviewers To 
+    {% if amendment %} 
+        An Amendment
+    {% elif renewal %} 
+        A Renewal 
+    {% else %}
+        Proposal 
+    {% endif %}
+
+  {% endblock %} 
+{% block breadcrumb %} 
+    <li class="breadcrumb-item ">
+        {% if amendment %}
+            <a id="list_page" href="{%  url 'amendment:amendment_list' %} ">Amendment List</a>
+        {% elif renewal %} 
+            <a id="list_page" href="{%  url 'renewal:renewal_list' %} ">Renewal List</a>
+        {% else %} 
+            <a id="list_page" href="{%  url 'proposal:proposal_list' %} ">Proposals List</a>
+        {% endif %}   
+        
+    </li> 
+    <li class="breadcrumb-item active"><a href="">Assign Reviewers</a></li> 
+{% endblock %} 
+{% block content %}
+
+<div class="content-body">
+         
+    <section id="html5">
+        <div class="row ">
+            <div class="col-12 d-flex align-items-center justify-content-center">
+                <div class="col-12">
+                    <div class="card box-shadow-2 border-grey border-lighten-3 px-1 py-2 m-0 round">
+                        <div class="card-header">
+                            <h4 class="card-title"></h4>
+                            
+                        </div>
+                        <div class="card-content ">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                <div class="card-body card-dashboard">
+                                    <div class="form-group">
+                                        <div class="text-bold-600 text-center font-medium-2 mb-2">
+                                            Select Reviewers for '{{prot_num}}'
+                                        </div>
+                                        <p class="mb-1">List of reviewers</p>
+                                            {% csrf_token %}
+                                            {{form.reviewers}} 
+                                            {{form.errors.reviewers}}
+                                    </div>
+                                                
+                                </div>
+                                <div class="card-footer text-right">
+                                    <div>
+                                        <button type="button" onclick="back_page()" class="btn btn-light mr-2 mb-2 col-lg-2 col-12 ">Cancel</button>
+                                        <button type="submit" onclick="return confirm('Are you sure you want to assign these users for this protocol?')" class="btn btn-success mb-2 col-lg-2 col-12 " >Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <!--/ HTML5 export buttons table -->
+
+
+</div>
+{% endblock %}
+{% block js %} 
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{% static 'staff/vendors/js/forms/select/select2.full.min.js' %}"></script>
+    <!-- END: Page Vendor JS-->
+    <!-- BEGIN: Page JS-->
+    <script src="{% static 'staff/js/scripts/forms/select/form-select2.min.js' %}"></script>
+    <!-- END: Page JS-->
+    <script>
+        function back_page(){
+            if (confirm("Are you sure you want to cancel assigning reviewers?")){
+                document.getElementById("list_page").click();
+            }
+        }
+    </script>
+    
+{% endblock %}

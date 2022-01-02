@@ -1,0 +1,54 @@
+{% load static %}
+<div class="col-lg-4">
+
+    <div class="sidebar">
+
+      <h3 class="sidebar-title">Search</h3>
+      <div class="sidebar-item search-form">
+        <form action="{% url 'search-news' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name='keyword'>
+            <button type="submit"><i class="bi bi-search"></i></button>
+        </form>
+      </div><!-- End sidebar search formn-->
+
+      <h3 class="sidebar-title">Categories</h3>
+      <div class="sidebar-item categories">
+        <ul>
+            {% for tag in tag_set %}
+                <li><a href="{% url 'filter-news' tag.name %}">{{ tag.name }} <span>({{ tag.news_set.count }})</span> </a></li>
+            {% endfor %}   
+        </ul>
+      </div><!-- End sidebar categories-->
+
+      <h3 class="sidebar-title">Recent Posts</h3>
+      <div class="sidebar-item recent-posts">
+        {% for lnews in latest_news %}
+            <div class="post-item clearfix">
+                {% if not lnews.image %}
+                    <img src="{% static 'customer/img/news.png' %}" alt="{{lnews.title}}">
+                {% else %}
+                    <img src="/media/{{lnews.image}}" alt="{{lnews.title}}">
+                {% endif %}
+                
+                <h4><a href="{% url 'news_detail' lnews.id %}">{{ lnews.title }} </a></h4>
+                <time datetime="2020-01-01"> {{ lnews.date_created }} </time>
+            </div>
+        {% endfor %}
+
+      </div><!-- End sidebar recent posts-->
+
+      <h3 class="sidebar-title">Tags</h3>
+      <div class="sidebar-item tags">
+        <ul>
+            {% for tag in tag_set %}
+                <li><a href="{% url 'filter-news' tag.name %}">{{ tag.name }}</a></li>
+            {% endfor %}
+        </ul>
+      </div><!-- End sidebar tags-->
+
+    </div><!-- End sidebar -->
+
+  </div><!-- End blog sidebar -->
+
+</div>

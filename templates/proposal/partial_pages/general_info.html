@@ -1,0 +1,170 @@
+{% load static %}
+<div role="tabpanel" class="tab-pane active " id="general_info" aria-labelledby="general_pill" aria-expanded="true"> 
+    <div class="card-body col-lg-12">
+        <div class="form-body" >
+            <h4 class="form-section">Proposal Information : '{{prop.protocol_number}}' </h4>
+            <h4 class="form-section">Requested By : <strong>{{prop_obj.created_by}}</strong> </h4>
+            <h4 class="form-section">PI Full Name : <strong>{{prop_obj.pi_name}}</strong> </h4>
+            <h5> Status :- <strong>{{prop.status}}</strong>
+            <h5> Latest Version :- <strong>{{prop.latest_version_num}}</strong></h5>
+
+            </h5>
+              
+            <div >
+                <div class="card-body">
+                    
+                    <!-- Form Detail -->
+                    <div class="col-lg-12">
+                        <p class="text-muted font-medium-2 text-center">General Information</p>
+                        <h5><strong>  Title : </strong>{{prop.title}}</h5><br>
+                        <h5><strong> Protocol Number : </strong>'{{prop.protocol_number}}'</h5><br>
+                        <h5 ><strong> Study Types :</strong>
+                                {{initial.study_type}} 
+                        </h5>
+                        <br>
+                            {% if initial.other_study %}
+                        <h5 ><strong> Other Study Types :</strong>{{initial.other_study}}</h5>
+                            {% endif %}
+                        
+                        <br>
+                        
+                        <div class="row">
+                            <h5 class="col-lg 6"><strong> Department :</strong>
+                                {{initial.department}}
+                            </h5>
+                            <h5  class="col-lg 6"><strong> Proposal Type :</strong>{{initial.proposal_type}}</h5>
+                            
+                        </div>
+                        <br>
+
+                        <p class="text-muted font-medium-2 text-center">CHARACTERISTICS of PARTICIPANTS PARTICIPATED</p><hr>
+                        <h5><strong>  Total Participants : </strong> {{initial.total_par}}</h5><br>
+                        <div class="row">
+                            <h5 class="col-lg-6"><strong>  Study Population : </strong>
+                                {{initial.study_pop}} 
+                            </h5>
+                            <h5 class="col-lg-6"><strong>  Impaired : </strong>
+                                {{initial.impaired}}
+                            </h5>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            
+                            {% if initial.min_age and initial.max_age %}
+                            <h5 class="col-lg-6"><strong> Participants Age Range : </strong>
+                                {{initial.min_age}} - {{initial.max_age}}
+                            </h5>
+                            {% endif %} 
+                            {% if initial.min_pediatric and initial.max_pediatric %} 
+                            <h5 class="col-lg-6"><strong>  Pediatric Age Range : </strong>
+                            {{initial.min_pediatric}} - {{initial.max_pediatric}}
+                            </h5>
+                            {% endif %}
+                        
+
+                        </div>
+
+                        <br>
+                            
+                        <h5 ><strong> REQUESTED EXCLUSION OF PARTICIPANTS : </strong>
+                            <span>{{initial.exclusion}}, </span>
+
+                        </h5>
+                        {% if initial.other_exclusion %} 
+                        <h5 ><strong>  Other Exclusion : </strong>
+                        {{initial.other_exclusion}}
+                        </h5>
+                        {% endif %}  
+                        
+                        <br>
+                        <h5 class="text-center"> Other Information</h5><hr>
+
+                        <div >    
+                            <h5 ><strong> SPECIAL RESOURCE REQUIREMENTS  : </strong>
+                                <span>{{initial.special_res}} </span>
+                                
+                            </h5>
+                            
+                            {% if initial.other_special_res %} 
+                            <h5 ><strong> Other Special Resourses : </strong>
+                            {{initial.other_special_res}}
+                            </h5>
+                            {% endif %}
+                        
+                        </div>
+
+                        <h5><strong> IONIZING RADIATION USE (X-rays, radioisotopes, etc):  </strong>
+                            {{initial.ionizing_rad}}
+                        </h5>
+                        <br>
+
+                        <h5 ><strong>INVESTIGATIONAL NEW DRUG (IND) / DEVICE (IDE):  </strong>
+                            {{initial.inves_new_drug_type}}
+                        </h5>
+                        
+                        <div class="row">
+                            <div class="col-lg-3">
+                                {% if initial.fda_no %}
+                                <h5><strong>FDA No:</strong>{{initial.fda_no}}</h5>
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-3">
+                                {% if initial.fda_name %}
+                                <h5><strong>Name:</strong>{{initial.fda_name}}</h5>
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-3">
+                                {% if initial.fda_sponsor %}
+                                <h5><strong>Sponsor:</strong>{{initial.fda_sponsor}}</h5>
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-3">
+                                {% if initial.fda_holder %}
+                                <h5><strong>Holder:</strong>{{initial.fda_holder}}</h5>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <h5><strong>Procedure Use:</strong>{{initial.procedure_use}}</h5>
+                            </div>
+                            <div class="col-lg-4">
+                                <h5><strong>MULTI-SITE COLLABORATION:</strong>{{initial.multisite_collab}}</h5>
+                            </div>
+                            <div class="col-lg-4">
+                                <h5><strong>FINANCIAL DISCLOSURE:</strong>{{initial.financial_dis}}</h5>
+                            </div>
+                        </div>
+                        <br>
+                        <h5><strong>Conflict of Interest : </strong>
+                        {% if initial.conflict_int %} 
+                        {{initial.conflict_int}}
+                        {% else %}
+                        No
+                        {% endif %}
+                        </h5>
+                        <br>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h5><strong>Collaborator Inistitution : </strong>{{initial.collaborator_inis}}</h5>
+                            </div>
+                            <div class="col-lg-6">
+                                <h5><strong>Source of Fund :</strong>{{initial.fund}}</h5>
+                            </div>
+                            
+                        </div>
+                        <br>
+
+                    </div>
+                <!-- End of Form Detail -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

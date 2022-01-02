@@ -1,0 +1,12 @@
+{% extends 'staff/base.html' %}
+{% block content %} 
+
+{% for p in irb_perms %} 
+{{p}}<br>
+{% endfor %}
+{% if 'irb.can_review_amendment' in irb_perms %} 
+yes
+{% endif %}
+   
+
+{% endblock %}

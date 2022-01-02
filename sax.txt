@@ -1,0 +1,1 @@
+1. Data integrity and data consistency (if the system has the data it will use it and does not let the user to input it)

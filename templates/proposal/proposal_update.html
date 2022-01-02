@@ -1,0 +1,610 @@
+{% extends 'staff/base.html'%}
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" type="text/css" href="{% static 'staff/css/plugins/forms/validation/form-validation.css' %}">
+    
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/file-uploaders/dropzone.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'staff/css/plugins/file-uploaders/dropzone.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'staff/css/plugins/forms/wizard.min.css' %}">
+<style>
+    ul {list-style:none}
+
+    label {
+        font-size: medium;
+        font-weight: 500;
+
+    }
+    #id_study_pop li,
+    #id_impaired li,
+    #id_exclusion li,
+    #id_special_res li,
+    #conflict_ul li,
+    #id_inves_new_drug_type li
+                {display: inline; margin-right:20px;}
+    
+</style>
+{% endblock %}
+{% block title %}Update Initial Submission Requests Form {% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="">Update Request Initial Submission</a></li> 
+{% endblock %}
+
+{% block content %} 
+
+<div class="content-body">
+        <section id="icon-tabs">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title text-center" >Initial Submission Requests Form</h4>
+                            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-h font-medium-3"></i></a>
+                            
+                        </div>
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                
+                                <form id="id_form" action=  ""  method="POST" enctype="multipart/form-data" class="icons-tab-steps wizard-circle">
+
+                                    {% csrf_token %}
+                                    {{doc_formset.management_form}}
+                                    {{cors_formset.management_form}}
+                                    <!-- Step 1 -->
+                                    <h6><i class="step-icon fa fa-home"></i> Proposal Information</h6>
+                                    <fieldset>
+                                            <div class="col-lg-6">
+                                                <div class=" mb-3">
+                                                    <label>1. {{proposal_form.title.label|title}} *</label>
+                                                    {{proposal_form.title}}
+                                                </div>
+                                            </div>
+                                            
+                                       
+                                        <div style="display: none;">
+                                            {{proposal_form.study_type}}
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <label for="verticalnav-lastname-input"> 2. {{proposal_form.study_type.label|title}} *</label>
+                                            <div class="ml-2 mb-2 row">
+                                                {% for s in proposal_form.study_types_chk %}
+                                                    <div class="col-md-3">    
+                                                        <label for="id_study_type_chk_{{s.id}}">
+                                                            <input type="checkbox" name="study_type_chk" {% if s.name in proposal_form.study_type.value %} checked {% endif %} value="{{s.id}}" class="mb-1" id="id_study_type_chk_{{s.id}}">
+                                                            {{s.name}}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                                <div class="col-md-3">    
+                                                    <label for="id_other_study_type_chk">
+                                                        <input  type="checkbox" id="id_other_study_type_chk" name="study_type_chk" value="Other Study Types" onclick="display_other_study_type()"
+                                                                {% if "Other Study Types" in proposal_form.study_type.value %} checked {% endif %}   >
+                                                        <b>Other Study Types</b>
+                                                    </label>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div id="other_study_div" class="row">
+                                            <div class="col-lg-12">
+                                                <div class="mb-3 ml-2">
+                                                    <label for="verticalnav-phoneno-input"><b>Specify {{proposal_form.other_study.label|title}}</b></label>
+                                                    {{proposal_form.other_study}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                       
+                                        <div class="col-lg-12 row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="verticalnav-address-input">3. {{proposal_form.department.label|title}} *</label>
+                                                    {{proposal_form.department}}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="verticalnav-address-input">4. Proposal Type *</label>
+                                                    {{proposal_form.proposal_type}}
+                                                 </div>
+                                            </div>
+                                        </div>
+                                        <br>
+
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label>5. Total Number of Participants *</label>
+                                                {{proposal_form.total_par}}
+                                            </div>
+                                        </div>
+                                        <br>
+                                        
+
+
+                                        <div class="col-lg-12 ">
+                                            <div style="display: none;">{{proposal_form.study_pop}}</div>
+                                            <br>
+                                            <label style="display: inline;">6. Study Population *</label>
+                                                
+                                            <div class="ml-2 mb-2 row">
+                                                
+                                                {% for s in proposal_form.study_pops_chk %}
+                                                    <div class="col-md-3">
+                                                        <label for="id_study_pop_chk_{{s.id}}">
+                                                            <input  type="checkbox" name="study_pop_chk" value="{{s.id}}" class="" id="id_study_pop_chk_{{s.id}}" 
+                                                                    {% if s.name in proposal_form.study_pop.value %} checked {% endif %}>
+
+                                                            {{s.name}} 
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                                
+                                            </div>
+                                            
+                                            
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div style="display: none;">{{proposal_form.impaired}}</div>
+                                            <br>
+                                            <label style="display: inline;">7. Impaired * </label>
+                                            <div class="ml-2 mb-2 row">
+                                                {% for c in proposal_form.impaired_chk %}
+                                                    <div class="col-md-3">    
+                                                        <label for="id_impaired_chk_{{c}}">
+                                                            <input type="checkbox" name="impaired_chk" value="{{c}}" class="" id="id_impaired_chk_{{c}}"
+
+                                                            {% if c in proposal_form.impaired.value %} checked {% endif %}>
+                                                            {{c}}
+                                                        </label>
+                                                       
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        
+                                        <br>
+                                        <div class="col-lg-12 row">
+                                            
+                                            <div class="col-lg-6">
+                                                <label>8. Participants Age Range</label> 
+                                                <br>
+                                                <div class="row" style="width: 100%;">
+                                                    <div class="col-lg-5 mb-3">
+                                                        <label for="verticalnav-lastname-input">Minimum Age*</label>
+                                                        {{proposal_form.min_age}}
+                                                    </div>
+    
+                                                    <div class="col-lg-5 mb-3">
+                                                        <label for="verticalnav-lastname-input">Maximum Age*</label>
+                                                        {{proposal_form.max_age}}
+                                                    </div>
+
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                            <div class="col-lg-6">
+                                                <label>9. Pediatric Age Range</label> <br>
+                                                <div class="row" style="width: 100%;">
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label for="verticalnav-lastname-input">Minimum Age*</label>
+                                                        <div class="row">
+                                                            <div class="col-lg-7 m-0">
+                                                                {{proposal_form.min_pediatric}}
+                                                            </div>
+                                                            <div class="col-lg-5 m-0">
+                                                                {{proposal_form.min_pediatric_age_type}}
+                                                            </div>
+
+                                                        </div>
+                                                        
+                                                    </div>
+    
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="text-center">Maximum Age*</label>
+                                                        <div class="row">
+                                                            <div class="col-lg-7 m-0">
+                                                                {{proposal_form.max_pediatric}}
+                                                            </div>
+                                                            <div class="col-lg-5 m-0">
+                                                                {{proposal_form.max_pediatric_age_type}}
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div style="display: none;">{{proposal_form.exclusion}}</div>
+                                            <br>
+                                            <label>10. Requested Exclusion Of Participants *</label>
+                                                
+                                            <div class="ml-2 mb-2 row">
+                                                {% for c in proposal_form.exclusion_chk %}
+                                                    <div class="col-md-3">    
+                                                        <label for="id_exclusion_chk_{{c}}">
+                                                            <input type="checkbox" name="exclusion_chk" value="{{c}}" class="" 
+                                                            id="id_exclusion_chk_{{c}}" {% if c in proposal_form.exclusion.value %} checked {% endif %}>
+                                                            {{c}}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                                <div class="col-md-3">    
+                                                    <label for="id_other_exclusion_chk">
+                                                        <input  type="checkbox" name="exclusion_chk" onclick="display_other_exclusion()" value="Other"  id="id_other_exclusion_chk"
+                                                                {% if 'Other' in proposal_form.exclusion.value %} checked {% endif %}>
+                                                        <b>Other</b> 
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div id="other_exclusion_div" class="col-lg-12" style="display: none;">
+                                            <div class="mb-3">
+                                                <label> Please specify:</label>
+                                                {{proposal_form.other_exclusion}}
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- Step 2 -->
+                                    <h6><i class="step-icon fa fa-pencil"></i>Other requirements</h6>
+                                    <fieldset>
+                                        <div class="col-lg-12">
+                                            <div style="display: none;">{{proposal_form.special_res}}</div>
+                                            <br>
+                                            <label style="display: inline;">11. Special Resource Requirements (check all that apply) * </label>
+                                            <div class="ml-2 mb-2 row"> 
+                                                {% for c in proposal_form.special_res_chk %} 
+                                                    <div class="col-md-3">
+                                                        <label for="id_special_res_chk_{{c.id}}">
+                                                            <input type="checkbox" name="special_res_chk" value="{{c.id}}" class="mb-1" 
+                                                            id="id_special_res_chk_{{c.id}}" {% if c.name in proposal_form.special_res.value %} checked  {% endif %}>
+                                                            {{c.name}}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                                <div class="col-md-3">
+                                                    <label for="id_other_special_chk">
+                                                        <input  type="checkbox" name="special_res_chk" onclick="display_other_special()" value="Other Special Resources" id="id_other_special_chk"
+                                                                {% if 'Other Special Resources' in proposal_form.special_res.value %} checked  {% endif %}>
+                                                        <b>Other Special Resources</b>
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                       
+                                        <div id="other_special_res_div" class="col-lg-12" style="display: none;">
+                                            <label ><b>Specify Other Requirements</b>: </label>
+                                            <br>
+                                            {{proposal_form.other_special_res}}
+                                        </div>
+                                        <br><br> 
+                                        
+                                        <div class="col-lg-6">
+                                            <label >12. INVESTIGATIONAL NEW DRUG (IND) / DEVICE (IDE): </label>
+                                            {{proposal_form.inves_new_drug_type}}
+                                        </div>
+                                        <div  id="fda_info_div" class="row"  >
+                                            <div class="col-lg-3">
+                                                <label style="display: inline;">FDA No</label>
+                                                {{proposal_form.fda_no}}
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label style="display: inline;">Name</label>
+                                                {{proposal_form.fda_name}}
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label style="display: inline;">FDA Sponsor</label>
+                                                {{proposal_form.fda_sponsor}}
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label style="display: inline;">FDA Holder</label>
+                                                {{proposal_form.fda_holder}}
+                                            </div>
+                                            
+                                        </div>
+                                        <br><br>
+                                        
+                                        <div class="row">
+                                           
+                                            <div class="col-lg-6">
+                                                <label >13. IONIZING RADIATION USE (X-rays, radioisotopes, etc): (check all that apply): </label>
+                                                {{proposal_form.ionizing_rad}}
+                                            </div>
+                                            
+                                            <div class="col-lg-6">
+                                                <label style="display: inline;">14. PROCEDURE USE: </label>
+                                                {{proposal_form.procedure_use}}
+                                            </div>
+
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                
+                                                <label style="display: inline;">15. MULTI-SITE COLLABORATION: </label>
+                                                {{proposal_form.multisite_collab}}
+
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <label style="display: inline;">16. FINANCIAL DISCLOSURE: </label>
+                                                {{proposal_form.financial_dis}}
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row col-lg-6">
+
+                                            <label style="display: inline;" >17. Conflict of Interest : </label>
+                                            <ul id="conflict_ul" class="col-lg-4 form-radio">
+                                                <li>
+                                                    <label for="conflict_yes">
+                                                        <input type="radio" id="conflict_yes" name="conflict_radio" value="Yes" {% if not proposal_form.conflict_int.value == "" %} checked {% endif %} class="form-radio" onclick="display_conflict()"  >
+                                                        Yes
+                                                    </label>
+                                            
+                                                </li>
+                                                <li>
+                                                    <label for="conflict_no">
+                                                        <input type="radio" id="conflict_no" name="conflict_radio" value="No" class="form-radio" onclick="display_conflict()" {% if  proposal_form.conflict_int.value == "" %} checked {% endif %}   >
+                                                        No
+                                                    </label>
+                                                </li>
+                                               
+                                            </ul>
+                                            <br>
+                                            <div class ="col-12" id= "conflict_div">
+                                                {{proposal_form.conflict_int}}
+                                            </div>
+                                           
+                                        </div>
+                                        
+                                        <br>
+
+                                        <div class="row">
+                                            <div class = "col-lg-6">
+                                                <label style="display: inline;">18. Collaborator Inistitute : </label>
+                                                {{proposal_form.collaborator_inis}}
+                                            </div>
+                                            <br>
+                                            <div class = "col-lg-6">
+                                                <label style="display: inline;">19. Funding Inistitute *: </label>
+                                                {{proposal_form.fund}}
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                    
+                                       
+                                    </fieldset>
+
+                                    <!-- Step 3 -->
+                                    <h6><i class="step-icon fa fa-tv"></i>Finish</h6>
+                                    <fieldset>
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-6">
+                                                <div class="text-center">
+                                                    <div class="mb-4">
+                                                        <i class="mdi mdi-check-circle-outline text-success display-4"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h3>Congradulations</h3>
+                                                        <h5>You have finished the updating form!</h5>
+                                                        <label for="id_send_notification">
+                                                            <input type="checkbox" name="send_notification" value="true" class="mb-1" id="id_send_notification">
+                                                            Send notification to IRB staffs about my update.
+                                                        </label>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                        <div class="text-center">
+                                            <div class="col-lg-4" style="margin: auto;">
+                                                <p class="text-muted">You can go back and re-check your inputs before submiting.</p>
+                                                <br>
+
+                                                <button type="button" onclick="valid()"  class=" col-lg-12 btn btn-success waves-effect waves-light" >
+                                                    Submit
+                                                </button>
+                                            </div>
+                                            <br><br>       
+                                        </div>
+                                    </fieldset>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- Form wizard with icon tabs section end -->
+</div>
+{% endblock %}
+{% block js %} 
+
+    
+<script src="{% static 'staff/vendors/js/extensions/jquery.steps.min.js' %}"></script>
+<script src="{% static 'staff/vendors/js/forms/validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'staff/js/scripts/forms/wizard-steps.min.js' %}"></script>
+
+
+<script>
+    
+
+    var study_types, study_pop, impaired, exclusion, special_res; 
+    
+    $(document).ready(function(){
+        study_types = document.getElementById('id_study_type');
+        study_pop = document.getElementById('id_study_pop');
+        impaired = document.getElementById('id_impaired')
+        exclusion = document.getElementById('id_exclusion')
+        special_res = document.getElementById('id_special_res')
+        display_other_study_type(); display_other_exclusion(); display_other_special();
+        display_fda_info(); display_conflict(); 
+       
+    });
+    
+    function display_other_study_type(){
+        if (document.getElementById('id_other_study_type_chk').checked )
+            document.getElementById("other_study_div").style['display'] = 'block';   
+        
+        else{
+            document.getElementById("other_study_div").style['display'] = 'none';
+            $("id_other_study").text("");
+        }
+        
+    }
+    
+
+    function display_other_exclusion(){
+        if (document.getElementById('id_other_exclusion_chk').checked)
+            document.getElementById("other_exclusion_div").style['display'] = 'block';
+        
+        else{
+            document.getElementById("other_exclusion_div").style['display'] = 'none';
+            $('#id_other_exclusion').val("")
+        }
+
+    }
+    
+    function display_other_special(){
+        if( document.getElementById('id_other_special_chk').checked)
+            {document.getElementById('other_special_res_div').style['display'] = 'block'}
+        
+        else
+            {document.getElementById('other_special_res_div').style['display'] = 'none';
+            $("#id_other_special_res").val('')
+        }
+
+    }
+
+
+    function pop_selected(){
+        // start pop study types
+        var s = ""
+        var study_type_chks = document.querySelectorAll('input[name="study_type_chk"]:checked');
+        for (var i = 0; i < study_type_chks.length; i++) 
+            {
+                s+= trim_start_and_end (study_type_chks[i].parentElement.textContent)+","}
+        study_types.value = s    
+        // end of pop study types
+
+        // start pop study pop
+        s=""
+        var study_pop_chks = document.querySelectorAll('input[name="study_pop_chk"]:checked')
+        for (var i = 0; i<study_pop_chks.length; i++)
+            s+= trim_start_and_end(study_pop_chks[i].parentElement.textContent)+","
+        study_pop.value = s
+        //  end of pop study pop
+        
+        //  start pop impaired
+        s=""
+        var impaired_chk = document.querySelectorAll('input[name="impaired_chk"]:checked')
+        for (var i = 0; i<impaired_chk.length; i++)
+            s+=impaired_chk[i].value+","
+        impaired.value = s
+        // end of pop impaired
+
+         //  start pop exclusion
+        s=""
+        var exclusion_chk = document.querySelectorAll('input[name="exclusion_chk"]:checked')
+        for (var i = 0; i<exclusion_chk.length; i++)
+            s+=trim_start_and_end(exclusion_chk[i].parentElement.textContent)+","
+        exclusion.value = s
+        // end of pop exclusion
+
+        //  start pop special res
+        s=""
+        var special_res_chk = document.querySelectorAll('input[name="special_res_chk"]:checked')
+        for (var i = 0; i<special_res_chk.length; i++)
+            s+=trim_start_and_end(special_res_chk[i].parentElement.textContent)+","
+        special_res.value = s
+        // end of pop special res
+
+            
+        
+    }
+
+    
+    function display_conflict(){
+        var x  =document.querySelector('input[name="conflict_radio"]:checked').value
+        if(x == 'Yes')
+            document.getElementById('conflict_div').style['display'] = 'block'
+        else{document.getElementById('conflict_div').style['display'] = 'none';
+             document.getElementById('id_conflict_int').value = "";}
+        
+    }
+
+
+    function display_fda_info(){
+        if(document.querySelector('input[name="inves_new_drug_type"]:checked').value == 'None'){
+                document.getElementById('fda_info_div').style['display'] ='none';
+                $("#id_fda_no").val(""); $("#id_fda_name").val("")  ; $("#id_fda_sponsor").val(""); $("id_fda_holder").val("")
+        }
+        else
+            document.getElementById('fda_info_div').style['display'] ='flex'
+
+    }
+
+
+    function valid(){
+        // fields to check for value = "", 
+            // 1. textarea (title)
+            // 2. Inputs i.e filled by text or from check box:-
+            //      (study_type, num_part, study_pop, impaired, exclusion, special_res, funding_ins )
+             
+            // 3. select (department, proposal_type) 
+            if(confirm('Are you sure you want to update this protocol?')){
+                pop_selected() 
+                var error_message ="", m = "", x =0;
+                var ta =document.querySelectorAll('textarea:required')
+                for (var i=0;i<ta.length; i++){
+                    if(ta[i].value=="")
+                        { x++; error_message+=ta[i].title+", "; }
+                }
+                var r = document.querySelectorAll('input:required')
+                
+                for (var i=0;i<r.length; i++){
+                    if(r[i].value == "")
+                        {x++; error_message+=r[i].title+', ';}
+                }
+                
+                if (x==0)
+                $('form').submit();  
+
+                else {
+                    alert(x.toString()+" "+"Unfilled inputs detected! Please re-check your inputs")
+                    var m_div =  '<div class="alert alert-icon-right alert-danger alert-dismissible col-md-12" role="alert">\
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+                                <span aria-hidden="true">×</span>\
+                            </button>\
+                                <span style="color:black;">'+"Please re-check the following fields:- "+error_message+'</span><a href="#" class="alert-link"></a>\
+                        </div>'
+            
+                    var x = document.getElementById('id_messages_area');
+                    x.innerHTML = m_div
+                }
+            }
+  
+    }
+   
+    function trim_start_and_end(s){
+        s =s.trimStart();
+        return s.trimEnd()
+    }
+
+</script>
+
+{% endblock %}

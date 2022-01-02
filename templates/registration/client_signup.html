@@ -1,0 +1,187 @@
+{% extends 'registration/reg_base.html' %} 
+{% load static %} 
+{% block style %}
+{% endblock %}
+{% block content %} 
+<section class="row flexbox-container">
+    <div class="col-12 d-flex align-items-center justify-content-center">
+        <div class=" col-9 box-shadow-2 p-0">
+            <div class="card border-grey border-lighten-3 px-1 py-1 m-0 round">
+                <div class="card-header border-0 pb-0">
+                    <h3 class="card-subtitle line-on-side text-muted text-center pt-2"><span>Investigator Registration</span></h3>
+                </div>
+                <div class="card-content">
+                
+                    <div class="card-body ">
+                        <form autocomplete="off" id="accountCreationForm" class="form-horizontal " action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row"> 
+                                <div class="col-7 card  "  >
+                                    <h4 class="text-center">Personl Info</h4>
+                                    <hr>
+                                    <div class="card-body ">
+                                        <p class="text-muted">Your Title</p>
+                                        <fieldset class="form-group position-relative has-icon-left ">
+                                            {{form.title}}
+                                            <div class="form-control-position">
+                                                <i class="fa fa-graduation-cap"></i>
+                                            </div>
+                                        </fieldset>
+                                        <span class="text-danger">{{form.errors.title}}</span>
+                                        <br>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p class="text-muted"><label for="id_first_name">First Name *</label></p>
+                                                <fieldset class="form-group position-relative has-icon-left">
+                                                    {{form.first_name}}
+                                                    <div class="form-control-position">
+                                                        <i class="fa fa-user"></i>
+                                                    </div>
+                                                </fieldset>
+                                                <span class="text-danger ml-0">{{form.errors.first_name}}</span>
+                                                
+                                            </div>
+
+                                            <div class="col-6">
+                                                <p class="text-muted"><label>Last Name</label></p>
+                                                <fieldset class="form-group position-relative has-icon-left">
+                                                    {{form.last_name}}
+                                                    <div class="form-control-position">
+                                                        <i class="fa fa-user"></i>
+                                                    </div>
+                                                </fieldset>
+                                                <span class="text-danger ml-0"> {{form.errors.last_name}}</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        
+                                        <div class="row">
+                                            <div class = "col-6">
+                                                <label class="text-muted" for="id_phone_number">Phone Number *</label>
+                                                <fieldset class="form-group position-relative has-icon-left">
+                                                    {{form.phone_number}}
+                                                    <div class="form-control-position">
+                                                        <i class="fa fa-phone"></i>
+                                                    </div>
+                                                </fieldset>
+                                                <span class="text-danger ml-0">{{form.errors.phone_numer}} </span>
+                                                
+                                            </div>
+
+                                            <div class="col-6 form-group ">
+                                                <lable for="id_profile_image" class="text-muted mb-5">Upload Image (optional)</lable>
+                                                
+                                                <div class="custom-file">
+                                                    {{form.profile_image}}
+                                                    <label class="custom-file-label" for="id_profile_image">Choose Image</label>
+                                                    
+                                               </div>
+                                               <span class="text-danger">{{form.errors.profile_image}}</span>
+                                            </div>
+                                        </div>
+                                        <br>
+
+                                        <label class="text-muted" for="id_sex">Select Sex *</label>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            {{form.sex}}
+                                            
+                                        </fieldset>
+                                        <span class="text-danger">{{form.errors.sex}}</span>
+                                               
+                                    </div>
+                                </div>
+
+                                <div class = "col-5 card " style="border-left: 1px solid grey ;" >
+                                    <h4 class="text-center">Sysem Cridentials</h4>
+                                    <hr>
+                                    <div class = "card-body">
+                                        <label for="id_email" class="text-muted">Email *</label>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            {{form.email}} 
+                                            <div class="form-control-position">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <span class="text-danger">{{form.errors.email}}</span>
+                                        
+                                        </fieldset>
+                                        
+                                        <!-- <br> -->
+                                        <lable for="id_password1"> Password *</label>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            {{form.password1}}
+                                            <div class="form-control-position">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <span class="text-danger">{{form.errors.password}}</span>
+                                        
+                                        </fieldset>
+                                       
+                                        <lable for="id_password2"> Password Comfirmation *</label>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                        {{form.password2}}
+                                            <div class="form-control-position">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <span class="text-danger">{{form.errors.password2}}</span>
+
+                                        </fieldset>
+                                        <div class="col-sm-12 col-12 mb-2 text-center text-sm-left pr-0">
+                                            <fieldset>
+                                                <input id="id_agree_chkbox" name="agree_chkbox"  type="checkbox" class="chk-remember">
+                                                <label class="ml-1"> I agree all statements in </label>
+                                                <a href="#" class="card-link" data-toggle = "modal" data-target = "#modal_terms"> Terms of service </a>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-10" style="margin: auto;">
+                                    <button id="reg_btn"  type="submit" class="btn btn-outline-success btn-block">
+                                        <h4>Register</h4>
+                                    </button>
+                                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-info  btn-block mt-2"><i
+                                        class="feather icon-unlock"></i> Login
+                                </a>
+                                </div>
+                            </div>
+                            
+                        </form>
+                        
+
+                    </div>
+                </div>
+            </div>
+            <!-- start modal -->
+            <div class="modal fade text-left" id="modal_terms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title" >Terms and Conditions</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <h5>When you register as a staff/ member, the following terms and conditions will hold...</h5>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard 
+                        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with 
+                        desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <button id="modal_agree_btn" onclick="agree_disagree()" type="button" data-dismiss="modal" class="btn btn-outline-primary">I agree</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- end modal -->
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block js %}
+    
+{% endblock %}

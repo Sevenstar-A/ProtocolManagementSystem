@@ -1,0 +1,168 @@
+{% extends 'blacklion/base.html' %}
+{% load static %}
+{% block transparent-header %}{% endblock %}
+{%block home %} class="active " {% endblock %}
+{% block content %}
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex justify-cntent-center align-items-center">
+    <div id="heroCarousel" class="container carousel carousel-fade" data-bs-ride="carousel" data-bs-interval="20000">
+
+      <!-- Slide 1 -->
+      <div class="carousel-item active">
+        <div class="carousel-container">
+          <h2 class="animate__animated animate__fadeInDown">Welcome to <span>Addis Ababa University College of Health Sciences Institutional Review Board</span></h2>
+          <p class="animate__animated animate__fadeInUp">The CHS-IRB is one of the first IRBs in Africa that received international recognition from WHO/SIDCER/FERCAP.</p>
+          <a href="{% url 'about' %}" class="btn-get-started animate__animated animate__fadeInUp">Read More</a>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-item">
+        <div class="carousel-container">
+          <h2 class="animate__animated animate__fadeInDown">Background of A.A University CHS IRB</h2>
+          <p class="animate__animated animate__fadeInUp">The College of Health Sciences-Institutional review Board (CHS-IRB), has a mission in safeguarding the rights, safety 
+                                      and wellbeing of all human participants involved in research. It facilitatesthe conduct of ethically sound research of the highest qualityfor advancement of scientific knowledge.</p>
+          <a href="{% url 'about' %}" class="btn-get-started animate__animated animate__fadeInUp">Read More</a>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <!-- <div class="carousel-item">
+        <div class="carousel-container">
+          <h2 class="animate__animated animate__fadeInDown">Sequi ea ut et est quaerat</h2>
+          <p class="animate__animated animate__fadeInUp">Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea voluptatem. Esse doloremque accusamus repellendus deleniti vel. Minus et tempore modi architecto.</p>
+          <a href="" class="btn-get-started animate__animated animate__fadeInUp">Read More</a>
+        </div>
+      </div> -->
+
+      <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bx bx-chevron-left" aria-hidden="true"></span>
+      </a>
+
+      <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon bx bx-chevron-right" aria-hidden="true"></span>
+      </a>
+
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+  
+
+    <!-- ======= Why Us Section ======= -->
+    <section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
+      <div class="container" style="margin-top: 20px;">
+        <div class="section-title" style="margin-top: 20px;">
+          <h2 style="margin-top: 20px;">AAU CHS IRB</h2>
+          <p>About our Mission and Vision</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 video-box">
+            <img src="{% static 'customer/img/building1.jpg' %}" style="height:350px"  class="img-fluid" alt="">
+            <!-- <a href="https://www.youtube.com/watch?v=jDDaplaOz7Q" target="_blank" class="venobox play-btn mb-4" data-vbtype="video" data-autoplay="true"></a> -->
+          </div>
+
+          <div class="col-lg-6 d-flex flex-column justify-content-center p-5">
+
+            <div class="icon-box">
+              <div class="icon"><i  class="bx bx-target-lock"></i></div>
+              <h4 class="title"><a href="">Our Mission</a></h4>
+              <p class="description">
+                The CHS has the mission, within a scholarly environment, of providing high quality and regionally relevant health sciences training,
+                 research and community services at both undergraduate and postgraduate levels. It is engaged in producing ethical, knowledgeable, 
+                 competent, and caring healthcare professionals who will become leaders in their respective disciplines.
+              </p>
+            
+              </div>
+
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-chalkboard"></i></div>
+              <h4 class="title"><a href="">Our Vision</a></h4>
+              <p class="description">
+                The College of Health Sciences envisions to become a prominent African Health Sciences University
+                dedicated to excellence in teaching, research and community health services.
+              </p>
+            
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Why Us Section -->
+
+    <!-- ======= Features Section ======= -->
+    <section class="features">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Features</h2>
+        </div>
+
+        <div class="row" data-aos="fade-up">
+          <div class="col-md-5">
+            <img src="{% static 'customer/img/features-3.svg' %}" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 pt-4">
+            <h3>About Us</h3>
+            <p class="fst-italic">
+              The College of Health Sciences-Institutional review Board (CHS-IRB), has a mission in safeguarding the rights, safety and 
+              wellbeing of all human participants involved in research. It facilitatesthe conduct of ethically sound research of the
+              highest qualityfor advancement of scientific knowledge.  
+            </p>
+            <ul>
+              <li><a href="{% url 'about' %}" class="btn-get-started animate__animated animate__fadeInUp">Read More</a></li>
+             
+            </ul>
+          </div>
+        </div>
+
+        <div class="row" data-aos="fade-up">
+          <div class="col-md-5 order-1 order-md-2">
+            <img src="{% static 'customer/img/features-1.svg' %}" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 pt-5 order-2 order-md-1">
+            <h3>Our Services</h3>
+            <p class="fst-italic">
+              We review and approve the research proposals that are submitted by the investigators (Staff or postgraduate students)
+              before initiating any research activities. 
+            </p>
+            <p>
+              Inorder to facilitate our services we have developed a web based system to let investigators ..... some description about 
+              our services  Inorder to facilitate our services we have developed a web based system to let investigators  some description about 
+              our services Inorder to facilitate our services we have developed a web based system to let investigators  some description about 
+              our services
+            </p>
+            <div class="carousel-container">
+            <a href="{% url 'about' %}" class="btn-get-started animate__animated animate__fadeInUp">Read More</a>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row" data-aos="fade-up">
+          <div class="col-md-5">
+            <img src="{% static 'customer/img/team.jpg' %}" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 pt-5 pb-3">
+            <h3>Team</h3>
+            <p> We have highly experianced members with lots of years of proposal reviewing experiance. Our memebers have the following key features...</p>
+            <ul>
+              <li><i class="bi bi-check"></i> Specialized on specific decipline</li>
+              <li><i class="bi bi-check"></i> Most of them from medical background </li>
+              <li><i class="bi bi-check"></i> From different universities in Ethiopia and abroad.</li>
+            </ul>
+          </div>
+        </div>
+
+       
+
+      </div>
+    </section><!-- End Features Section -->
+
+  
+  </main><!-- End #main -->
+ {% endblock %}
+ 

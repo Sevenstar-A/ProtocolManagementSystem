@@ -1,0 +1,361 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% load core_templatetags %}
+{% block title %} Manage Renewal {% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'renewal:renewal_list' %}"> Renewal List </a></li> 
+<li class="breadcrumb-item active"><a href=""> Renewal Management Page</a></li> 
+{% endblock %}
+
+{% block content  %} 
+
+        <!-- BEGIN: Content-->
+        <div class="content-overlay"></div>
+            <div class="content-wrapper">
+              
+              <div class="content-body">
+                  <section >
+                      <div class="row">
+                          <!-- left menu section -->
+                          <div class="col-md-3 mb-2 py-2 round bg-white" >
+                              <h4><strong>Management Tabs</strong></h4>
+                              <ul class="nav nav-pills flex-column mt-md-0 mt-1">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex active" id="renewal-general-tab" data-toggle="pill"
+                                            href="#general_info" aria-expanded="true">
+                                            <i class="fa fa-globe"></i>
+                                            <h5>General</h5>
+                                        </a>
+                                    </li>
+                                    {% if not is_creator %}
+
+                                        {% if 'irb.can_list_renewal' in irb_perms %} 
+                                            <!-- special note -->
+                                            <li class="nav-item">
+                                                <a class="nav-link d-flex " id="special-note" data-toggle="pill"
+                                                    href="#special_note_div" aria-expanded="true">
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                    <h5>Special Note</h5>
+                                                </a>
+                                            </li>
+                                            <!-- end of special note -->
+                                        {% endif %} 
+
+                                        {% if 'irb.can_accept_renewal' in irb_perms %}
+                                            <!-- start of acceptance page -->
+                                            <li class="nav-item">
+                                                {% if renewal.status == 'Pending' %}
+                                                <a class="nav-link d-flex" id="acceptance_page_pill" onclick="return confirm('Are you sure you want to accept this renewal request?')" 
+                                                    href="{% url 'renewal:accept_renewal' pk=renewal.id %}" aria-expanded="false">
+                                                {% else %} 
+                                                <a class="nav-link d-flex" title="Can't Accept on '{{renewal.status}}' Status!"
+                                                    aria-expanded="false">
+                                                {% endif %}
+                                                    <i class="fa fa-check"></i>
+                                                    <h5>Accept Request</h5>
+                                                </a>
+                                            </li>
+                                            <!-- end of acceptance page -->
+
+                                            <!-- start to pending -->
+                                            <li class="nav-item">
+                                                {% if renewal.status == 'Pending' or renewal.status == 'Rejected' %}
+                                                <a class="nav-link d-flex"  title="Cannot revert to 'Pending' when renewal status is on '{{renewal.status}}' status!" aria-expanded="true">
+                                                    <i class="fa fa-exclamation yellow"></i>
+                                                {% else %}
+                                                <a class="nav-link d-flex"  onclick = "return confirm('Are you sure you want to revert the status to Pending?')" 
+                                                    href="{% url 'renewal:to_pending' pk=renewal.id %}" aria-expanded="true">
+                                                    <i class="fa fa-exclamation "></i>
+                                                {% endif %}
+                                                    <h5>Change Status to Pending</h5>
+                                                </a>
+                                            </li>
+                                            <!-- end to pending -->
+        
+                                            <!-- start correction comment -->
+                                            <li class="nav-item">
+                                                {% if renewal.status != "Approved" and renewal.status != "Rejected" %}
+                                                    <a class="nav-link d-flex" id="correction_comment_pill" data-toggle="pill"
+                                                        href="#correction_comment" aria-expanded="false">
+                                                {% else %} 
+                                                    <a  class="nav-link d-flex" title="Can't send correction comment at '{{renewal.status}}' status!">
+        
+                                                {% endif %}
+                                                    <i class="fa fa-envelope"></i>
+                                                    <h5>Send Correction Comment</h5>
+                                                </a>
+                                            </li>
+                                            <!-- end correction comment -->
+
+                                        {% endif %}
+
+                                            <!-- Start Assigning Reviewers -->
+                                        {% if 'irb.can_assign_renewal_reviewers' in irb_perms %} 
+
+                                        <!-- start assigning reviewers -->
+                                            <li class="nav-item ">
+                                                {% if renewal.status == 'Submited' or renewal.status == 'On Review' or renewal.status == 'Reviewed' %}
+                                                    <a class="nav-link d-flex " href="{% url 'renewal:assign_reviewers' pk=renewal.id %}">
+                                                {% else %} 
+
+                                                    <a class="nav-link d-flex " title="Can't assign reviewers at '{{renewal.status}}' Status!" >        
+                                                {% endif %}
+                                                <i class="fa fa-users"></i>
+                                                    <h5>Assign Reviewers</h5>
+                                                </a>
+                                            </li>
+                                        <!-- end assigning reviewers -->
+
+                                        <!-- start reviewers assassment and IRB Comment -->
+                                            <li class="nav-item">
+                                                <a class="nav-link d-flex"  
+                                                    href="{% url 'renewal:list_assessment_reviews' pk=renewal.id %}">
+                                                    <i class="fa fa-list-alt"></i>
+                                                    <h5>Reviewers Response</h5>
+                                                </a>
+                                            </li>
+                                        <!-- end reviewers assassment and IRB Comment -->
+                                        {% endif %}
+                                            
+                                        
+                                       
+                                        {% if 'irb.can_approve_renewal'  in irb_perms %}
+                                        <!-- start Approving -->
+                                        <!-- if has not been approved status should be reviewed,
+                                            else  status could b either submitted, or review or reviewed -->
+
+                                            {% if app_code == 1  %} 
+                                                <li class="nav-item">
+                                                    <a class="nav-link d-flex" id="account-pill-notifications" 
+                                                        href="{% url 'renewal:approve_renewal' pk=renewal.id %}"aria-expanded="false">
+                                                        <i class="fa fa-check"></i>
+                                                        <h5>Approve Amendent Request</h5>
+                                                    </a>
+                                                </li>
+                                            {% elif app_code == 3 %}
+                                                <li class="nav-item">
+                                                    <a class="nav-link d-flex" id="account-pill-notifications" 
+                                                        href="{% url 'renewal:approve_renewal' pk=renewal.id %}"aria-expanded="false">
+                                                        <i class="fa fa-check"></i>
+                                                        <h5>Update Approval Letter</h5>
+                                                    </a>
+                                                </li>
+                                            {% elif app_code in err_codes %}
+                                                <li class="nav-item">
+                                                    <a class="nav-link d-flex" title="{{app_msg}}" aria-expanded="false">
+                                                        <i class="fa fa-check"></i>
+                                                        <h5>Approve Protocol</h5>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            <!-- End of Approving -->
+
+                                            <!-- Start Reject -->
+                                            <li class="nav-item">
+                                                {% if renewal.status != 'Rejected'  %}
+                                                    <a class="nav-link d-flex" id="account-pill-notifications" data-toggle="pill"
+                                                    href="#reject_tab" aria-expanded="True">
+                                                {% else %}
+                                                    <a class="nav-link d-flex" title="Already Rejected!" 
+                                                    aria-expanded="false">
+                                                {% endif %}
+                                                    <i class="fa fa-times red"></i>
+                                                    <h5>Reject Renewal Request</h5>
+                                                    </a>
+                                            </li>
+                                            <!-- End Rejecting -->
+                                        {% endif %}
+
+
+                                    {% else %} 
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex" aria-expanded="false">
+                                                <i class="feather icon-lock"></i>
+                                                <h5>You can't manage this protocol since you are the creator!</h5>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                              </ul>
+                          </div>
+                          <!-- right content section -->
+                            <div class="col-md-9">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="tab-content">
+                                                {% include 'renewal/partial_pages/general_info.html' %}
+
+                                                <!-- Send correction comment  -->
+                                                <div role="tabpanel" class="tab-pane " id="correction_comment" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Protocol Number : '{{renewal.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{renewal.status}}</strong></h5>
+                                                            
+                                                            <div>
+                                                                <div class="card-body">
+                                                                    <div class="col-lg-12">
+                                                                        <h5 class="col-12">Enter your correction comment</h5>
+                                                                        <br>
+                                                                        {{correction_form.correction_comment}}
+                                                                        <p class="text-danger">{{correction_form.errors.correction_comment}}</p>
+                                                                    </div> 
+                                                                </div>
+
+                                                                <div class="card-footer col-md-12">
+                                                                    <fieldset class="form-group" style="float:right" >
+                                                                        <button type="button" onclick="send_comment()"   class="btn btn-success px-3 " >
+                                                                            Send Comment
+                                                                        </button>
+                                                                    </fieldset>
+                                                                    
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of send correction comment -->
+
+
+                                                <!-- Update special note  -->
+                                                <div role="tabpanel" class="tab-pane " id="special_note_div" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Protocol Number : '{{renewal.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{renewal.status}}</strong></h5>
+                                                            
+                                                            <div>
+                                                                <div class="card-body">
+                                                                    <div class="col-lg-12">
+                                                                        <h5 class="col-12">Special Note on this renewal</h5>
+                                                                        <br>
+                                                                        {{note_form.special_note}}
+                                                                        <p class="text-danger">{{note_form.errors.special_note}}</p>
+                                                                    </div> 
+                                                                </div>
+                                                               
+                                                                <div class="card-footer col-md-12">
+                                                                    <fieldset class="form-group" style="float:right" >
+                                                                        <button type="button" onclick="update_special_note()"   class="btn btn-success px-3 " >
+                                                                            Update Note
+                                                                        </button>
+                                                                    </fieldset>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of update special note -->
+
+                                                 <!-- start rejecting -->
+                                                 <div role="tabpanel" class="tab-pane " id="reject_tab" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Protocol Number : '{{renewal.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{renewal.status}}</strong></h5>
+                                                            <form action="{% url 'renewal:reject_renewal' pk=renewal.id %}" method="POST" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <div>
+                                                                    <div class="card-body">
+                                                                        <div class="col-lg-12">
+                                                                            <h5 class="col-12">Please enter rejection comment.</h5>
+                                                                            <br>
+                                                                            {{rejection_form.rejection_comment}}
+                                                                            {{rejection_form.errors.rejection_comment}}
+                                                                        </div> 
+                                                                    </div>
+
+                                                                    <div class="card-footer col-md-12">
+                                                                        <fieldset class="form-group" style="float:right" >
+                                                                            <button type="submit" onclick="return confirm('Are you sure you want to reject this protocol?')"   class="btn btn-warning px-3 " >
+                                                                                Reject renewal
+                                                                            </button>
+                                                                        </fieldset>
+                                                                        
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of rejecting -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                  </section>
+                
+              </div>
+            </div>
+          <!-- END: Content-->
+{% endblock %}
+
+{% block js %} 
+<script>
+    function send_comment() {
+        try{
+            if(confirm("Send Comment Now..."))
+            var comment = document.getElementById('id_correction_comment').value // id_correction_comment is from a form
+            var r_id = "{{renewal.id}}"
+            if( comment != ''){
+                fetch("{% url 'renewal:correction_comment'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'comment': comment, 'r_id': r_id})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully sent your comment!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some comment on the comment area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+        }
+
+    
+    function update_special_note() {
+        try{
+            if(confirm("Updating Special Note..."))
+            var note = document.getElementById('id_special_note').value
+            
+            var r_id = "{{renewal.id}}"
+            if( note != ''){
+                fetch("{% url 'renewal:update_special_note'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'note': note, 'r_id': r_id})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully updated note!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some note on the text area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+            
+        }
+
+    
+</script>
+{% endblock %}

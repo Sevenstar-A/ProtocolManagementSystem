@@ -1,0 +1,381 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% load core_templatetags %}
+
+{% block title %} Manage Proposal{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'proposal:proposal_list' %}"> Proposals List </a></li> 
+<li class="breadcrumb-item active"><a href=""> Proposal Management Page</a></li> 
+{% endblock %}
+
+{% block content  %} 
+
+        <!-- BEGIN: Content-->
+        <div class="content-overlay"></div>
+            <div class="content-wrapper">
+              
+              <div class="content-body">
+                <!-- account setting page start -->
+                  <section id="page-account-settings">
+                      <div class="row">
+                          <!-- left menu section -->
+                          <div class="col-md-3 mb-2 py-2 round" style="background-color: #dedee3;">
+                              <h4><strong>Management Tabs</strong></h4>
+                              <ul class="nav nav-pills flex-column mt-md-0 mt-1">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex active" id="account-pill-general" data-toggle="pill"
+                                            href="#general_info" aria-expanded="true">
+                                            <i class="fa fa-globe"></i>
+                                            General
+                                        </a>
+                                    </li>
+                                    {% if user != prop.created_by %}
+
+                                        {% if 'irb.can_list_proposal' in irb_perms %} 
+
+                                            <li class="nav-item">
+                                                <a class="nav-link d-flex " id="account-pill-general" data-toggle="pill"
+                                                    href="#special_note_div" aria-expanded="true">
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                
+                                                    Special Note
+                                                </a>
+
+                                            </li>
+                                            <li class="nav-item">
+                                                {% if prop.status == 'Pending' %}
+                                                <a class="nav-link d-flex" id="acceptance_page_pill" data-toggle="pill" href="#acceptance_page"
+                                                    aria-expanded="false">
+                                                {% else %} 
+                                                <a class="nav-link d-flex" title="Can't Accept on '{{prop.status}}' Status!"
+                                                    aria-expanded="false">
+                                                {% endif %}
+                                                    <i class="fa fa-check"></i>
+                                                    Acceptance Form
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                {% if prop.status == 'Pending' %}
+                                                <a class="nav-link d-flex"  title="Already on Pending!" aria-expanded="true">
+                                                    <i class="fa fa-exclamation yellow"></i>
+                                                {% else %}
+                                                <a class="nav-link d-flex"  onclick = "return confirm('Are you sure you want to revert the status to Pending?')" 
+                                                    href="{% url 'proposal:to_pending' pk=prop.id %}" aria-expanded="true">
+                                                    <i class="fa fa-exclamation "></i>
+                                                {% endif %}
+                                                    Change Status to Pending
+                                                </a>
+                                            </li>
+                                            <!-- end to pending -->
+        
+                                            <li class="nav-item">
+                                                {% if prop.status != "Approved" and prop.status != "Rejected" %}
+                                                    <a class="nav-link d-flex" id="correction_comment_pill" data-toggle="pill"
+                                                        href="#correction_comment" aria-expanded="false">
+                                                {% else %} 
+                                                    <a  class="nav-link d-flex" title="Can't send correction comment at '{{prop.status}}' status!">
+        
+                                                {% endif %}
+                                                    <i class="fa fa-envelope"></i>
+                                                    Send Correction Comment
+                                                </a>
+                                            </li>
+
+                                        {% endif %}
+                                            <!-- Start Assigning Reviewers -->
+                                        
+                                        {% if 'irb.can_assign_proposal_reviewers' in irb_perms %} 
+                                            <li class="nav-item ">
+                                                {% if prop.status == 'Submited' or prop.status == 'On Review' or prop.status == 'Reviewed' %}
+                                                    <a class="nav-link d-flex " href="{% url 'proposal:assign_reviewers' pk=prop.id %}">
+                                                        
+                                                {% else %} 
+                                                    <a class="nav-link d-flex " title="Can't assign reviewers at '{{prop.status}}' Status!" >
+                                                        
+                                                {% endif %}
+                                                <i class="fa fa-users"></i>
+                                                    Assign Reviewers
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link d-flex"  
+                                                    href="{% url 'proposal:list_assessment_reviews' pk=prop.id %}">
+                                                    <i class="fa fa-list-alt"></i>
+                                                    IRB Comments List
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                            <!-- End Assigning Reviewers -->
+
+                                        
+                                       
+                                        {% if 'irb.can_approve_proposal'  in irb_perms %}
+                                        <!-- start Approving -->
+                                            {% if not prop.has_been_approved %}
+                                                <li class="nav-item">
+                                                    {% if prop.latest_version_num == 1 %} 
+                                                        {% if  prop.status == 'Reviewed'  %}
+                                                            <a class="nav-link d-flex" id="account-pill-notifications" 
+                                                            href="{% url 'proposal:approve_proposal' pk=prop.id %}"aria-expanded="false">
+                                                        {% else%}
+                                                            <a class="nav-link d-flex" title="Can't be approved at '{{prop.status}}' Status for the first time! It has to be on 'Reviewed' Status!" 
+                                                            aria-expanded="false">
+                                                        {% endif %}
+
+                                                    {% else %} 
+                                                        {% if prop.status == "Submited" or prop.status == "On Review" or prop.status == "Reviewed" %}
+                                                            <a class="nav-link d-flex" id="account-pill-notifications" 
+                                                                href="{% url 'proposal:approve_proposal' pk=prop.id %}"aria-expanded="false">
+                                                        {% else %}
+                                                            <a class="nav-link d-flex" title="Can't be approved at '{{prop.status}}' Status! It has to be either 'Submited', 'On Review' or 'Reviewed'!" 
+                                                                aria-expanded="false">
+                                                        {% endif %}
+                                                    {% endif %}
+
+                                                    <i class="fa fa-check"></i>
+                                                    Approve Protocol
+
+                                                    </a>
+
+                                                </li>
+
+                                            {% else %} 
+                                                <li class="nav-item">
+                                                    {% if not prop.status == "Rejected"  %}
+                                                        <a class="nav-link d-flex" id="account-pill-notifications" 
+                                                        href="{% url 'proposal:approve_proposal' pk=prop.id %}"aria-expanded="false">
+                                                        
+                                                    {% else %}
+                                                        <a class="nav-link d-flex" title="Can't be approved at '{{prop.status}}' Status!" 
+                                                        aria-expanded="false">
+                                                    {% endif %}
+                                                        <i class="fa fa-check"></i>
+                                                        Update Approval Letter
+                                                        </a>
+                                                </li>    
+                                                
+                                            {% endif %}
+                                            <!-- End of Approving -->
+
+                                            <!-- Start Reject -->
+                                            <li class="nav-item">
+                                                {% if prop.status != 'Rejected'  %}
+                                                    <a class="nav-link d-flex" id="account-pill-notifications" data-toggle="pill"
+                                                    href="#reject_tab" aria-expanded="True"> <i class="fa fa-times red"></i>
+                                                    Reject Protocol
+                                                    </a>
+                                                {% else %}
+                                                <a class="nav-link d-flex" id="account-pill-notifications" data-toggle="pill"
+                                                    href="#reject_tab" aria-expanded="True"> <i class="fa fa-times red"></i>
+                                                    Update Rejection
+                                                </a>
+                                                {% endif %}
+                                                    
+                                            </li>
+                                            <!-- End Rejecting -->
+                                        {% endif %}
+
+
+                                    {% else %} 
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex" aria-expanded="false">
+                                                <i class="feather icon-lock"></i>
+                                                You can't manage this protocol since you are the creator!
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                              </ul>
+                          </div>
+                          <!-- right content section -->
+                            <div class="col-md-9">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="tab-content">
+                                                {% include "proposal/partial_pages/general_info.html" %}
+
+                                                {% if prop.status == 'Pending' %}
+                                                    {% include "proposal/partial_pages/acceptance_form.html" %}
+                                                {% endif %}
+
+                                                <!-- Send correction comment  -->
+                                                <div role="tabpanel" class="tab-pane " id="correction_comment" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Proposal Information : '{{prop.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{prop.status}}</strong></h5>
+                                                            <h5> Latest Version :- <strong>{{prop.latest_version_num}}</strong></h5>
+                                                            
+                                                            <div>
+                                                                <div class="card-body">
+                                                                    <div class="col-lg-12">
+                                                                        <h5 class="col-12">Enter your correction comment</h5>
+                                                                        <br>
+                                                                        {{correction_form.correction_comment}}
+                                                                        <p class="text-danger">{{correction_form.errors.correction_comment}}</p>
+                                                                    </div> 
+                                                                </div>
+
+                                                                <div class="card-footer col-md-12">
+                                                                    <fieldset class="form-group" style="float:right" >
+                                                                        <button type="button" onclick="send_comment()"   class="btn btn-success px-3 " >
+                                                                            Send Comment
+                                                                        </button>
+                                                                    </fieldset>
+                                                                    
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of send correction comment -->
+
+
+                                                <!-- Update special note  -->
+                                                <div role="tabpanel" class="tab-pane " id="special_note_div" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Proposal Information : '{{prop.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{prop.status}}</strong></h5>
+                                                            <h5> Latest Version :- <strong>{{prop.latest_version_num}}</strong></h5>
+                                                            
+                                                            <div>
+                                                                <div class="card-body">
+                                                                    <div class="col-lg-12">
+                                                                        <h5 class="col-12">Special Note on this protocol</h5>
+                                                                        <br>
+                                                                        {{note_form.special_note}}
+                                                                        <p class="text-danger">{{note_form.errors.special_note}}</p>
+                                                                    </div> 
+                                                                </div>
+                                                               
+
+                                                                <div class="card-footer col-md-12">
+                                                                    <fieldset class="form-group" style="float:right" >
+                                                                        <button type="button" onclick="update_special_note()"   class="btn btn-success px-3 " >
+                                                                            Update Note
+                                                                        </button>
+                                                                    </fieldset>
+                                                                    
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of update special note -->
+
+                                                 <!-- start rejecting -->
+                                                 <div role="tabpanel" class="tab-pane " id="reject_tab" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Proposal Information : '{{prop.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{prop.status}}</strong></h5>
+                                                            <h5> Latest Version :- <strong>{{prop.latest_version_num}}</strong></h5>
+                                                            <form action="{% url 'proposal:reject_proposal' pk=prop.id %}" method="POST" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <div>
+                                                                    <div class="card-body">
+                                                                        <div class="col-lg-12">
+                                                                            <h5 class="col-12">Please enter rejection comment.</h5>
+                                                                            <br>
+                                                                            {{rejection_form.rejection_comment}}
+                                                                            {{rejection_form.errors.rejection_comment}}
+                                                                        </div> 
+                                                                    </div>
+
+                                                                    <div class="card-footer col-md-12">
+                                                                        <fieldset class="form-group" style="float:right" >
+                                                                            <button type="submit" onclick="return confirm('Are you sure you want to reject this protocol?')"   class="btn btn-warning px-3 " >
+                                                                                Reject proposal
+                                                                            </button>
+                                                                        </fieldset>
+                                                                        
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of rejecting -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                  </section>
+                <!-- account setting page end -->
+              </div>
+            </div>
+          <!-- END: Content-->
+{% endblock %}
+
+{% block js %} 
+<script>
+    function send_comment() {
+        try{
+            if(confirm("Send Comment Now..."))
+            var comment = document.getElementById('id_correction_comment').value
+            var p_id = "{{prop.id}}"
+            if( comment != ''){
+                fetch("{% url 'proposal:correction_comment'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'comment': comment, 'p_id': p_id})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully sent your comment!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some comment on the comment area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+            
+        }
+
+    
+    function update_special_note() {
+        try{
+            if(confirm("Updating Special Note..."))
+            var note = document.getElementById('id_special_note').value
+            
+            var p_id = "{{prop.id}}"
+            if( note != ''){
+                fetch("{% url 'proposal:update_special_note'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'note': note, 'p_id': p_id})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully updated note!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some note on the text area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+            
+        }
+
+    
+</script>
+{% endblock %}

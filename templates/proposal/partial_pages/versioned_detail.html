@@ -1,0 +1,118 @@
+{% load static %}
+{% load core_templatetags %}
+
+<div role="tabpanel" class="tab-pane " id="ver_{{cur_ver}}_panel" aria-labelledby="ver_{{cur_ver}}_pill" aria-expanded="true">
+    <div class="card-body" id = "card_body">
+            <div class="form-body" >
+                <h4 class="form-section">Documents of Version {{cur_ver}} : ({{prop_obj.protocol_number}}) </h4>
+                <h4 class="form-section">Requested By : <strong>{{prop_obj.created_by}}</strong> </h4>
+                <h4 class="form-section">PI Full Name : <strong>{{prop_obj.pi_name}}</strong> </h4>
+                <h5> Status :- <strong>
+                    
+                    {% if is_creator  %}
+                        {% if prop_obj.status == "On Review" or prop_obj.status == "Reviewed" %}
+                            On Review
+                        {% else %} 
+                            {{prop_obj.status}}
+                        {% endif %} 
+                    {% else %} 
+                        {{prop_obj.status}}
+                    {% endif %}
+                </strong></h5>
+                <br>
+                <div >
+                    <table class="table table-striped table-bordered zero-configuration">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Document Type</th>
+                                <th>Document File</th>
+                                <th>Download</th>
+                                <th>Upload date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>1</td>
+                                <td>Point by point response</td>
+                                {% if prop.response_doc %}
+                                    <td><a href = "{{prop.response_doc.url}} " target="_blank" >{{prop.response_doc|get_filename|truncatechars_html:30}}</a></td>
+                                    <td><a href = " {{prop.response_doc.url}}" download >download</a></td>
+                                {% else %} 
+                                    <td><a > - </a></td>
+                                    <td><a >Document not found</a></td>
+                                {% endif %}
+
+                                <td>{{prop.created_date}}</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                <td>2</td>
+                                <td>Clean Document</td>
+                                {% if prop.clean_doc %}
+                                    <td><a href = "{{prop.clean_doc.url}}" target="_blank" >{{prop.clean_doc|get_filename|truncatechars_html:30}}</a></td>
+                                    <td><a href = "{{prop.clean_doc.url}}" download >download</a></td>
+                                {% else %} 
+                                    <td><a >-</a></td>
+                                    <td><a >Document not found</a></td>
+                                {% endif %}
+                                <td>{{prop.created_date}}</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                <td>3</td>
+                                <td>Track Change</td>
+                                {% if prop.track_change %}
+                                    <td><a href = "{{prop.track_change.url}}" target="_blank" >{{prop.track_change|get_filename|truncatechars_html:30}}</a></td>
+                                    <td><a href = "{{prop.track_change.url}}" download >download</a></td>
+                                {% else %} 
+                                    <td><a  >-</a></td>
+                                    <td><a >Document not Found</a></td>
+                            
+                                {% endif %}
+                                <td>{{prop.created_date}}</td>
+                                
+                            </tr>
+                        
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <h5>Other related documents</h5>
+                
+                <table class="table table-striped table-bordered zero-configuration">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Document Type</th>
+                            <th>Document File</th>
+                            <th>Download</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in rel_docs %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>Related Document ({{f.id}})</td>
+                                {% if f.doc %}
+                                    <td><a href = "{{f.doc.url}} " target="_blank" >{{f.doc|get_filename|truncatechars_html:30}}</a></td>
+                                    <td><a href = " {{f.doc.url}}" download >download</a></td>
+                                {% else %} 
+                                    <td><a> - </a></td>
+                                    <td><a>Document not found</a></td>
+                                {% endif %}
+                                
+                                
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+    </div>
+</div>

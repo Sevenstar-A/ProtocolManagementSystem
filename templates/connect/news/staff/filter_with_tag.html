@@ -1,0 +1,45 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% block style %} 
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/datatable/datatables.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/extensions/buttons.dataTables.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/datatable/buttons.bootstrap4.min.css' %}">
+{% endblock %} 
+
+{% block content  %}
+    <div class="content-body">
+        <section id="html5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title"> {{ tag.name }} NEWS list</h4>
+                            <a class="heading-elements-toggle"><i class=""></i></a>
+                        </div>
+                        <div class="card-content collapse show">
+                            <div class="card-body card-dashboard">
+                                {% include "connect/news/staff/news_list_table.html" %}				
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block js %} 
+
+    <!-- vender js -->
+    <script src="{% static 'staff/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/datatable/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/datatable/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/jszip.min.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/pdfmake.min.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/vfs_fonts.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/buttons.print.min.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/tables/buttons.colVis.min.js' %}"></script>
+    <script src="{% static 'staff/js/scripts/tables/datatables-extensions/datatable-button/datatable-html5.min.js' %}"></script>
+
+{% endblock %}

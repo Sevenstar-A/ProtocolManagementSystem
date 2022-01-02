@@ -1,0 +1,105 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %} Your Renewal Requests{% endblock %}
+{% block renewal_tab %}has-sub open {% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="">My Renewals</a></li> 
+{% endblock %}
+{% block content %} 
+
+<div class="content-body">
+    <section >
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"></h4>
+                        <div class="heading-elements">
+                            
+                        </div>
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard">
+                            <table class="table table-striped table-bordered multi-ordering">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Protocol No</th>
+                                        <th>Title</th>
+                                        <th>Protocol Version</th>
+                                        <th>Renewal No</th>
+                                        <th>Code</th>
+                                        <th>Status</th>
+                                        <th>Submission Date</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                               
+                                <tbody>
+                                  {% for r in renewals %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td><a href="#">{{r.protocol_number}}</a></td>
+                                        <td>{{r.proposal_title|truncatechars_html:30}}</td>
+                                        <td>{{r.proposal_version}}</td>
+                                        <td>{{r.renewal_num}}</td>
+                                        <td>{{r.code}}</td>
+                                        <td>
+                                            {% if r.status == 'Pending' %} 
+                                            <span class="badge badge-warning">{{r.status}}</span>
+                                            {% elif r.status == 'Approved' %} 
+                                            <span class="badge badge-success">Approved</span>
+                                            {% elif r.status == 'Rejected' %}
+                                            <span class="badge badge-danger">Rejected</span>
+                                            {% else %}
+                                            <span class="badge badge-info">{{r.status}}</span>
+                                            {% endif %}
+                                        
+                                        </td>
+                                        <td>{{r.submited_date}}</td>
+                                        <td>
+                                            <span class="dropdown">
+                                                <a  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle dropdown-menu-right"><i
+                                                    class="fa fa-ellipsis-v"></i>
+                                                </a>
+                                                <span aria-labelledby="btnSearchDrop31" class="dropdown-menu mt-1 dropdown-menu-right">
+                                                
+                                                    <a href="{% url 'renewal:renewal_detail' pk=r.id %}" class="dropdown-item delete"><i class="fa fa-eye"></i>View Detail</a>
+                                                            
+                                                        {% if r.status == 'Pending' %}
+                                                            <a href="{% url 'renewal:update_renewal' pk=r.id %}"  class="dropdown-item"><i class="fa fa-pencil"></i>Update Request</a>
+                                                            <a  href="{% url 'renewal:delete_renewal' pk=r.id %}"  class="dropdown-item"
+                                                                onclick="return confirm('Are you sure you want to delete this Amendment? Deleting an renewal is an irreversible process and once you delete it all data related with it will be deleted from the system. \n Do you want to continue deleting?')">
+                                                                <i class="fa fa-trash red"></i> Delete Amendment
+                                                            </a>
+                                                        {% endif %}
+                                                        
+                                                        <a href="{% url 'renewal:list_assessment_reviews' pk=r.id %}"    class="dropdown-item"><i class="fa fa-list"></i>IRB Comments</a>
+                                                        {% if r.has_been_approved and r.renewalapproval_set.first.approval_letter %} 
+                                                            <a href="{{r.renewalapproval_set.first.approval_letter.url}}" download=""  class="dropdown-item"><i class="fa fa-download"></i> Download Approval Letter</a>
+                                                        {% endif %}
+                                                        
+                                                        {% if r.status == 'Approved' or r.status == 'Rejected' %}
+                                                            <a href="{% url 'renewal:check_prot_num' %}"  class="dropdown-item"><i class="fa fa-upload"></i> Request Another Renewal</a>
+                                                        {% endif %}
+                                                </span>
+                                            </span>
+                                    </td>
+                                        
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>				
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+
+</div>
+{% endblock %}

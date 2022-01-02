@@ -1,0 +1,233 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+
+{% block title %} List of latest amendment requests{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href=""> List Amendments</a></li> 
+{% endblock %}
+
+{% block content  %} 
+ <!-- BEGIN: Content-->
+   
+
+      <div class="content-body">
+         
+          <section id="html5">
+              <div class="row">
+                  <div class="col-12">
+                      <div class="card">
+                          <div class="card-header">
+                              <h4 class="card-title"></h4>
+                              <a class="heading-elements-toggle"><i class=""></i></a>
+                             
+                          </div>
+                          <div class="card-content collapse show">
+                              <div class="card-body card-dashboard">
+                                  <table class="table table-striped table-bordered multi-ordering ">
+                                      <thead>
+                                          <tr>
+                                            <th>#</th>
+                                            <th>Protocol Number</th>
+                                            <th>Investigator</th>
+                                            <th>Submission Date</th>
+                                            <th>Proposal Version</th>
+                                            <th>Amendment No</th>
+                                            <th>Code</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                          </tr>
+                                      </thead>
+                                     
+                                        <tbody>
+                                            {% for a in amends %}
+                                                <tr>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{a.protocol_number}}</td>
+                                                    <td>{{a.created_by}}</td>
+                                                    <td>{{a.submited_date}}</td>
+                                                    <td class="text-center">{{a.proposal_version}}</td>
+                                                    <td class="text-center">{{a.amend_num}}</td>
+                                                    <td>{{a.code}}</td>
+                                                    <td>   
+                                                        {% if a.status == 'Pending' %} 
+                                                        <span class="badge badge-warning">Pending</span>
+                                                        {% elif a.status == 'Approved' %} 
+                                                        <span class="badge badge-success">Approved</span>
+                                                        {% elif a.status == 'Rejected' %}
+                                                        <span class="badge badge-danger">Rejected</span>
+                                                        {% else %}
+                                                        <span class="badge badge-info">{{a.status}}</span>
+                                                        
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <span class="dropdown">
+                                                            <a id="btnSearchDrop31" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle dropdown-menu-right"><i
+                                                                class="fa fa-ellipsis-v"></i>
+                                                            </a>
+                                                            <span aria-labelledby="btnSearchDrop31" class="dropdown-menu mt-1 dropdown-menu-right">
+                                                            
+                                                            {% if user != a.created_by %}
+                                                                    <!-- start actions for specific status type  -->
+                                                                    {% if 'irb.can_see_amendment_detail' in irb_perms  %}
+                                                                        <a href="{% url 'amendment:amend_detail' pk=a.id %}" class="dropdown-item delete"><i class="fa fa-eye"></i>View Detail </a>
+                                                                        <a href="{% url 'amendment:manage_amendment' pk=a.id %}" class="dropdown-item "><i class="fa fa-cog"></i>Manage Amendment</a>
+                                                                    {% endif %}
+
+                                                                    {% if 'irb.can_accept_amendment' in irb_perms %} 
+                                                                        <a href="#" data-target="#comment_modal" data-toggle="modal" onclick="comment_fun('{{a.id}}', '{{a.protocol_number}}')"  class="dropdown-item">
+                                                                            <i class="fa fa-envelope"></i> Send Comment
+                                                                        </a>
+
+                                                                        {% if a.status == 'Pending' and a.submission_count == 1 %} 
+                                                                            <a  href="{% url 'amendment:delete_amendment' pk=a.id %}"  class="dropdown-item"
+                                                                                onclick="return confirm('Are you sure you want to delete this Amendment? Deleting an amendment is an irreversible process and once you delete it all data related with it will be deleted from the system. \n Do you want to continue deleting?')">
+                                                                                <i class="fa fa-trash red"></i> Delete Amendment
+                                                                            </a>
+                                                                        {% endif %}
+
+                                                                    {% endif %}
+
+                                                                <!-- for creators -->
+                                                                {% else %}
+                                                                    <a href="{% url 'amendment:amendment_detail' pk=a.id %}" class="dropdown-item "><i class="fa fa-eye"></i>View Detail</a>
+                                                                    
+                                                                    {% if a.status == 'Pending' and a.submission_count == 1 %} 
+                                                                        <a  href="{% url 'amendment:delete_amendment' pk=a.id %}"  class="dropdown-item"
+                                                                            onclick="return confirm('Are you sure you want to delete this Amendment? Deleting an amendment is an irreversible process and once you delete it all data related with it will be deleted from the system. \n Do you want to continue deleting?')">
+                                                                            <i class="fa fa-trash red"></i> Delete Amendment
+                                                                        </a>
+                                                                    {% endif %}
+                                                                                                                                    
+                                                                {% endif %}
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Protocol Number</th>
+                                                <th>Title</th>
+                                                <th>Submission Date </th>
+                                                <th>Proposal version</th>
+                                                <th>Amendment No</th>
+                                                <th>Code</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                                
+                                            </tr>
+                                        </tfoot>
+                                  </table>				
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          <!--/ HTML5 export buttons table -->
+
+          
+        <div class="modal fade" id="comment_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <section class="contact-form">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Send amendment request correction comment for :-  <h4 id='comment_modal_header'></h4></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <input type="hidden"  name="a_id"    id = 'comment_a_id'    value="" />
+                                
+                                <fieldset class="form-group col-12">
+                                    <label>Write your comment below.</label>
+                                    <br>
+                                   <textarea class="form-control round col-lg-12" id="comment_area" rows="10" name="comment"></textarea>
+                                </fieldset>
+                                <span id="fav" class="d-none"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <fieldset class="form-group position-relative has-icon-left mb-0">
+                                    <button type="reset"   class="btn btn-light mr-2" data-dismiss="modal"><i
+                                        class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Cancel</span></button>
+                                    <button type="submit" onclick="send_comment()" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+                                        class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Comment</span></button>
+                                </fieldset>
+                            </div>
+                    
+                    </section>
+                </div>
+            </div>
+        </div>
+
+
+
+      </div>
+  
+  <!-- END: Content-->
+
+{% endblock %} 
+
+{% block js %} 
+
+   <script>
+   
+ 
+    // functions for commenting on amendement
+    function comment_fun(id, p_num){
+        document.getElementById('comment_a_id').value = id;
+        document.getElementById('comment_modal_header').innerHTML = " "+p_num
+    }
+
+
+    function send_comment() {
+        try{
+            if(confirm("Send Comment Now..."))
+            var comment = document.getElementById('comment_area').value
+            if( comment != ''){
+                fetch("{% url 'amendment:correction_comment'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'comment': comment, 'a_id': document.getElementById('comment_a_id').value})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully sent your comment!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some comment on the comment area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+            
+        }
+
+
+    function to_pending(pk){
+        if (confirm("Are you sure you want to revert the status of this protocol to 'Pending'? "))
+            window.open("/amendment/to_pending/"+pk+"/", "_self")
+    }
+
+
+    function to_reviewed(pk){
+        if (confirm("Are you sure you want to revert the status of this protocol to 'Reviewed'?"))
+            window.open("/amendment/to_reviewed/"+pk+"/","_self")
+    }
+    
+    function accept(pk){
+        if (confirm("Are you sure you want to accept this amendment request?"))
+            window.open("/amendment/accept_amend/"+pk+"/", "_self")
+    }
+
+</script>
+
+{% endblock %} 

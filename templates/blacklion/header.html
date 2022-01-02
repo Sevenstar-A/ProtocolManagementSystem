@@ -1,0 +1,46 @@
+{% load static %}
+<header id="header" class="fixed-top d-flex align-items-center ">
+      
+    <div class="container d-flex justify-content-between align-items-center">
+
+      <div class="logo">
+        <h1 class="text-light"><a href="/"><span></span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo --> 
+        <a href="/"><img src="{% static 'customer/img/irb.png' %}" alt="" class="img-fluid"></a>
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a {% block home %}{%endblock %}  href="index.html">Home</a></li>
+          <li><a {% block home %}{%endblock %}  href="index.html">Help</a></li>
+          
+          <li><a {% block about %} {%endblock %}href="about.html">About</a></li>
+          <li><a {% block services%}{%endblock%} href="services.html">Services</a></li>
+          <li><a {% block latest_reseaches%}{%endblock%}href="portfolio.html">Latest Researchs</a></li>
+          <li><a {% block my_proposals%}{%endblock%}href="blog.html">My Proposals</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li class="dropdown"><a href="#"><span>{{user.username}}</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="#">My Messages</a></li>
+              
+              <!-- <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="#">Deep Drop Down 1</a></li>
+                  <li><a href="#">Deep Drop Down 2</a></li>
+                  <li><a href="#">Deep Drop Down 3</a></li>
+                  <li><a href="#">Deep Drop Down 4</a></li>
+                  <li><a href="#">Deep Drop Down 5</a></li>
+                </ul>
+              </li> -->
+              <li><a href="#">Logout</a></li>
+              
+            </ul>
+          </li>
+         
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header>

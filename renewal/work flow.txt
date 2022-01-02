@@ -1,0 +1,49 @@
+Inv = Investigator
+PU = Any permited user (ex)
+
+1. Inv requests renewal for a proposal using it's protocol number
+ ---- this part is done, so check if there is any error in it and try to fix them
+
+2. PU view list of renewal requests (each object in the list has 3 options, 1. View Detail, 2.Send correction comment 3. Accept  4. Reject)
+
+    2.1 View Detail of a requests
+    2.2 Send correction comment: accept the comment and send a notification to z Investigator with the description of the 
+        notification = comment sent from the staff (status = pending)
+    2.3 Accept: accept a renewal request ( status = accept, notification to the inv)
+    2.4 Reject: If click on Reject, pop up a modal to submit rejection comment (status = Rejected, notification to the inv)
+
+3. PU view accepted renewals ( 1. can view detail, 2. can approve, 3. can Reject )
+    3.1. same as 2.1
+    3.2. Approve: approve a renewal requests (status = Approved, notification to the inv) , save obj to RenewalApproval model
+    3.3. Reject: same as 2.3, save obj to RenewalRejection model
+
+______ for Investigators 
+1. can view list of my renewals:
+    action 1. view detail 
+    action 2 (for status = pending only). Update Renewal Request. 
+  
+2. can view detail of each renewal request 
+    - if the renewal has comments, show them in the detail page
+    - if the reneal is in pending status, he can update it
+
+3. Update Page:
+
+  1. inv creates a renewal request (status = pending, notification to PU)
+  2. Pu view list of request 
+     Pu view detail of a renewal request
+  3. PU send correction comment (status is still pending, notification to Investigator)
+
+  4. inv view list of my renewals, 
+  5. inv view detail of a renewal (if there are any comments from the irb, view those comments)
+  6. inv can update a renewal (notification to PU)
+  
+  7. PU view detail of a renewal , if there is no other correction comments, accept (status = OnReview, notification to inv)
+  8. PU Approve the request (status = Approve, fill approval form)
+
+
+
+
+
+
+
+

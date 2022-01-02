@@ -1,0 +1,102 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/datatable/datatables.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/extensions/buttons.dataTables.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/datatable/buttons.bootstrap4.min.css' %}">
+{% endblock %} 
+
+{% block title %} Position List {% endblock %}
+{% block breadcrumb %} 
+    <li class="breadcrumb-item active"><a href="#">Position List</a></li>
+{% endblock %}
+
+{% block content  %} 
+ <!-- BEGIN: Content-->
+
+      <div class="content-body">
+         
+          <section id="html5">
+              <div class="row">
+                  <div class="col-12">
+                      <div class="card">
+                          <div class="card-header mt-4 ">
+                            <h4 class="card-title"></h4>
+                            <a class="heading-elements-toggle"><i class=""></i></a>
+                            <div class="heading-elements mt-2 col-2 ">
+                                <a href="{% url 'irb:position_create' %}"><button class="btn btn-success col-12">Create New Position</button></a>
+                               
+                            </div>
+
+                          </div>
+                          
+                          <div class="card-content ">
+                              <div class="card-body card-dashboard">
+                                  <table class="table table-striped table-bordered dataex-html5-export">
+                                      <thead>
+                                          <tr>
+                                              <th>#</th>
+                                              <th>Position Name</th>
+                                              <th>Num of permissions</th>
+                                              <th>Num of users</th>
+                                              <th>Created By</th>
+                                              <th>Created At</th>
+                                              <th>Action</th>
+                                          </tr>
+                                      </thead>
+                                     
+                                      <tbody>
+                                        {% for pos in positions %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{pos.name}}</td>
+                                            <td>{{pos.permissions.count}}</td>
+                                            <td>{{pos.useraccount_set.count}}
+                                                {% if pos.useraccount_set.count == 1 %}
+                                                   <p class="text-muted"> ({{pos.useraccount_set.first|truncatechars_html:40}})</p>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{pos.created_by}}</td>
+                                            <td>{{pos.created_date.date}}</td>
+                                            <td>
+                                                <span class="dropdown">
+                                                    <a id="btnSearchDrop31" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle dropdown-menu-right"><i
+                                                        class="fa fa-ellipsis-v"></i>
+                                                    </a>
+                                                    <span aria-labelledby="btnSearchDrop31" class="dropdown-menu mt-1 dropdown-menu-right">
+                                                    
+                                                            <a href="{% url 'irb:position_detail' pk=pos.id %}" class="dropdown-item delete"><i class="fa fa-eye"></i>View Detail</a>
+                                                            <a href="#" class="dropdown-item"><i class="fa fa-trash red" ></i> Delete</a>
+                                                    </span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                     
+                                  </table>				
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          <!--/ HTML5 export buttons table -->
+
+      </div>
+  <!-- END: Content-->
+
+{% endblock %} 
+
+
+{% block js %} 
+
+<!-- vender js -->
+
+<!-- end vender js -->
+
+<!-- BEGIN: Page JS-->
+<script src="{% static 'staff/js/scripts/tables/datatables-extensions/datatable-button/datatable-html5.min.js' %}"></script>
+<!-- END: Page JS-->
+
+{% endblock %} 

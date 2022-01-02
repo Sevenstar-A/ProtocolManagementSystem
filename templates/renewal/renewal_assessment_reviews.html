@@ -1,0 +1,139 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% load core_templatetags %}
+{% block title %} 
+    List of Reviewers review     
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active"><a href="">List Reviewers Reviews </a></li> 
+{% endblock %}
+
+{% block content %}
+    <div class="card p-5" >
+        {% if 'irb.can_approve_renewal' in irb_perms %} 
+            <div id="buttons_div" class="col-md-12 right" style="float: right;">
+                {% if renewal.status == 'Approved' %} 
+                    <a href="{% url 'renewal:approve_renewal' pk=renewal.id %}" style ="float:right; " class="btn btn-success mb-1 right">
+                        <i class="fa fa-check"></i>
+                        Update Approval Letter
+                    </a>
+                {% elif renewal.status == 'On Review' or renewal.status == 'Reviewed' %} 
+                    <a href="{% url 'renewal:approve_renewal' pk=renewal.id %}" style ="float:right; " class="btn btn-success mb-1 right">
+                        <i class="fa fa-check"></i>
+                            Approve Request
+                    </a> 
+                {% else %} 
+                    <a  style ="float:right; " title="Cannot approve at '{{renewal.status}}' status!" class="btn btn-light mb-1 right">
+                        <i class="fa fa-check"></i>
+                            Approve Request
+                    </a> 
+                {% endif %}
+            </div>
+        {% endif %}
+        <!-- End of Approving -->
+
+
+        <div class="card-content" >
+            <br>
+            {% if not is_creator and 'irb.can_assign_renewal_reviewers' in irb_perms %}
+                <h4 class="card-title form-section text-center" id="basic-layout-form">
+                    Reviewers assessments for <strong> '{{renewal.protocol_number}}'</strong>
+                    ( <strong> '{{renewal.status}}' </strong> ) 
+                </h4>
+                
+                <div class="col-md-12">
+                    <div class="collapsible email-detail-head">
+                        
+                        {% if  reviews|length > 0 %} 
+                            
+                            <div class="row mt-1">
+                                {% for r in reviews %}
+                                    <div class="card  col-md-12 collapse-header mb-0" role="tablist" >
+                                        <div id="id_item_{{r.id}}" style="height: 100px;" class="card-header box-shadow-1 border-grey border-lighten-2 py-1 d-flex justify-content-between align-items-center" 
+                                            data-toggle="collapse" role="tab" data-target="#item_{{r.id}}" aria-expanded="false" aria-controls="item_{{r.id}}">
+                                            <div class="collapse-title media">
+                                            <div class="pr-1">
+                                                <div class="avatar mr-75" style="height: 100px; width: 100px;">
+                                                <img src="{{ r.reviewer.profile_image.url }}" alt="avtar img holder" style="width:40; height:40;">
+                                                </div>
+                                            </div>
+                                            <div class="media-body py-1">
+                                                <h5 class="text-primary">{{ r.reviewer }} <span class="d-sm-inline d-none"> &lt;{{r.reviewer.email}}&gt;</span></h5>
+                                               
+                                                <h6> Approval Start Date :  <time>{{r.start_date.date}}</time> </h6>
+                                                <h6> Approval End Date :  <time>{{r.end_date.date}}</time> </h6>
+                                               
+                                            </div>
+                                            </div>
+                                            <div class="information d-sm-flex d-none align-items-center">
+                                            <small class="text-muted mr-50">{{r.updated_date}}</small>
+                                            </div>
+                                        </div>
+
+                                        <div id="item_{{r.id}}" role="tabpanel" aria-labelledby="headingCollapse5" class="collapse">
+                                            <div class="card-content">
+                                                <div class="card-body py-1">
+                                                    <h5 class="text-bold-500">Note</h5>
+                                                    <textarea class="form-control round col-md-12" style="height: 100px;" disabled>{{r.note}}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            
+                        {% else %} 
+                            <br>
+                            <h4 >No Reviewers Response Found</h4> 
+                            <br>
+                        {% endif %}
+                    
+                    </div>
+                </div>
+                <br><br>
+            {% endif %}
+            
+           
+            <div class=" row col-md-12 ">
+                {% if renewal.renewalrejection_set.first %} 
+                    <h4 class=" col-md-12 mt-3 card-title form-section text-center" >
+                        Renewal Rejections 
+                        (<strong> '{{renewal.status}}'</strong>)
+                    </h4>
+                    <div class="table-responsive">
+                        <table  class="table  table-striped table-bordered table-hover align-middle mb-0">
+                            <thead class = "table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Rejected By</th>
+                                    <th>Rejection Comment</th>
+                                    <th>Rejected Date</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                {% for rej in renewal.renewalrejection_set.all %}
+                                    <tr >
+                                        <th>{{forloop.counter}}</th>
+                                        <td>{{rej.rejected_by}}</td>
+                                        <td>{{rej.rejection_comment}}</td>
+                                        <td>{{ rej.rejection_date.date }}</td>                                        
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                {% endif %}
+            </div>
+                
+        </div>
+
+    </div>
+    
+
+{% endblock %}
+

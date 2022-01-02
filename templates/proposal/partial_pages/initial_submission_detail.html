@@ -1,0 +1,300 @@
+{% load static %}
+{% load core_templatetags %}
+
+<div role="tabpanel" class="tab-pane active " id="initial_panel" aria-labelledby="initial_pill" aria-expanded="true"> 
+    <div class="card-body col-lg-12">
+        <div class="form-body" >
+            <h4 class="form-section">Proposal initial submission detail : '{{prop_obj.protocol_number}}' </h4>
+            <h4 class="form-section">Requested By : <strong>{{prop_obj.created_by}}</strong> </h4>
+            <h4 class="form-section">PI Full Name : <strong>{{prop_obj.pi_name}}</strong> </h4>
+            <h5> Status :- <strong>
+                {% if is_creator  %}
+                    {% if prop_obj.status == "On Review" or prop_obj.status == "Reviewed" %}
+                        On Review
+                    {% else %} 
+                        {{prop_obj.status}}
+                    {% endif %} 
+                {% else %} 
+                    {{prop_obj.status}}
+                {% endif %}
+            </strong></h5>
+                
+            <div >
+                <div class="card-body">
+                    <ul class="nav nav-tabs nav-underline" role="tablist">
+                        <li class="nav-item">
+                        <a class="nav-link active" id="letter_docs_tab" data-toggle="tab" aria-controls="letter_docs_content" href="#letter_docs_content" role="tab" aria-selected="true"><i class="fa fa-files-o"></i> Letter Documents</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" id="form_detail_tab" data-toggle="tab" aria-controls="form_detail_content" href="#form_detail_content" role="tab" aria-selected="false"><i class="fa fa-list-ul"></i>Initial Request Form Detail</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" id="investigators_tab" data-toggle="tab" aria-controls="investigators_content" href="#investigators_content" role="tab" aria-selected="false"><i class="fa fa-users"></i> Investigators</a>
+                        </li>
+                        
+                    </ul>
+
+                    <div class="tab-content px-1 pt-1">
+                        <div class="tab-pane active" id="letter_docs_content" role="tabpanel" aria-labelledby="letter_docs_tab">
+                            <br>
+                            <h5 class="text-center"><strong>Initial Submission Documents</strong> </h5>
+                            <br>
+                            <div class="col-lg-12">
+                                <table class="table table-striped table-bordered zero-configuration">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Document Type</th>
+                                            <th>Document File</th>
+                                            <th>Download</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for d in docs %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{d.doc_type}}</td>
+                                                {% if d.doc %}
+                                                    <td><a href = " {{d.doc.url}} " target="_blank" >{{d.doc|get_filename|truncatechars_html:30}}</a></td>
+                                                    <td><a href = " {{d.doc.url}}  " download >Download</a></td>
+                                                {% else %} 
+                                                    <td><a href = "#" >-</a></td>
+                                                    <td><a href = "#" >-</a></td>
+                                                {% endif %}
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                    
+                                </table>
+                                    
+                            </div>   
+                        </div>
+
+                        <!-- Form Detail -->
+                        <div class="tab-pane " id="form_detail_content" role="tabpanel" aria-labelledby="form_detail_tab">
+                            <div class="col-lg-12">
+                                <p class="text-muted font-medium-2 text-center">General Information</p>
+                                <h5><strong>  Title : </strong>{{prop_obj.title}}</h5><br>
+                                <h5><strong> Protocol Number : </strong>'{{prop_obj.protocol_number}}'</h5><br>
+                                <h5 ><strong> Study Types :</strong>
+                                        {{prop.study_type}} 
+                                </h5>
+                                <br>
+                                    {% if prop.other_study %}
+                                <h5 ><strong> Other Study Types :</strong>{{prop.other_study}}</h5>
+                                    {% endif %}
+                                
+                                <br>
+                                
+                                <div class="row">
+                                    <h5 class="col-lg 6"><strong> Department :</strong>
+                                        {{prop.department}}
+                                    </h5>
+                                    <h5  class="col-lg 6"><strong> Proposal Type :</strong>{{prop.proposal_type}}</h5>
+                                    
+                                </div>
+                                <br>
+
+                                <p class="text-muted font-medium-2 text-center">CHARACTERISTICS of PARTICIPANTS PARTICIPATED</p><hr>
+                                <h5><strong>  Total Participants : </strong> {{prop.total_par}}</h5><br>
+                                <div class="row">
+                                    <h5 class="col-lg-6"><strong>  Study Population : </strong>
+                                        {{prop.study_pop}} 
+                                    </h5>
+                                    <h5 class="col-lg-6"><strong>  Impaired : </strong>
+                                        {{prop.impaired}}
+                                    </h5>
+                                </div>
+                                <br>
+
+                                <div class="row">
+                                    
+                                    {% if prop.min_age and prop.max_age %}
+                                        <h5 class="col-lg-6"><strong> Participants Age Range : </strong>
+                                            {{prop.min_age}} - {{prop.max_age}}
+                                        </h5>
+                                    {% endif %}
+                                        
+                                    {% if prop.min_pediatric != "None" and prop.max_pediatric != "None" %} 
+                                        <h5 class="col-lg-6"><strong>  Pediatric Age Range : </strong>
+                                        {{prop.min_pediatric}} {{prop.min_pediatric_age_type}} - {{prop.max_pediatric}} {{prop.max_pediatric_age_type}}
+                                        </h5>
+                                    {% endif %}
+                                </div>
+                                <br>
+                                <h5 ><strong> REQUESTED EXCLUSION OF PARTICIPANTS : </strong>
+                                    <span>{{prop.exclusion}} </span>
+
+                                </h5>
+                                {% if prop.other_exclusion %} 
+                                <h5 ><strong>  Other Exclusion : </strong>
+                                {{prop.other_exclusion}}
+                                </h5>
+                                {% endif %}  
+                                
+                                <br>
+                                <h5 class="text-center"> Other Information</h5><hr>
+
+                                <div >    
+                                    <h5 ><strong> SPECIAL RESOURCE REQUIREMENTS  : </strong>
+                                        <span>{{prop.special_res}} </span>
+                                        
+                                    </h5>
+                                    
+                                    {% if prop.other_special_res %} 
+                                    <h5 ><strong> Other Special Resourses : </strong>
+                                    {{prop.other_special_res}}
+                                    </h5>
+                                    {% endif %}
+                                
+                                </div>
+
+                                <h5><strong> IONIZING RADIATION USE (X-rays, radioisotopes, etc):  </strong>
+                                    {{prop.ionizing_rad}}
+                                </h5>
+                                <br>
+
+                                <h5 ><strong>INVESTIGATIONAL NEW DRUG (IND) / DEVICE (IDE):  </strong>
+                                    {{prop.inves_new_drug_type}}
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        {% if prop.fda_no %}
+                                        <h5><strong>FDA No:</strong>{{prop.fda_no}}</h5>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-3">
+                                        {% if prop.fda_name %}
+                                        <h5><strong>Name:</strong>{{prop.fda_name}}</h5>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-3">
+                                        {% if prop.fda_sponsor %}
+                                        <h5><strong>Sponsor:</strong>{{prop.fda_sponsor}}</h5>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-3">
+                                        {% if prop.fda_holder %}
+                                        <h5><strong>Holder:</strong>{{prop.fda_holder}}</h5>
+                                        {% endif %}
+                                    </div>
+                                    
+                                </div>
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <h5><strong>Procedure Use:</strong>{{prop.procedure_use}}</h5>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <h5><strong>MULTI-SITE COLLABORATION:</strong>{{prop.multisite_collab}}</h5>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <h5><strong>FINANCIAL DISCLOSURE:</strong>{{prop.financial_dis}}</h5>
+                                    </div>
+                                </div>
+                                <br>
+                                <h5><strong>Conflict of Interest : </strong>
+                                {% if prop.conflict_int %} 
+                                {{prop.conflict_int}}
+                                {% else %}
+                                No
+                                {% endif %}
+                                </h5>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h5><strong>Collaborator Inistitution : </strong>{{prop.collaborator_inis}}</h5>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h5><strong>Source of Fund :</strong>{{prop.fund}}</h5>
+                                    </div>
+                                    
+                                </div>
+                                <br>
+
+                            </div>
+                            
+                        </div>
+                        <!-- End of Form Detail -->
+
+                        <!-- Investigators Info -->
+                        <div class="tab-pane " id="investigators_content" role="tabpanel" aria-labelledby="investigators_tab">
+                            {{ prop.co_ivs_doc}}
+                            
+                            {% if 'irb.can_accept_proposal' in irb_perms %}
+                                {% if   prop.co_inv_doc   %}
+                                    <a class="btn btn-primary right " style="float: right;"  href="{{prop.co_inv_doc.url}}" download="">Download signiture document </a>
+                                {% else %} 
+                                    <a class="btn btn-light right " style="float: right;" title="Document not found!">Download signiture document </a>
+                                
+                                {% endif %}
+                            {% endif %}
+                            <br>
+                            <br>
+                            <h5 class="text-center"> List of investigators </h5><hr>
+                           
+                            <div class="row">
+                                {% for inv in invs %}
+                                    <div class=" col-md-6 round ">
+                                        <div class ="card">
+                                            <div class="card-header " style="margin-top:2px">
+                                                <h4 class="card-title" id="basic-layout-colored-form-control">Investigator {{forloop.counter}}
+                                                    {% if inv.is_pi %} 
+                                                        (PI)
+                                                    {% else %} 
+                                                        (Co-Investigator)
+                                                    {% endif %}
+                                                </h4>
+                                            </div>
+                                                <div class="card-body " >
+                                                        <div class="col-md-12">
+                                                            <span><strong>Full Name : </strong> {{inv.name}}</span>
+                                                        </div>
+                                                        <br>
+                                                        
+                                                        <div class="row col-md-12">
+                                                            <div class="col-md-6">
+                                                                <strong >Email : </strong>{{ inv.email }}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <strong>Inistitution : </strong>{{ inv.insititution }}        
+                                                            </div>           
+                                                        </div>
+                                                        <br>
+                                                        {% if inv.cv %}
+                                                        <div class="col-md-12">
+                                                        <strong >Investigator CV Document : </strong> 
+                                                        <br>
+                                                        {% if inv.cv %}
+                                                            <a href="{{inv.cv.url}}" target="_blank" >{{inv.cv|get_filename|truncatechars_html:30}}</a>
+                                                        {% endif %}
+                                                        </div>
+                                                        {% endif %}
+                                                            
+                                                        
+                                                </div>
+                                            
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                            
+                           
+                        </div>
+                        <br><br>
+                        <!-- End of Investigators Info -->
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

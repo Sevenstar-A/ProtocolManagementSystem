@@ -1,0 +1,31 @@
+Algorithms 
+
+1. Get latest approval letter of protocol number:
+- input = a protocol number 
+- output = the latest approval document or None 
+
+- algorithm:
+    search for proposal:
+        if initial proposal is found:
+            +search for renewal with the proposal latest_version_num_with_amendment 
+                -if found:
+                    return approval letter of the renewal 
+                -if not: 
+                    + search for an amendment with the proposal latest_version_num_with_amendment
+                        -if found: 
+                            return approval letter of the amendment 
+
+            return approval letter of the proposal
+
+        if initial proposal is not found: 
+            +search for renewal with the protocol number 
+                -if found:
+                    return approval letter of the latest renewal 
+                -if not: 
+                    + search for an amendment with the protocol number 
+                        -if found: 
+                            return approval letter of the latest amendment 
+
+            return None
+
+

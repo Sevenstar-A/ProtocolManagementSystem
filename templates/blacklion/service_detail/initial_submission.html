@@ -1,0 +1,102 @@
+{% extends 'blacklion/base.html' %}
+{% load static %}
+{% block service %} class = "active" {% endblock %}
+{% block content %}
+  
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Service Detail</h2>
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li><a href="{% url 'services' %}">Services</a></li>
+            <li>About Us</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End About Us Section -->
+
+    <!-- ======= About Section ======= -->
+    <section class="about" data-aos="fade-up">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-6">
+              <a href="{% static 'customer/img/initial-work-flow.jpg' %}" target="_blank">
+                <img src="{% static 'customer/img/initial-work-flow.jpg' %}"  class="img-fluid" alt="">      
+              </a>
+            
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0">
+            <h3>Detail process of the protocol initial submission.</h3>
+            <br>
+            <p>
+                Investigators or their delegates ensure the submission of complete proposal package using CHS IRB checklist and need to get
+                confirmation of the IRB officer for the submission of the complete proposal package.
+            </p>
+            <p>
+                Investigators can submit initail protocols to be reviewed by our experianced IRB reviewers from different medical deciplines.
+                You can process any amendment request using our online system. Read more for the details.
+            </p>
+          </div>
+        </div>
+        <br>
+        <p class="mb-1"><b>The documents you need to submit are the following </b></p>
+        <div class="row">
+          <ul >
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Application Form <a href="#" onclick="return alert('document download link')">Download</a></li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Checklist for initial submission <a href="#" onclick="return alert('document download link')">Download</a></li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Clinical trial protocol template <a href="#" onclick="return alert('document download link')">Download</a></li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Executive summary template <a href="#" onclick="return alert('document download link')">Download</a></li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Material transfer agreement <a href="#" onclick="return alert('document download link')">Download</a></li>
+            <li><i class="bi bi-check2-circle" style="color: green;"></i>Research protocol template <a href="#" onclick="return alert('document download link')">Download</a></li>    
+            
+          </ul>
+        </div>
+        
+      </div>
+    </section><!-- End About Section -->
+
+   
+    <!-- ======= Facts Section ======= -->
+    <div class="section-title">
+      <h2>We Receive huge number of protocol requests each year</h2>
+      <p>Every year we receive huge number of protocol related requests. The following figures show the number of requests from last year.</p>
+    </div>
+    <section class="facts section-bg" data-aos="fade-up">
+      <div class="container">
+
+        <div class="row counters">
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-purecounter-start="0" data-purecounter-end="113" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Initial Submissions</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-purecounter-start="0" data-purecounter-end="87" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Amendments</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            
+            <span data-purecounter-start="0" data-purecounter-end="157" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Renewals</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-purecounter-start="0" data-purecounter-end="4" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Seminarts</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Facts Section -->
+
+  
+
+    
+{% endblock %}

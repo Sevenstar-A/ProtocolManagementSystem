@@ -1,0 +1,440 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+  
+<head>
+   {% include 'staff/head.html' %}
+   {% block style %}
+    {% endblock %}
+</head>
+  <!-- END: Head-->
+
+  <!-- BEGIN: Body-->
+  <body class="vertical-layout vertical-menu-modern 2-columns   fixed-navbar" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+
+    <!-- BEGIN: Header-->
+   {% include 'staff/header.html' %}
+    <!-- END: Header-->
+
+    <!-- BEGIN: Main Menu-->
+    <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
+      <div class="main-menu-content" style="margin-bottom: 40px;">
+       
+        <ul class="navigation navigation-main " id="main-menu-navigation" data-menu="menu-navigation" style="margin-top: 20px; margin-bottom: 200px;">
+          <li class=" navigation-header"><span>General</span></li>
+          
+          <li class=" nav-item">
+            <a href="{% url 'irb:home' %}"><i class="fa fa-home"></i><span class="menu-title" >Dashboard</span></a>
+          </li>
+          <li class=" nav-item">
+            <a href="{% url 'accounts:my_profile' %}"><i class="fa fa-user"></i><span class="menu-title" >My Profile</span></a>   
+          </li>
+
+          <li class=" navigation-header"><span>Proposal</span></li>
+          
+          <!-- proposal related -->
+          <li class=" nav-item">
+            <a href="#">
+              <i class="fa fa-th-list"></i><span class="menu-title" >Proposals</span>
+            </a>
+            <ul class="menu-content">
+              {% if 'irb.can_list_proposal' in irb_perms %}
+                <li class=" nav-item"><a href="{% url 'proposal:proposal_list' %} " class="menu-item">
+                  <span class="menu-title" >List Proposals</span></a>
+                </li>
+              {% endif %}
+
+              {% if 'irb.can_review_proposal' in irb_perms %}
+                <li class=" nav-item"><a href="{% url 'proposal:assigned_proposal' %} " class="menu-item">
+                  <span class="menu-title" >Assigned Proposals</span></a>
+                </li>
+              {% endif %}
+              
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item">
+                <span class="menu-title" >My Proposals</span></a>
+              </li>
+
+              <li class=" nav-item"><a href="{% url 'proposal:proposal_create' %}">
+                <span class="menu-title" >Request Initial Submission</span></a> 
+              </li>
+              
+            </ul>
+            
+          </li>
+          <!-- end of proposal related -->
+
+          <!-- amendment --> 
+          <li class=" nav-item {% block amendment %} {% endblock %}">
+            <a href="#">
+              <i class="fa fa-edit"></i><span class="menu-title" >Amendment</span>
+            </a>
+            <ul class="menu-content">
+            {% if 'irb.can_list_amendment' in irb_perms %}
+              <li class=" nav-item"><a href="{% url 'amendment:amendment_list' %} " class="menu-item"><span class="menu-title" >List Amendments</span></a>
+              </li>
+            {% endif %} 
+
+            {% if 'irb.can_review_amendment' in irb_perms %}
+              <li class=" nav-item"><a href="{% url 'amendment:assigned_amendment' %} " class="menu-item"><span class="menu-title" >Assigned Amendments</span></a>
+              </li> 
+            {% endif %}
+
+            <li class=" nav-item"><a href="{% url 'amendment:my_amendments' %} " class="menu-item"><span class="menu-title" >My Amendments</span></a>
+            </li>
+            <li class=" nav-item">
+              <a href="{% url 'amendment:check_prot_num' %}"><span class="menu-title" >Request Amendment</span></a> 
+            </li>
+            </ul>
+  
+          </li>
+          <!-- end of amendment -->
+
+          <!-- Renewal related -->
+          <li class=" nav-item {% block renewal_tab %} {% endblock %}">
+            <a href="#">
+              <i class="fa fa-reply-all"></i><span class="menu-title" >Renewal</span>
+            </a>
+            <ul class="menu-content">
+              {% if 'irb.can_list_renewal' in irb_perms %}
+              <li class=" nav-item"><a href="{% url 'renewal:renewal_list' %} " class="menu-item"><span class="menu-title" >List Renewals</span></a>
+              </li>
+              {% endif %}
+              
+              {% if 'irb.can_review_amendment' in irb_perms %}
+                <li class=" nav-item"><a href="{% url 'renewal:assigned_renewal' %} " class="menu-item"><span class="menu-title" >Assigned Renewals</span></a>
+                </li> 
+              {% endif %}
+              <li class=" nav-item"><a href="{% url 'renewal:my_renewals' %} " class="menu-item"><span class="menu-title" >My Renewals</span></a>
+              </li>
+
+              <li class=" nav-item">
+                <a href="{% url 'renewal:check_prot_num' %}"><span class="menu-title" >Request Re-Newal</span></a> 
+              </li>
+            </ul>
+          </li>
+          <!-- end of renewal related -->
+          
+            <!-- SAE related -->
+          <!-- <li class=" nav-item">
+            <a href="#">
+              <i class="fa fa-bug"></i><span class="menu-title" >SAE</span>
+            </a>
+            <ul class="menu-content">
+                <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >List SAE</span></a>
+                </li>
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My SAE</span></a>
+              </li>
+              <li class=" nav-item">
+                <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Request SAE</span></a> 
+              </li>
+            </ul>
+          </li> -->
+          <!-- end of SEA related -->
+          
+
+          <li class=" nav-item">
+            <a href="#"><i class="fa fa-line-chart"></i><span class="menu-title" > My Report</span></a> 
+          </li>
+
+          {% if user.is_staff %}
+              <!-- SAE related -->
+            
+              <li class=" nav-item">
+                <a href="#">
+                  <i class="fa fa-bar-chart"></i><span class="menu-title" >Report</span>
+                </a>
+                <ul class="menu-content">
+                  <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >Initial Submission Report</span></a></li>
+                  <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >Amendment Report</span></a></li>
+                  <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >Renewal Report</span></a></li>
+                  
+              
+                  <li class=" nav-item"><a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >General Report</span></a> </li>
+                </ul>
+              
+              </li>
+              
+              
+            
+                <!-- for staffs only -->
+              <li class=" navigation-header"><span>Collaborations</span></li>
+
+              <li class=" nav-item">
+                <a href="{% url 'irb:email' %}"><i class="fa fa-envelope"></i><span class="menu-title" title="Send email to one or many users, (uses your login email) ">Email</span></a> 
+              </li>
+
+              <li class=" nav-item"><a href="#"><i class="fa fa-share-alt"></i><span class="menu-title" >Collaborations</span></a>
+                <ul class="menu-content">
+                  <li><a class="menu-item" href="invoice-add.html" >Downloadable Documents</a>
+                  </li>
+                  <li><a class="menu-item" href="{% url 'news_list'  %}">News</a>
+                  </li> 
+                  
+                </ul>
+              </li>
+              <!-- endif for secreteriat Officer if -->
+         
+          {% endif %}
+         
+         
+
+          
+          {% if 'irb.can_list_user' in irb_perms %}
+            <li class=" navigation-header"><span>System</span></li>
+            <li class=" nav-item"><a href="#"><i class="fa fa-users"></i><span class="menu-title" >Users</span></a>
+              <ul class="menu-content">
+                <li><a class="menu-item" href="{% url 'accounts:users_list' %}">All</a></li> 
+                <li><a class="menu-item" href="{% url 'accounts:users_type_list' type='investigators' %}" >Investigators</a></li>
+                <li><a class="menu-item" href="{% url 'accounts:users_type_list' type='staff' %}">IRB Staffs</a></li>
+              </ul>
+            </li>
+          {% endif %}
+          {% if 'irb.can_manage_permission' in irb_perms %}
+            <li class=" nav-item">
+              <a href="{% url 'irb:position_list' %}"><i class="fa fa-briefcase"></i><span class="menu-title" >IRB Positions & Permissions</span></a> 
+            </li>
+          {% endif %}
+          {% if 'irb.can_list_configuration' in irb_perms %}
+            <li class=" nav-item">
+              <a href="{% url 'irb:position_list' %}"><i class="fa fa-cog"></i><span class="menu-title" >Settings</span></a> 
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+      <div class="content-overlay"></div>
+      <div class="content-wrapper">
+
+        <!--start message area -->
+        <div id="id_messages_area" class="content-header row" style="width: 100%;">
+            
+          {% if messages %}
+              {% for m in messages %}
+              
+                  {% if 'success' in m.tags  %}
+                  <div class="alert alert-icon-right alert-success alert-dismissible col-md-12" role="alert">
+                  {% elif 'warning' in m.tags %}
+                  <div class="alert alert-icon-right alert-warning alert-dismissible col-md-12" role="alert">
+                  {% elif 'error' in m.tags %}
+                  <div class="alert alert-icon-right alert-danger alert-dismissible col-md-12" role="alert">
+                  {% else %} 
+                  <div class="alert alert-icon-right alert-info alert-dismissible col-md-12" role="alert">
+                  {% endif %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <strong></strong> {{m}} <a href="#" class="alert-link"></a>
+                  </div>
+                
+              {% endfor %}
+          {% endif %}
+        </div>
+        <!-- end message area -->
+
+        <div class="content-header-left col-md-6 col-12 mb-2">
+          <h3 class="content-header-title mb-0">{% block title %}{% endblock %}</h3>
+          <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'irb:home' %}">Home</a></li>
+
+                <!-- list other page breadcrumbs in here -->
+                {% block breadcrumb %} {% endblock %}
+                
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-body"><!-- Grouped multiple cards for statistics starts here -->
+         {% block content %} 
+
+         {% endblock %}
+        </div>
+      </div>
+    </div>
+    <!-- END: Content-->
+
+    <!-- BEGIN: Footer-->
+    <footer class="footer footer-static footer-light navbar-border">
+      <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">Copyright  &copy; 2021 <a class="text-bold-800 grey darken-2" href="#" target="_blank">DebolTech</a></span><span class="float-md-right d-none d-lg-block">Developed with <i class="fa fa-heart pink"></i></span></p>
+    </footer>
+    <!-- END: Footer-->
+
+    <!-- BEGIN: Vendor JS-->
+      <script src="{% static 'staff/vendors/js/vendors.min.js' %}"></script>
+      <script src="{% static 'staff/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+    
+      <!-- BEGIN: Page Vendor JS-->   
+   <script src="{% static 'staff/js/scripts/tables/datatables/datatable-basic.min.js' %}"></script> 
+   <!-- END: Page Vendor JS-->
+      
+   <script src="{% static 'staff/js/core/app-menu.min.js' %}"></script>
+   <script src="{% static 'staff/js/core/app.min.js' %}"></script>    
+   <!-- END: Theme JS-->
+
+   <!-- BEGIN: Theme JS-->
+   <!-- END: Page JS-->
+   {% block js %} 
+   {% endblock %}
+  <script src="{% static 'staff/js/scripts/compiled.min.js' %}"></script>
+  <script>
+     $(document).ready(function(){
+      if ("{{user.is_authenticated}}"=="True"){
+        fetch_notis()
+        // check_last_fetch_time();
+        // setInterval( fetch_notis, 5000 );
+    }
+      
+    });
+    
+    function check_last_fetch_time(){
+      var currentdate = new Date(); 
+      if (localStorage.getItem('last_fetch')){
+          var last = localStorage.getItem('last_fetch')
+          var dif = currentdate.getTime() - new Date(last).getTime()
+          dif = dif/(1000*60)//changing from millisecond to minute
+          console.log("last fetch was on "+last+ "\n new is = "+currentdate.toString()
+          +" \n difference: "+dif 
+          )
+          if (dif >=30)
+            check_inbox()
+        }
+      else
+        {
+          localStorage.setItem('last_fetch', currentdate.toDateString())
+          fetch_notis()
+        }
+
+    }
+
+    function check_inbox(){
+      fetch(" {% url 'noti:get_last_noti_id' %}").then(e=>e.json()).then(data =>
+      {
+        if(data['id']!=null && localStorage.getItem('last_noti_id') != data['id'])
+        {
+            console.log("There is a new noti ")
+            fetch_notis()
+          }
+          else{
+            window.alert("There is no new Notification")
+          }
+      });
+
+    }
+
+    function fetch_notis(){
+      fetch( " {% url 'noti:api_get_unread'  %}").then(e=>e.json()).then(data =>
+        {   num_unread_messages = data['num']
+            if (num_unread_messages > 0){ 
+                document.getElementById("noti_count_span").innerHTML = num_unread_messages;
+                document.getElementById("noti_count_span2").innerHTML = num_unread_messages+ "  New";
+
+                var list = document.getElementById('unread_notis_list');
+                list.innerHTML = "";
+                for (n of data['notis'])
+
+                  list.innerHTML += append_unread_messages(n);
+                  
+                // localStorage.setItem('last_noti_id', data['notis'][-1]['id'])
+              }
+            else {document.getElementById("noti_count_span").innerHTML = ''; document.getElementById("noti_count_span2").innerHTML = ''}    
+        });
+      
+    }
+    
+    function truncateString(string, limit= 70) {
+      if (string.length > limit) 
+        return string.substring(0, limit) + "...";
+      return string
+    }
+
+    function append_unread_messages(n){
+      var anchor = ""
+      var detail = "/noti/notification_detail/"+n.id+"/"
+      var icon_class = '', t_color  = '';
+
+      
+      if (n.noti.tag == 'success')
+        { 
+          icon_class = 'fa fa-check icon-bg-circle bg-teal'; t_color = '#009688 '}
+      else if(n.noti.tag == 'warning')
+        {  icon_class  ='fa fa-exclamation-triangle icon-bg-circle bg-yellow bg-darken-3'; t_color = '#c8960a ';}
+      else if(n.noti.tag == 'error')
+        { icon_class  ='fa fa-times icon-bg-circle bg-red bg-darken-1'; t_color = 'red ';}
+      else
+        { icon_class = 'fa fa-info-circle icon-bg-circle bg-cyan'; t_color = 'blue darken-3'}
+    
+        var full = "<div id= 'noti_"+n.id+"' class='media'>\
+                      <div class='media-left align-self-center'><i class='" + icon_class + "'></i></div>\
+                      <div class='media-body'>\
+                        <h6 class='media-heading ' style =' color: "+t_color+"'>"+truncateString(n.noti.noti)  +"</h6>\
+                        <p class=' font-small-3 text-muted' style='float:right'>\
+                          <a class='btn-info mr-1' href = '"+detail+"' >View Detail</a>\
+                          <i class='fa fa-eye' onclick=markasread('"+n.id+"')></i>"
+                               
+                if (n['noti']['link'] != '' ){
+                  full += "<a href = "+n.noti.link + "> Redirect </a>\
+                        </p>\
+                        <small><time class='media-meta text-muted' datetime=''>"+n['noti']['created_date']+"</time></small>\
+                      </div>\
+                    </div> "
+                            }
+                          else{
+                            full += "</p>\
+                                        <small><time class='media-meta text-muted' datetime=''>"+n['noti']['created_date']+"</time></small>\
+                                    </div>\
+                                  </div>"
+                          }
+                        
+                        
+    return full
+        }
+
+    function markasread(id){
+      try {
+        fetch( '/noti/mark_user_notification_as_read/'+id+'/' ).then(e=>e.json()).then(data =>
+            {   if (data['error'] == false){
+                    var list = document.getElementById('noti_'+id);
+                    list.remove();
+                    var num_area = document.getElementById("noti_count_span")
+                    num_area.innerHTML = parseInt( num_area.innerHTML) - 1
+                  }
+                else{window.alert(data['msg'])}
+            });
+      } 
+      catch (error) {}
+
+    }
+
+    function markallread(){
+      
+      if (confirm('You are updating all unread messages As Read! Do you want Continue? '))
+          fetch( " {% url 'noti:api_mark_all_as_read'  %}").then(e=>e.json()).then(data =>
+              {   update_num = data['update_num']
+                  if (update_num >= 0){ 
+                      document.getElementById("noti_count_span").innerHTML = '';
+                      document.getElementById("noti_count_span2").innerHTML = "";
+
+                      var list = document.getElementById('unread_notis_list');
+                      list.innerHTML = "";
+                      // localStorage.setItem('last_noti_id', data['notis'][-1]['id'])
+                    }
+                  else {
+                    alert("Sorry! an exception occured, please try again later")
+                  }    
+              });
+    }
+      
+</script>
+
+
+
+  </body>
+  <!-- END: Body-->
+
+</html>

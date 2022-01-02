@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>{% block title %} IRB Research Proposal Sumition System{% endblock %}</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'customer/img/logo.png' %}" rel="icon">
+  <link href="{% static 'customer/img/logo.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i&display=swap" rel="stylesheet">
+
+  <link href="{% static 'staff/global_assets/css/icons/icomoon/styles.min.css' %}" rel="stylesheet" type="text/css">
+<!-- <link href="{% static 'staff/assets/css/customer_all.min.css' %}" rel="stylesheet" type="text/css"> -->
+
+<!-- customer CSS Files -->
+  <link href="{% static 'customer/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'customer/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'customer/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'customer/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'customer/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'customer/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'customer/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  
+  <link href="{% static 'customer/css/style.css' %}" rel="stylesheet">
+  
+
+  {% block style %} {% endblock %}
+</head>
+
+<body >
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center {% block transparent-header %}{% endblock %}">
+      
+    <div class="container d-flex justify-content-between align-items-center">
+
+      <div class="logo">
+        <h1 class="text-light"><a href="{% url 'index' %}"><span>AAU CHS IRB </span></a><img src="{% static 'customer/img/irb.png' %}" alt="" height="100%" class="img-fluid"></a></h1>
+        
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="{% static 'customer/img/hero-bg.jpg' %}" alt="" class="img-fluid"></a> -->
+      </div>
+      {% for message in messages %}
+        {{message.tag}}
+          {% if 'success' in message.tags %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+          <i class="mdi mdi-check-all me-2"></i>
+          {{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% else %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+          <i class="mdi mdi-check-all me-2"></i>
+          message <a href="#" class="alert-link">#</a>. Give it a click if you like.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+      {% endfor %}
+      
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a {% block home %}{%endblock %}  href="{% url 'index' %}">Home</a></li>
+          <li class="dropdown"><a href="#"><span>About Us</span> <i class="bi bi-chevron-down"></i></a>
+              <ul>
+                <li><a {% block about %} {%endblock %}href="{% url 'about' %}">About Us</a></li>
+                <li><a {% block services%}{%endblock%} href="{% url 'services' %}">Services</a></li>
+                <li><a {% block galary%}{%endblock%}href="{% url 'gallery' %}">Gallery</a></li>
+              </ul>
+          </li>
+          <li class="dropdown" style="width: fit-content;"><a href="#"><span>News and Events</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              
+              <li><a href="{% url 'news-feed' %}"><i class="bi bi-newspaper"></i>News</a></li>
+              <li><a href="#"><i class="bi bi-calendar-event"></i>Events</a></li> 
+            </ul>
+          </li>
+
+          <li class="dropdown" style="width: fit-content;"><a href="#"><span>Documents</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#"><i class="bi bi-calendar-event"></i>All</a></li> 
+              <li><a href="{% url 'news-feed' %}"><i class="bi bi-newspaper"></i>Initial Submission Related</a></li>
+              <li><a href="#"><i class="bi bi-calendar-event"></i>Amedment Related</a></li> 
+              <li><a href="#"><i class="bi bi-calendar-event"></i>Renewal Related</a></li> 
+
+            </ul>
+          </li>
+          <li><a {% block help %}{%endblock %}  href="{% url 'index' %}">Help</a></li>
+
+         
+          
+          
+          <li><a {% block contact_us %}{%endblock%} href="{% url 'contact_us' %}">Contact Us</a></li>
+          {% if user.is_authenticated %}
+          <li class="dropdown">
+            <a {% block profile %}{%endblock%} href="#">
+              <img src="{{user.profile_image.url}}" width="45px" height="45px"  style="border: solid 2px white; border-radius: 49%; 
+              box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);" />
+              <!-- <span>user.full_name</span>  -->
+             
+            </a>
+            <ul>
+              <li><a  href="{% url 'irb:home' %}">Dashboard</a></li>
+              <li><a href="{% url 'proposal:my_proposals' %}">My Proposals</a></li>
+              <li><a href="{% url 'noti:notifications' %}">My Notifications</a></li>
+              
+              <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+              
+            </ul>
+          </li>
+          <li>
+            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="mdi mdi-magnify"></i>
+                            </button>
+          </li>
+          {% else %} 
+          <li><a {% block sign_in %}{%endblock%} href="{% url 'accounts:login' %}">Login</a></li>
+          <li class="dropdown" style="width: fit-content;"><a href="#"><span>Register</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'accounts:signup' %}" style="float:left">As Investigator</a></li> 
+              <li><a href="{% url 'accounts:member_signup' %}" style="float:left">As IRB Member</a></li>
+
+            </ul>
+          </li>
+
+          {% endif %}
+         
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header>
+  <!-- End Header -->
+  
+  
+  <main id="main">
+  {% block content %} 
+
+  {% endblock %}
+</main>
+  
+
+ <!-- End #main -->
+ 
+ {% include 'blacklion/footer.html' %}
+  <!-- ======= Footer ======= -->
+  
+  <!-- Vendor JS Files -->
+  <script src="{% static 'customer/vendor/aos/aos.js' %}"></script>
+  
+  <script src="{% static 'customer/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'customer/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'customer/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'customer/vendor/purecounter/purecounter.js' %}"></script>
+  <script src="{% static 'customer/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'customer/vendor/waypoints/noframework.waypoints.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'customer/js/main.js' %}"></script>
+  {% block extrastyle %} {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,479 @@
+{% extends 'staff/base.html'%}
+{% load static %} 
+{% load core_templatetags %}
+{% block title %} Update Initial Documents and Investigators Information{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="">Update Documents</a></li> 
+{% endblock %}
+{% block style %} 
+<style>
+    #cors_table td {
+        padding-right:8px;
+        padding-left:4px;       
+    }
+
+    .errorlist li{
+        color: #ff7588;;
+    }
+
+</style>
+<link rel="stylesheet" type="text/css" href="{% static 'staff/css/plugins/forms/wizard.min.css' %}">
+
+{% endblock %}
+{% block content %} 
+
+<div class="content-body">
+<!-- Form wizard with icon tabs section start -->
+        <section id="icon-tabs">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mt-1 card-title text-center ">Update your proposal documents and update investigators information.</h4>
+                            
+                        </div>
+                        <div class="card-content ">
+                            <div class="card-body">
+                            <form action="" method="POST" enctype="multipart/form-data" class="icons-tab-steps wizard-circle">
+                                    {% csrf_token %}
+                                    {{doc_formset.management_form}}
+                                    {{cors_formset.management_form}}
+                                    
+                                    <h6><i class="step-icon fa fa-file-text"></i> Update Proposal Documents</h6>
+                                   
+                                    <fieldset>
+                                        <div class="col-xl-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class=" text-center"><b> {{doc_types|length}}  Documents are required : -  </b>
+                                                        {% for d in doc_types %} 
+                                                            {{d.name}}, 
+                                                        {% endfor %}
+                                                       
+                                                    </h5>
+                                                    <br>
+                                                    
+                                                   {% if doc_errors %} 
+                                                   <h4 class="text-danger text-center">
+                                                       Invalid inputs found for the document uploading form! Please recheck and resubmit again!
+                                                    </h4>
+                                                   {% endif %}
+                                                    <br>
+                                                    
+                                                    <div class="table-responsive">
+                                                        <table id="docs_table" class="table table-bordered table-striped table-hover align-middle mb-0">
+                                                            <thead class = "table-light">
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Document Type</th>
+                                                                    <th>Document File</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="docs_table_body">
+                                                                {% for form in doc_formset %}
+                                                                    {{form.id}}
+                                                                    <tr id="docrow_{{forloop.counter}}">
+                                                                        <th scope="row">{{forloop.counter}}</th>
+                                                                        <td>{{ form.doc_type }}
+                                                                            {{form.errors.doc_type}}
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="custom-file">{{ form.doc }}
+                                                                                <label class="docs custom-file-label" for="id_doc_form-{{c}}-doc">Update File</label>
+                                                                            </div>
+                                                                           
+                                                                            {{form.errors.doc}}
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <br>
+                                                    <h4>Current documents</h4>
+                                                    <input id="id_deleted_other_docs" type="hidden" name = "deleted_other_docs"  value=""/>
+                                                    <div class="table-responsive">
+                                                        <table id="docs_table" class="table table-bordered table-striped table-hover align-middle mb-0">
+                                                            <thead class = "table-light">
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Document Type</th>
+                                                                    <th>Document File</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody id="docs_table_body">
+                                                                {% for d in initial_docs %}
+                                                                    <tr id="cur_docrow_{{d.id}}">
+                                                                        <th scope="row">{{forloop.counter}}</th>
+                                                                        <td>
+                                                                            {{ d.doc_type.name }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <a href="{{d.doc.url}}">{{ d.doc|get_filename}}</a>
+                                                                        </td>
+                                                                        <td>
+                                                                            {% if d.doc_type.name == 'Other Related Document' %}
+                                                                            <a onclick="delete_other_docs('{{d.id}}')"><i id="other_doc_icon_{{d.id}}" class="fa fa-trash red"></i></a>
+                                                                            {% endif %}
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                    
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">Add Other Related Documents</h4>
+                                                        <p class="card-title-desc">If you have any other related files, click the button below and select the files( one or multiple files) you to upload. </p>
+                                                        <div>
+                                                            <input class="btn btn-info " name="other_docs" type="file" accept=".pdf,.doc, .docx, .csv, .xlsx" id="other_docs"  multiple="multiple">  
+                                                            <div class="dz-message needsclick">
+                                                                <div class="mb-3">
+                                                                    <i class="display-4 text-muted bx bxs-cloud-upload"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col -->
+                                        </div> <!-- end row -->
+                                        <br>
+
+                                    </fieldset>
+                                    <br>
+
+                                    <!-- Step 2 -->
+                                    <h6><i class="step-icon fa fa-users"></i>Include Proposal Investigators</h6>
+                                    <fieldset>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div id="generate_cors_div" class="row">
+                                                            
+                                                            
+                                                            <div class="col-lg-5">
+                                                                <h4 class=" card-title" >Please specify the number of investigators (The minimum is 1): </label>
+                                                            </div>
+                                                            <div  class="col-md-6 row" >
+                                                                <div class="col-md-6">
+                                                                    <input id="no_invest" class=" form-control"  type="number" value="1" min="1" placeholder="Number of investigators"  style="display: inline;">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <button type="button" id="generate_cors_btn" onclick="generate_cors()" class="btn btn-success waves-effect waves-light" style="display: inline; padding-left: 40px;padding-right: 40px;">Ok</button>    
+                                                                </div>  
+                                                            </div>  
+                    
+                                                        </div>
+    
+                                                        <div class="row col-xl-12" style="padding-left: 20px;margin-top: 20px;">
+                                                            <h5  sytle="font-weight-semibold" id="number_helper"></h5>
+                                                        </div>
+                                                    
+                                                        <div id="add_more_cors_div" style = "display: none" class="col-lg-3">
+                                                            <button type="button" id="add_more_cors_btn" onclick="add_new_cors(generate_text=true)" class="btn btn-success waves-effect waves-light" style="display: inline; padding-left: 40px;padding-right: 40px;">Add More Investigator</button>    
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if cors_errors %} 
+                                        <h4 class="text-danger text-center">
+                                            Ivalid inputs found for the investigators information form! Please recheck and resubmit again!    
+                                        </h4>
+                                        {% endif %}
+                                        <br>
+
+                                        <input id="id_deleted_cors_ids" hidden name = "deleted_cors_ids" value="">
+                                        
+                                        <div class="table-responsive">
+                                            <table id="cors_table" class="table table-bordered table-striped table-hover align-middle mb-0">
+                                                <thead class = "table-light">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Full Name</th>
+                                                        <th>Email</th>
+                                                        <th>Inistitution (optional)</th>
+                                                        <th>CV</th>
+                                                        <th>Is PI</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody id="cors_table_body">
+                                                    {% for form in cors_formset %}
+                                                    {{form.id}}
+                                                        <tr id="corsrow_{{form.id.value}}">
+                                                            <td class="num_field"style = "width:50px; " >{{forloop.counter}}</td>
+                                                            <td style = "padding-right: 5px; padding-left: 0px;"  >
+                                                                {{ form.name }}
+                                                               {{form.errors.name}}
+                                                            </td>
+                                                            <td style = "padding-right: 5px; padding-left: 0px;">{{ form.email }}
+                                                                {{form.errors.email}}
+                                                            </td>
+                                                            <td style = "padding-right: 5px; padding-left: 0px;">
+                                                                {{ form.insititution }}
+                                                                {{form.errors.insititution}}
+                                                            </td>
+                                                            <td style = "padding-right: 5px; padding-left: 0px;" style = "width:150px; padding-right: 1px; padding-left: 1px;">
+                                                                   {{ form.cv }}
+                                                                   {{form.errors.cv}}
+                                                            </td>
+                                                            <td >{{ form.is_pi }}
+                                                                {{form.errors.is_pi}}
+                                                            </td>
+                                                            <td >
+                                                                <button type="button"  id="cors_btn_{{form.id.value}}" title="Remove this investigator." onclick="delete_current_cors('{{form.id.value}}')" 
+                                                                    class="btn btn-danger fa fa-trash w-sm">
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    
+                                        <br>
+                                        <hr>
+
+                                    </fieldset>
+
+                                    <!-- Step 3 -->
+                                    <h6><i class="step-icon fa fa-paperclip"></i>Finish</h6>
+                                    <fieldset>
+                                        <h4 class="card-title">You can update the file that shows the list of participating investigators signiture:</h4>
+                                    {% if part_inv_form %}
+                                        <p>Click <a href="{{part_inv_form.0.doc.url}}" download>download</a> to download the checklist document.</p>
+                                    {% endif %}
+                                    <div class="row" style="width: 80%;">
+                                        <div class="col-lg-3"> <h4 style="display: inline; padding-left: 50px;" >Upload File</h4></div>
+                                        <div class="col-lg-8 custom-file">
+                                            {{inv_form.inv_doc}}
+                                            <label class="custom-file-label" for="part_inv_doc">Update File</label>
+                                            {% if co_inv_doc %} 
+                                            <a href="{{co_inv_doc.url}}" download="">
+                                                Download current document
+                                            </a>
+                                            {% else %} 
+                                            Current document not found!
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                    <br>
+                                    <p  class="mt-3" style="margin: auto; width: 50%;">
+                                        <label for="id_send_notification " >
+                                            <input type="checkbox" name="send_notification" value="true" class="mb-1" id="id_send_notification">
+                                            Send notification to IRB staffs about my update.
+                                        </label>
+                                    </p>
+                                    <br>
+                                 
+                                    <div  style="margin:auto; width:50%"  >
+                                        <button  type="submit" onclick="return confirm('Finished uploading all required files?')" style="width: 90%;" class="btn btn-success btn-lg waves-effect waves-light text-center">Submit</button>
+                                    </div>
+                                       
+                                    </fieldset>
+
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- Form wizard with icon tabs section end -->
+</div>
+{% endblock %}
+{% block js %} 
+
+<script src="{% static 'staff/vendors/js/extensions/jquery.steps.min.js' %}"></script>
+<script src="{% static 'staff/vendors/js/forms/validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'staff/js/scripts/forms/wizard-steps.min.js' %}"></script>
+
+
+     
+<script>
+
+    // for current data
+    var deleted_cors_ids = new Array()
+    var deleted_other_doc_ids = new Array()
+
+    // for newly created Co-investigators row
+    function get_num_rows(){
+        return $("#cors_table_body tr").length
+    }
+    
+    var last_cors_row_id = get_num_rows() - 1  //since it starts from 0
+
+    $(document).ready(function(){
+        update_doc_label_fors();
+        if ("{{editing}}"=="True"){
+            document.getElementById("generate_cors_div").style['display'] = 'none'
+            document.getElementById("add_more_cors_div").style['display'] = 'block'
+            generate_number_helper_text();
+        }
+       
+    })
+
+    function delete_other_docs(id){
+        row = document.getElementById('cur_docrow_'+id)
+        icon = document.getElementById('other_doc_icon_'+id)
+       
+        if (deleted_other_doc_ids.includes(id) )
+            {
+                for (var i=0;i<deleted_other_doc_ids.length; i++)
+                    if (deleted_other_doc_ids[i] == id)
+                        deleted_other_doc_ids.splice(i,1);
+
+                row.style['background-color'] = ""
+                icon.className = "fa fa-trash red"
+                icon.title = "Delete"
+                
+            }
+        else{
+            deleted_other_doc_ids.push(id)
+            row.style['background-color'] = "#e9b4b4"
+            icon.className = "fa fa-refresh #0A0454 "
+            icon.title = "Restore"
+        }
+    }
+
+    function delete_current_cors(id){
+        row = document.getElementById('corsrow_'+id)
+        btn = document.getElementById('cors_btn_'+id)
+
+        if (deleted_cors_ids.includes(id) ) // if already in deleted, restore it
+            {
+                for (var i=0;i<deleted_cors_ids.length; i++)
+                    if (deleted_cors_ids[i] == id)
+                        deleted_cors_ids.splice(i,1);
+                row.style['background-color'] = ""
+                btn.className = "btn btn-danger fa fa-trash red"
+                btn.title = "Remove this investigator."
+            }
+        else{
+            deleted_cors_ids.push(id)
+            row.style['background-color'] = "#e9b4b4"
+            btn.className = "btn btn-success fa fa-refresh #0A0454 "
+            btn.title = "Restore this investigator"
+        }
+    }
+
+    function add_new_cors(generate_text=false)
+    {
+        try {
+            var row_num = get_num_rows() +1
+            var new_row_id = "new_"+(last_cors_row_id+1)
+            var table = document.getElementById("cors_table")
+            var row = table.insertRow();
+            row.id= "corsrow_"+ new_row_id;
+            console.log("adding row ",row.id)
+            var cell1=  row.insertCell(), cell2=  row.insertCell(), cell3=  row.insertCell(), 
+                cell4=  row.insertCell(), cell5=  row.insertCell(), cell6=  row.insertCell(), cell7=  row.insertCell() ;
+            cell1.setAttribute('class',"num_field");
+            cell1.innerHTML =   '<td class="num_field"  scope="row">'+row_num+'</th>';
+            cell2.innerHTML =   '<td >{{ cors_formset.empty_form.name }}</td>'.replace(/__prefix__/g, new_row_id);
+            cell3.innerHTML =   '<td style = "padding-right: 5px; padding-left: 0px;">{{ cors_formset.empty_form.email }}</td>'.replace(/__prefix__/g, new_row_id);
+            cell4.innerHTML =   '<td style = "padding-right: 5px; padding-left: 0px;">{{ cors_formset.empty_form.insititution }}</td>'.replace(/__prefix__/g, new_row_id);
+            cell5.innerHTML =   '<td style = "padding-right: 5px; padding-left: 0px;" style = "width:150px; ">\
+                                            {{ cors_formset.empty_form.cv }}\
+                                    </td>'.replace(/__prefix__/g, new_row_id);
+
+            cell6.innerHTML =   '<td  >{{ cors_formset.empty_form.is_pi }}</td>'.replace(/__prefix__/g, new_row_id);
+            
+
+            cell7.innerHTML =   '<td >\
+                                    <button id="btn_'+new_row_id+'" type="button" onclick=remove_cors("'+(row.id)+'") class="btn btn-danger fa fa-trash w-sm">\
+                                        <i class="mdi mdi-trash-can d-block font-size-16"></i> \
+                                    </button>\
+                                </td>'.replace(/__prefix__/g, new_row_id);
+
+                
+            $('#id_cors_form-TOTAL_FORMS').val(row_num);
+            last_cors_row_id +=1;
+
+            if (generate_text)
+                generate_number_helper_text() 
+             
+
+        }
+    catch (error){console.log(error)}
+    }
+  
+
+    function update_doc_label_fors(){
+        
+        var docs_labels = document.querySelectorAll('label[class="docs custom-file-label"]')
+        for (i=0;i<docs_labels.length;i++){
+            if (docs_labels[i].htmlfor != 'part_inv_doc')
+                docs_labels[i].setAttribute("for", "id_doc_form-"+i+"-doc");    
+        }
+
+        var cors_labels = document.querySelectorAll('label[class="cors custom-file-label"]')
+        for (i=0;i<cors_labels.length;i++){
+            if (cors_labels[i].htmlfor != 'part_inv_doc')
+                cors_labels[i].setAttribute("for", "id_cors_form-"+i+"-cv");    
+        }
+
+    }
+
+    function remove_cors(id){
+        document.getElementById(id.trim()).remove()
+        var corsrow_count = get_num_rows()
+        $('#id_cors_form-TOTAL_FORMS').val(corsrow_count); 
+        
+        var num_fields = document.querySelectorAll('td[class="num_field"]')
+
+        for (i=0;i<corsrow_count; i++) {num_fields[i].innerHTML = i+1;} 
+
+        generate_number_helper_text()
+
+    }
+    
+    function generate_cors(){
+        
+        // since we already have one django generated form by default, we should generate n-1 number of forms 
+        var no_invest = parseInt(document.getElementById("no_invest").value) - 1 
+        for (i=0;i<no_invest;i++)
+            add_new_cors()
+        document.getElementById("generate_cors_div").style['display'] = 'none'
+        document.getElementById("add_more_cors_div").style['display'] = 'block'
+        generate_number_helper_text();
+        var btns = document.querySelectorAll('button[class="btn btn-danger fa fa-trash w-sm"]')
+        for (var i = 0; i < btns.length; i++) {
+            var id = String(btns[i].id).replace('btn_','')
+            btns[i].addEventListener('click', remove_cors(id));
+        }
+        
+    }
+
+    function generate_number_helper_text(){
+        document.getElementById("number_helper").innerHTML = "NB. Your Proposal contains a total of <strong>"+parseInt( $('#id_cors_form-TOTAL_FORMS').val())+"</strong> Investigators.<br> You can update their information or add new."
+    }
+        
+    $("form").submit(function(){
+        document.getElementById('id_deleted_cors_ids').value = deleted_cors_ids
+        document.getElementById('id_deleted_other_docs').value = deleted_other_doc_ids
+        
+    })
+</script>
+
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends 'staff/base.html' %} 
+{% load static %}
+{% load core_templatetags %} 
+{% block title %} List of latest proposals{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href=""> List Proposals</a></li> 
+{% endblock %}
+
+{% block content  %} 
+ <!-- BEGIN: Content-->
+   
+
+      <div class="content-body">
+         
+          <section id="html5">
+              <div class="row">
+                  <div class="col-12">
+                      <div class="card">
+                          <div class="card-header">
+                              <h4 class="card-title"></h4>
+                              <a class="heading-elements-toggle"><i class=""></i></a>
+                             
+                          </div>
+                          <div class="card-content collapse show">
+                              <div class="card-body card-dashboard">
+                                  <table class="table table-striped table-bordered multi-ordering ">
+                                      <thead>
+                                          <tr>
+                                              <th>#</th>
+                                              <th>Protocol Number</th>
+                                              <th>Proposal Title</th>
+                                              <th>Investigator</th>
+                                              <th>Submission Date</th>
+                                              <th>Latest Version</th>
+                                              <th>Status</th>
+                                              <th>Action</th>
+                                          </tr>
+                                      </thead>
+                                     
+                                      <tbody>
+                                        {% for p in props %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{p.protocol_number}}</td>
+                                                <td>{{p.title|truncatechars_html:40}}</td>
+                                                <td><a href="{% url 'accounts:edit_user_account' user_id=p.created_by.id %}" target="_blank">{{p.created_by}}</a></td>
+                                                <td>{{p.accepted_date.date}}</td>
+                                                <td class="text-center">{{p.latest_version_num_with_amend}}
+                                                    {% if p.latest_version_num_with_amend > p.latest_version_num %} 
+                                                    <br>
+                                                       ({% subtract p.latest_version_num_with_amend  p.latest_version_num %}  
+                                                        version from amendment request)
+                                                    {% endif %}
+                                                </td>
+                                                <td>   
+                                                    {% if p.status == "Pending" or p.status == "On Comment" %} 
+                                                        <span class="badge badge-warning">{{p.status}}</span>
+                                                    {% elif p.status == 'Approved' %} 
+                                                        <span class="badge badge-success">Approved</span>
+                                                    {% elif p.status == 'Rejected' %}
+                                                        <span class="badge badge-danger">Rejected</span>
+                                                    {% else %} 
+                                                        <span class="badge badge-info">{{p.status}}</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <span class="dropdown">
+                                                        <a id="btnSearchDrop31" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle dropdown-menu-right"><i
+                                                            class="fa fa-ellipsis-v"></i>
+                                                        </a>
+                                                        <span aria-labelledby="btnSearchDrop31" class="dropdown-menu mt-1 dropdown-menu-right">
+                                                            
+                                                            
+                                                            {% if user != p.created_by %}
+                                                            <!-- if a user cannot view detail how couold he manage proposal or  -->
+                                                                {% if 'irb.can_see_proposal_detail' in irb_perms  %}
+                                                                    <a href="{% url 'proposal:proposal_detail' pk=p.id %}" class="dropdown-item "><i class="fa fa-eye"></i>View Detail</a>
+                                                                    <a href="{% url 'proposal:manage_proposal' pk=p.id %}" class="dropdown-item "><i class="fa fa-cog"></i>Manage Proposal</a>
+                                                                {% endif %}
+                                                                
+                                                                
+                                                                {% if  'irb.can_accept_proposal' in irb_perms %}
+                                                                        <a href="#" data-target="#comment_modal" data-toggle="modal" onclick="comment_fun('{{p.id}}', '{{p.protocol_number}}')"  class="dropdown-item">
+                                                                            <i class="fa fa-envelope"></i> Send Comment
+                                                                        </a>
+                                                                        {% if p.protocol_number == '-' %}
+                                                                            {% if   p.status == 'Pending' or p.status == 'Rejected'  %} 
+                                                                                <a  href="{% url 'proposal:delete_proposal' pk=p.id %}"  class="dropdown-item"
+                                                                                    onclick="return confirm('Are you sure you want to delete this proposal? Deleting a proposal is an irreversible process and once you delete it all data related with it will be deleted from the system. \n Do you want to continue deleting?')">
+                                                                                    <i class="fa fa-trash red"></i> Delete Proposal
+                                                                                </a>
+                                                                            {% endif %}
+                                                                        {% endif %}
+
+                                                                {% endif %}
+
+
+                                                            {% else %}
+                                                                
+                                                                <a href="{% url 'proposal:proposal_detail' pk=p.id %}" class="dropdown-item "><i class="fa fa-eye"></i>View Detail</a>
+                                                                
+                                                                {% if p.protocol_number == '-' %}
+                                                                        {% if p.status == 'Pending' or p.status == 'Rejected' %} 
+                                                                            <a  href="{% url 'proposal:delete_proposal' pk=p.id %}"  class="dropdown-item"
+                                                                                onclick="return confirm('Are you sure you want to delete this proposal? Deleting a proposal is an irreversible process and once you delete it all data related with it will be deleted from the system. \n Do you want to continue deleting?')">
+                                                                                <i class="fa fa-trash red"></i> Delete Proposal
+                                                                            </a>
+                                                                        {% endif %}
+                                                                {% endif %}
+
+                                                            {% endif %}
+                                                                
+
+                                                            
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                      <tfoot>
+                                          <tr>
+                                              <th>#</th>
+                                              <th>Protocol Number</th>
+                                              <th>Proposal Title</th>
+                                              <th>Investigator </th>
+                                              <th>Submission Date</th>
+                                              <th>Latest Version </th>
+                                              <th>Status</th>
+                                              <th>Action</th>
+                                          </tr>
+                                      </tfoot>
+                                  </table>				
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          <!--/ HTML5 export buttons table -->
+
+
+        <!-- start correction comment modal -->
+        <div class="modal fade" id="comment_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <section class="contact-form">
+                            <div class="modal-header">
+                                <h5 class="modal-title" >Send Correction Comment for :-  <h4 id='comment_modal_header'></h4></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <input type="hidden"  name="p_id"    id = 'comment_p_id'    value="" />
+                                
+                                <fieldset class="form-group col-12">
+                                    <label>Write your comment below.</label>
+                                    <br>
+                                   <textarea class="form-control round col-lg-12" id="comment_area" rows="10" name="comment"></textarea>
+                                </fieldset>
+                                <span id="fav" class="d-none"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <fieldset class="form-group position-relative has-icon-left mb-0">
+                                    <button type="submit" onclick="send_comment()" id="edit-contact-item" class="btn btn-info edit-contact-item" data-dismiss="modal"><i
+                                        class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Comment</span></button>
+                                </fieldset>
+                            </div>
+                    
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- end correction comment modal -->
+       
+
+
+      </div>
+  
+  <!-- END: Content-->
+
+{% endblock %} 
+
+{% block js %} 
+
+<!-- vender js -->
+
+<!-- end vender js -->
+<script>
+   
+ 
+    // functions for commenting on proposal
+    function comment_fun(id, p_num){
+        document.getElementById('comment_p_id').value = id;
+        document.getElementById('comment_modal_header').innerHTML = " "+p_num
+    }
+
+    function send_comment() {
+        try{
+            if(confirm("Send Comment Now..."))
+            var comment = document.getElementById('comment_area').value
+            if( comment != ''){
+                fetch("{% url 'proposal:correction_comment'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'comment': comment, 'p_id': document.getElementById('comment_p_id').value})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully sent your comment!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some comment on the comment area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+            
+        }
+
+    function to_pending(pk){
+        if (confirm("Are you sure you want to revert the status of this protocol to 'Pending'? "))
+            window.open("/proposal/to_pending/"+pk+"/", "_self")
+    }
+
+    
+    function submit_acceptance(){
+        if (confirm("Are you sure you want to accept this proposal?")){
+            document.getElementById('accept_p_id').value = id;
+        document.getElementById('accept_modal_header').innerHTML = " "+p_num
+        }
+    }
+
+    function accept(pk, p_num){
+            document.getElementById('accept_p_id').value = id;
+            if (p_num != "-")
+                document.getElementById('accept_modal_header').innerHTML = "for "+p_num
+        
+    }
+
+</script>
+{% endblock %} 

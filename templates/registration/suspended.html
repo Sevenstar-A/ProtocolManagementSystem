@@ -1,0 +1,30 @@
+{% extends 'registration/reg_base.html' %} 
+{% load static %} 
+{% block content %}
+    <section class="row flexbox-container">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+            <div class=" col-7 box-shadow-2 p-0">
+                <div class="card border-grey border-lighten-3 px-1 py-1 m-0 round">
+                    <div class="card-header border-0 pb-0">
+                        <h3 class="card-subtitle line-on-side text-muted text-center  pt-2"><span>Suspended Account!</span></h3>
+                    </div>
+                    <div class="card-content">
+                        <!-- <h5 class="text-danger ml-3">Please re-check your inputs!</h5> -->
+                        <br>
+                        <p  style="margin: auto;" class="text-center  col-7 ">This account has been suspended by system admins. Please contact AAU CHS IRB staffs! </p>
+                        <br>
+                        <div class="card-body ">
+                            <div class="col-5" style="margin: auto;">
+                                <br>
+                                <div class="card-body">
+                                    <a href="\" class="btn btn-outline-danger btn-block"><i
+                                            class="feather icon-user"></i> Home </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

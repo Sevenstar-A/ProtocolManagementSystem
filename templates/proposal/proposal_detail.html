@@ -1,0 +1,361 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% load core_templatetags %}
+{% block title %} Detail of Proposal{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href=""> Proposal Detail</a></li> 
+{% endblock %}
+
+{% block content  %} 
+ <!-- BEGIN: Content-->
+        <div class="content-body">
+            <!-- account setting page start -->
+            <section id="page-account-settings">
+                <br>
+                    
+                <div class="row">
+                      <!-- left menu section -->
+                    <div class="col-md-2 mb-2 mb-md-0 pt-1 round" style="background-color: white;">
+                        <h5>Proposal Versions</h5>
+                        <ul class="nav nav-pills flex-column mt-md-0 mt-1">
+                            {% for v in versions %}
+                                {% if v == 1 %}
+                                    <li class="nav-item">
+                                        {% if cur_ver == 1 %}
+                                            <a  id="initial_pill" class="nav-link d-flex  active"  data-toggle="pill" href=" #initial_panel" aria-expanded="true">  
+                                        {% else %}
+                                            <a  id="initial_pill" class="nav-link d-flex " href=" {% url 'proposal:specific_ver_detail' pk=prop_obj.id ver=1 %} " aria-expanded="true">
+                                        {% endif %}
+                                        Version 1 (Initial Submission) 
+                                        </a> 
+                                    </li>
+                                {% elif v > 1 %}
+                                    <li class="nav-item ">
+                                        {% if v == cur_ver  %}
+                                            <a id="ver_{{v}}_pill" data-toggle="pill" aria-expanded="false"  class="nav-link d-flex  active" href=" #ver_{{v}}_panel " >
+                                            Version {{v}} 
+                                            </a>
+                                        {% else %} 
+                                            <a id="ver_{{v}}_pill"  aria-expanded="false"  class="nav-link d-flex   "  href=" {% url 'proposal:specific_ver_detail' pk=prop_obj.id ver=v %} " >
+                                            Version {{v}} 
+                                    </a>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}                                    
+                        </ul>
+                        <br>
+                        <hr></hr>
+                        <ul class="nav nav-pills flex-column mt-md-0 mt-1">
+                            <!-- #perm_req -->
+                            <!-- reviews for this version -->
+                            <!-- not creator, 
+                                if permitted to assign reviewers, or is reviewer : - show info about reviewers response-->
+                                
+                            {% if can_view_reviewers_response == 0 %}
+                                    {% if  rv_feedback|length > 0  %}
+                                        <li class="nav-item ">
+                                            <a  data-toggle="modal" data-target="#reviewers_respons_list_modal"   
+                                            class="nav-link btn btn-info d-flex" href="#"  >Reviewers Response </a>
+                                        </li>  
+                                    {% else %}
+                                        <li class="nav-item ">
+                                            <p class="text-center"> No Review Feedback for this version </p>
+                                        </li>
+                                    {% endif %}
+                            {% endif %}
+                            <!-- and prop_obj.status == 'On Comment' -->
+                            <!-- #perm_req -->
+
+                            {% if 'irb.can_assign_proposal_reviewers' in irb_perms or is_creator   %}
+                                
+                                <li class="nav-item ">
+                                    <a aria-expanded="false"  class="btn btn-info mt-1 nav-link d-flex" href="{% url 'proposal:list_assessment_reviews' pk=prop_obj.id %}" >
+                                        <i class="fa fa-list"></i>
+                                        IRB Comments </a>
+                                </li>  
+                            {% endif %}
+
+                            {% if 'irb.can_see_proposal_detail' in irb_perms and not is_creator %} 
+                                <li class="nav-item ">
+                                    <a aria-expanded="false" class="btn btn-info mt-1 nav-link d-flex" href="{% url 'proposal:manage_proposal' pk=prop_obj.id %}" >
+                                        <i class="fa fa-cog"></i>
+                                        Manage Proposal </a>
+                                </li>  
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                      <!-- right content section -->
+                    <div class="col-md-10 round">
+                        <div class="card px-2 py-3">
+
+                            <div class="right">
+                                {% if can_review  == 1 %}
+                                    <div id="buttons_div" class="col-md-6 " style="float: right;">
+                                        <button data-target="#study_ass" data-toggle="modal" type="button " style ="float:right; padding-left: 50px; padding-right: 50px;"
+                                            class=" btn btn-success ">Review Version {{prop_obj.latest_version_num}} </button>
+                                    </div>
+                                {% elif can_review == 2 %}
+                                    <div  class="col-md-6 mr-1" style="float: right;">
+                                        <p><strong class="success " style ="float:right; ">You have already reviewed this version!</strong></p><br>
+                                        {% if  cur_ver == prop_obj.latest_version_num  %} 
+                                        <button data-target="#study_ass" data-toggle="modal" type="button " style ="float:right; padding-left: 50px; padding-right: 50px;"
+                                        class=" btn btn-success ">Update Review of version {{prop_obj.latest_version_num}} </button>
+                                        {% endif %}
+                                    </div>
+                                    
+                                {% endif %}  
+
+                                {% if can_send_correction_comment == 0 %}
+                                    <div id="buttons_div" class="col-md-6 row" style="float: left;">
+                                       
+                                        <div class="col-md-12 col-sm-12 ">
+                                            <button type="button " style ="float:left; " data-target="#comment_modal" data-toggle="modal" class=" btn btn-warning ">Send Comment</button>
+                                        
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if is_creator %} 
+                                
+                                    <div  class="col-md-6 row" style="float: right;">
+                                        <div class="col-md-12 col-sm-12 right ">
+                                            {% if prop_obj.status == 'Pending'  %}
+                                                {% if prop_obj.latest_version_num == 1 %} 
+                                                <div id="buttons_div" class="col-md-12 row" style="float: right;">
+                                                    <div class="col-md-6 col-sm-12 ">
+                                                        <a href="{% url 'proposal:proposal_initial_form_update' pk=prop_obj.id %}" style ="float:right; "  class=" btn btn-success ">Update Initial Form</a>
+                                                    </div>
+                                                    <br>
+                                                    <div class="col-md-6 col-sm-12 ">
+                                                        <a href="{% url 'proposal:proposal_initial_docs_update' pk=prop_obj.id %}" style ="float:right;" class=" btn btn-success ">Update Initial Docs</a>
+                                                    </div>
+                                                </div>
+                                                {% else %}
+                                                <div id="buttons_div" class="col-md-6 right" style="float: right;">
+                                                    <div class="col-md-12 col-sm-12 right">
+                                                        <a href="{% url 'proposal:proposal_versioned_update' pk=prop_obj.id %}" style ="float:right; "  class=" btn btn-success right ">Update Version {{prop_obj.latest_version_num}} </a>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+
+                                            {% else %} 
+                                                <div id="buttons_div" class="col-md-6 right" style="float: right;">
+                                                    <div class="col-md-12 col-sm-12 right">
+                                                        <a style ="float:right; " title="Can't update at {{prop_obj.status}}"  class="white btn btn-light right ">Update Version {{prop_obj.latest_version_num}} </a>
+                                                    
+                                                    </div>
+                                                </div>
+                                            {% endif %} 
+
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            {% if cur_ver == 1 %}
+                               {% include 'proposal/partial_pages/initial_submission_detail.html' %}
+
+                            {% elif cur_ver != 1 %}
+                                {% include 'proposal/partial_pages/versioned_detail.html' %}
+
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+            <!-- account setting page end -->
+        </div>
+
+         <!-- start review modal -->
+        <div class="modal fade" id="study_ass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                        <section class="contact-form">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center" id="exampleModalLabel">Attach Your Study Assassment Document :- <h4 id='study_ass_header'></h4></h5>
+                                    <button type="button-primary" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="{% url 'proposal:prop_review' pk=prop_obj.id %}" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                            <input type="hidden"  name="p_id"    id = 'review_p_id'    value="" />
+
+                                            <fieldset class="form-group col-12">
+                                                <br>
+                                                <div class="custom-file col-md-10">
+                                                    {{review_form.study_ass_doc}}
+                                                    <label class="custom-file-label" for="id_study_ass_doc">Choose file.</label>
+                                                </div>
+                                            
+                                            </fieldset>
+                                            <span id="fav" class="d-none"></span>
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <fieldset class="form-group position-relative has-icon-left mb-0">
+                                            <button type="button"   class="btn btn-light" data-dismiss="modal"><i class="fa fa-paper-plane-o d-lg-none"></i>
+                                                <span class="d-none d-lg-block">Cancel</span>
+                                            </button>
+                                            <button type="submit"  onclick= "return confirm('Are you sure you want to submit this document?')"   class="btn btn-success" >
+                                                <i class="fa fa-paper-plane-o d-lg-none"></i>
+                                                <span class="d-none d-lg-block">Submit</span>
+                                            </button>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                        
+                        </section>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- end modal -->
+
+
+        <!-- comment modal -->
+        <div class="modal fade" id="comment_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <section class="contact-form">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Send Correction Comment <h4 id='comment_modal_header'></h4></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden"  name="p_id"    id = 'comment_p_id'    value="{{prop_obj.id}}" />
+                                <fieldset class="form-group col-12">
+                                    <label>Write your comment below.</label>
+                                    <br>
+                                   <textarea class="form-control round col-lg-12" id="comment_area" rows="10" name="comment"></textarea>
+                                </fieldset>
+                                <span id="fav" class="d-none"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <fieldset class="form-group position-relative has-icon-left mb-0">
+                                    <button type="button"   class="btn btn-light " data-dismiss="modal"><i
+                                        class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Cancel</span></button>
+                                    
+                                    <button type="submit" onclick="send_comment()"  class="btn btn-success " data-dismiss="modal"><i
+                                        class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Comment</span></button>
+                                </fieldset>
+                            </div>
+                    
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- End of comment modal -->
+
+
+         <!-- start modal -->
+         <div class="modal fade" id="reviewers_respons_list_modal" tabindex="-1" role="modal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" >
+                <div class="modal-content">
+                        <section class="contact-form">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center col-12" >List of Reviewers Response for version <strong> {{cur_ver}}</strong></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                        <fieldset class="form-group col-12">
+                                            {% if  rv_feedback|length > 0 %}
+                                                <div class="table-responsive">
+                                                    <table  class="table  table-striped table-hover align-middle mb-0">
+                                                        <thead class = "table-light">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Reviewer Name</th>
+                                                                <th>Reviewer Document</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody >
+                                                            {% for rv in rv_feedback %}
+                                                            <tr >
+                                                                <th>{{forloop.counter}}</th>
+                                                                <td>{{ rv.reviewer }}</td>
+                                                                <td>
+                                                                    {% if rv.study_ass_doc %}
+                                                                        <a href="{{ rv.study_ass_doc.url }}" download >download document</a>
+                                                                    {% else %} Doc Not Found {% endif %}
+                                                                </td>
+                                                                
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <br>
+
+                                            {% else %} 
+                                                <h5 class="warning">No reviewer feedback</h5>
+                                            {% endif %}
+                                        </fieldset>
+                                        
+                                       
+                                </div>
+                                <div class="modal-footer">
+                                    <fieldset class="form-group position-relative has-icon-left mb-0">
+                                        <button type="button"   class="btn btn-primary " data-dismiss="modal"><i class="fa fa-paper-plane-o d-lg-none"></i>
+                                            <span class="d-none d-lg-block">Close</span>
+                                        </button>
+                                       
+                                    </fieldset>
+                                </div>
+                                
+                        </section>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- end modal -->
+
+
+{% endblock %}
+{% block js %} 
+<script>
+    function accept(){
+        if (confirm("Are you sure you want to accept this request?"))
+        window.open(" {% url 'proposal:accept_prop' pk=prop_obj.id %}", "_self")
+    }
+
+
+    function send_comment() {
+        if (confirm("Are you sure you want to send this comment?"))
+            try{
+                var comment = document.getElementById('comment_area').value
+                if( comment != ''){
+                    fetch("{% url 'proposal:correction_comment'  %}",
+                            {   method:"POST",credentials: 'same-origin',
+                                headers:{
+                                    "content-Type":'application/json',
+                                    'X-CSRFToken':'{{csrf_token}}'
+                                },
+                                body:JSON.stringify({ 'comment': comment, 'p_id': document.getElementById('comment_p_id').value})
+                            }
+                            ).then(e => e.json()).then(result=>{
+                                if (result['error'] == false) {window.alert('Successfully sent your comment!')}     
+                                else {window.alert('Internal Server Error has occured')}                         
+                                });    
+                }
+                else{window.alert("Please write some comment on the comment area!")}
+            }
+            
+            catch (error){window.alert("Sorry Counldn't send comment. Please reload the page and try again!")}     
+            }
+
+
+</script>
+{% endblock %}
+

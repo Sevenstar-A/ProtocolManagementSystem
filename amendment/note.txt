@@ -1,0 +1,48 @@
+creating amendment
+    first display a check protocol page
+        - user submit protocol number (front end validates format)
+        - for the post request, redirect to CreateProposalAmendment
+
+        CreateProposalAmendment algorithm
+        - first check protocol number
+        if code == 0:
+            means invalid protocol number or an exception
+
+        +search for proposal 
+
+            if found
+                +search for amendment and renewals
+
+                    1. if both are not found:
+                        code = 1, msg = "First time to request proposal amendment,  " (use the proposals information and approval letter)
+
+                    2. elif only amendment is found:
+                        code = 2, msg = previous amendme is found, ( use latest amendment information and approval letter)
+                    
+                    3. if only renewal is found:
+                        code = 3, msg = renewal found but no amendment  ( user latest renewal information and approval letter)
+                    
+                    4. if both are found:
+                        code = 4, msg = "Both Amendment requests and renewals are found", ( use the information from either which has greater version number)
+
+            if proposal is not submitted using the system:
+                + search for amendment and renewals:
+                    1. if both are not found: #
+                        code = 5, msg = "The very very First time to ask amendment, for a protocol number, without any proposal, amendment, and renewal) (accept all information from the user) 
+
+                    2. elif only amendment is found:
+                        code = 6, msg = "No proposal or renewal, but another amendment request" , (use the information of the latest amendment) 
+
+                    3. elif only renewal is found:
+                        code = 7, msg = "No proposal or previous amendment found, but previous renewal is found", use the renewals information and approval letter 
+                    
+                    4. if both are found: 
+                        code = 8, msg = "No proposal but previous amendment and renewals are found" (use the information from either, with the higher version number) 
+
+
+          
+
+
+
+
+

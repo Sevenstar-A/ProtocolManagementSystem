@@ -1,0 +1,68 @@
+{% extends 'registration/reg_base.html' %} 
+{% load static %}
+{% block content %} 
+   
+    <section class="row flexbox-container">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+            <div class="col-lg-4 col-md-8 col-10 box-shadow-2 p-0">
+                <div class="card border-grey border-lighten-3 m-0 round">
+                    <div class="card-header border-0">
+                        <div class="card-title text-center">
+                            <div class="p-1"><img width="110px;" height="110px;" src="{% static 'customer/img/logo.png' %}" alt="branding logo"></div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2"><span>Login </span></p>
+                    
+                        <div class="card-body pt-0">
+                            <form   class="register-form" id="login-form" class="form-horizontal" action="" method ="POST">
+                                {% csrf_token %}
+                                <fieldset class="form-group floating-label-form-group">
+                                    <label for="user-name">Email</label>
+                                    <input type="text" name="email" autocomplete="email" class="form-control" id="user-name" placeholder="-@gmail.com">
+                                    {{form.errors.email}}
+                                </fieldset>
+
+                                <fieldset class="form-group floating-label-form-group mb-1">
+                                    <label for="user-password">Password</label>
+                                    <input  type="password" autocomplete="new-password" name="password" class="form-control" id="user-password" placeholder="Enter Password">
+                                    {{form.errors.password}}
+                                </fieldset>
+                                <br>
+                                <div class="form-group row ">
+                                    <div class="col-sm-6 col-12 float-sm-left  "><a
+                                            href="recover-password.html" class="card-link">Forgot Password?</a></div>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-outline-primary btn-block"><i
+                                        class="feather icon-unlock"></i> Login</button>
+                            </form>
+                        </div>
+                        <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1"><span>New to PMS?  </span></p>
+                        <div class="card-footer m-2 row" style="border: none;" >
+
+                            <h4 class="col-4 text-right">Register as: </h4>
+                            <ul class="col-6 ">
+                                <li><h5><a href="{% url 'accounts:signup' %}"><i class="fa fa-graduation-cap mr-1 "></i>Investigator</a></h5></li>
+                                <br>
+                                <li><h5><a href="{% url 'accounts:member_signup' %}"> <i class="fa fa-briefcase mr-1 "></i> Member</a></h5></li>
+                            </ul>
+                        </div>
+                    
+                        <!-- <div class="card-body">
+                            <a href="register-with-bg.html" class="btn btn-outline-danger btn-block"><i
+                                    class="feather icon-user"></i> Register </a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+{% endblock %}
+
+{% block js %} 
+<script src="{% static 'staff/js/scripts/forms/form-login-register.min.js' %}"></script>
+
+{% endblock %}
+

@@ -1,0 +1,224 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% load core_templatetags %}
+{% block title %} List of IRB Comments {% endblock %}
+
+{% block breadcrumb %}
+    {% if user == prop.created_by %} 
+        <li class="breadcrumb-item "><a href="{% url 'proposal:my_proposals' %}">My Proposals </a></li> 
+    {% elif user.is_staff %} 
+        <li class="breadcrumb-item "><a href="{% url 'proposal:proposal_list' %}">List Proposals </a></li> 
+    {% endif %} 
+        <li class="breadcrumb-item active"><a href="">List Comments </a></li> 
+{% endblock %}
+
+{% block content %}
+    <div class="card p-2" >
+        <div class="card-header">
+            <h4 class="card-title form-section text-center" id="basic-layout-form">IRB Comments for <strong> '{{prop.protocol_number}}'</strong> ( Status :<strong>{{prop.status}}</strong>)</h4>
+            <a class="heading-elements-toggle"></a>
+            {% if user != prop.created_by %} 
+                {%if 'irb.can_approve_proposal' in irb_perms %}
+                    <div id="buttons_div" class="col-md-6 " style="float: right;">
+                        {% if prop.status == "On Review" or prop.status == 'Reviewed'  %} 
+                            <a class="btn btn-success right"  style ="float:right; " href="{% url 'proposal:approve_proposal' pk=prop.id %}"> 
+                                <i class="fa fa-check"></i>
+                            Approve Proposal</a>
+                        {% elif prop.status == 'Approved' %}
+                            <a href="{% url 'proposal:approve_proposal' pk=prop.id %}" style ="float:right; " class="btn btn-info  right">
+                                <i class="fa fa-edit"></i>
+                                Update Approval Letter</a>
+                        {% else %}
+                            <a class="btn btn-light right" title="Can't approve at '{{prop.status}}' status!" style ="float:right; "> 
+                                <i class="fa fa-check"></i>
+                                Approve Proposal</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+              
+            {% else %}
+                {% if prop.status == "On Comment" %}
+                    <div id="buttons_div" class="col-md-6 " style="float: right;">
+                        <a class="btn btn-success right"  style ="float:right; " href="{% url 'proposal:versioned_create' pk=prop.id %}">
+                            <i class="fa fa-upload"></i>
+                            Submit Next Version</a>
+                    </div>
+                {% elif  prop.status == "Approved"  %} 
+                        {% if prop.proposalapprovals_set.first and prop.proposalapprovals_set.first.approval_letter %} 
+                        <div id="buttons_div" class="col-md-6 " style="float: right;">
+                            <a class="btn btn-info right" style ="float:right; " href="{{prop.proposalapprovals_set.first.approval_letter.url}}" download="" > 
+                                <i class="fa fa-download"></i>
+                                Download Approval Letter </a>
+                        </div>
+                        {% else %} 
+                            <a class="btn btn-warning right" style ="float:right; "> Approval Letter Not Found </a>
+                        {% endif %}
+                {% endif %}
+            {% endif %}  
+        </div>
+        <div class="card-content "  >
+            <h5 class="ml-2"></h5>
+            
+             
+            <div class=" row col-md-12 ">
+                {% if prop.proposalirbcomment_set.count > 0 %}
+                    <h5 class="ml-2">IRB Comment Documents List</h5>
+                    <div class="table-responsive">
+                        <table  class="table  table-striped table-bordered table-hover align-middle mb-0">
+                            <thead class = "table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Version</th>
+                                    <th>Commented On</th>
+                                    <th>Decistion Type</th>
+                                    <th>Comment Document</th>
+                                    <th>Download Document</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                {% for comment in prop.proposalirbcomment_set.all %}
+                                    <tr >
+                                        <th>{{forloop.counter}}</th>
+                                        <td>Version {{ comment.version }}</td>
+                                        <td>{{ comment.updated_date.date }}</td>
+                                        <td>{{comment.decision_type}}</td>
+                                        {% if comment.irb_comment_doc %}
+                                            <td><a >{{comment.irb_comment_doc|get_filename}}</a></td>
+                                            <td><a href="{{ comment.irb_comment_doc.url }}" download >Download Document</a></td>
+                                        {% else %}
+                                            <td> - </td>  
+                                            <td>Document Not Found </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %} 
+                    <div class="col-12">
+                        <br><br>
+                        <h4 class="text-center col-12">No IRB comments</h4>
+                    </div>
+                {% endif %}
+            </div>
+            <br>
+            <br>
+
+            {% if prop.proposalrejection_set.first %} 
+                <h4 class=" col-md-12 mt-3 card-title form-section text-center" >
+                    Proposal Rejection
+                    (<strong> '{{prop.status}}'</strong>)
+                </h4>
+                <div class="table-responsive">
+                    <table  class="table  table-striped table-bordered table-hover align-middle mb-0">
+                        <thead class = "table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Version</th>
+                                <th>Rejection Comment</th>
+                                <th>Rejected Date</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for rej in prop.proposalrejection_set.all %}
+                                <tr >
+                                    <th>{{forloop.counter}}</th>
+                                    <td>Version {{ rej.version }}</td>
+                                    <td>{{rej.rejection_comment}}</td>
+                                    <td>{{ rej.rejection_date.date }}</td>                                        
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% endif %}
+
+
+
+
+            <!-- if the user has the permission to send irb comment  -->
+            <!-- and a form is sent from the backend, -->
+            {% if 'irb.can_assign_proposal_reviewers' in irb_perms and form %}
+            
+                {% if prop.status == "On Review" or prop.status == "Reviewed" %}
+                         
+                    <h4 class="text-center">Attach your IRB comment document for Version : <strong>{{prop.latest_version_num}} </strong></h4>
+                    <hr> 
+                    <form action = "{% url 'proposal:list_assessment_reviews' pk=prop.id  %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="col-9 ml-4 text-center  ">
+                            <br>
+                                <h5><strong>Choose Decission Type</strong></h5>
+                                <div class="row col-md-12">
+                                    {% for d in form.decision_type %} 
+                                    <div class="col-md-4">{{d}}</div>
+                                    {% endfor %}
+                                   
+                                </div>
+                                {{form.errors.decistion_type}}
+                                <br>
+                                <h5> Upload IRB Comment Document</h5>
+                            <div class="row">
+                                <div class="col-9 mr-1 custom-file">
+                                    {{form.irb_comment_doc}}
+                                    <label for="id_irb_comment_doc" class="custom-file-label">Choose File</label>
+                                    {{form.errors.irb_comment_doc}}
+                                </div>
+                                <button type="submit" style="float: right;" onclick="return confirm('Send IRB comment?')" class="col-2 btn btn-success text-center px-3">
+                                Submit
+                                </button>
+                            </div>
+                        </div>
+                       
+
+                    </form>
+
+                {% elif prop.status == "On Comment" %}
+                
+                    <h5 class="text-center">Update the IRB comment document for Version : <strong>{{prop.latest_version_num}} </strong></h5> 
+                    
+                    <form action = "{% url 'proposal:list_assessment_reviews' pk=prop.id  %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="col-12 ">
+                            <div  style="margin: auto; ">
+                                <h5>Update Decission Type</h5>
+                                <div class="row col-md-12">
+                                    {% for d in form.decision_type %} 
+                                    <div class="col-md-4">{{d}}</div>
+                                    {% endfor %}
+                                    {{form.errors.decision_type}}
+                                </div>
+                                <p class="text-danger">{{form.errors.decistion_type}}</p>
+                                <br>
+                                <h5> Upload IRB Comment Document</h5>
+                                <div class="custom-file">
+                                    {{form.irb_comment_doc}}
+                                    <label for="id_irb_comment_doc" class="custom-file-label">Choose File</label>
+                                    {{form.errors.irb_comment_doc}}
+                                </div>
+                            </div>
+                            
+                            <br>
+
+                            <button type="submit" style="float: right;" onclick="return confirm('Send IRB comment?')" class="btn btn-success text-center px-3">
+                               Submit
+                            </button>
+                        </div>
+                       
+
+                    </form>
+
+                {% endif %}
+            
+            {% endif %}
+
+        </div>
+    </div>
+  
+    
+
+{% endblock %}
+

@@ -1,0 +1,164 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %}Create New Amendment Request {% endblock %}
+{% block breadcrumb %} 
+    <li class="breadcrumb-item "><a href="{% url 'amendment:check_prot_num' %}">Check Protocol Number</a></li>
+    <li class="breadcrumb-item active "><a href="">Request Amendment </a></li>
+    
+{% endblock %}
+{% block content %}
+<div class="card" style="padding: 10px;">
+    <div class="card-header">
+        
+        <h4 class="card-title text-center" id="basic-layout-form">Amendment Request Form</h4>
+        <a class="heading-elements-toggle"><i class=""></i></a>
+        <!-- <div class="heading-elements"></div> -->
+    </div>
+    <div class="card-content "  style="padding:0px, 20px;">
+        <div id = "card_body" class="card-body pt-0" >
+
+            <form  action ="" method="POST" enctype="multipart/form-data" class="form" >
+               {% csrf_token %}
+                <div class="form-body "  >
+                    <h5 id="prop_detail_h4" class="text-center form-section" > 
+                        Requesting amendment for protocol number <strong>{{prot_num}}</strong> :
+                        <br> 
+                        {{msg}}
+                    </h5>
+                    <div >
+                        <div class="form-group">
+                            <label for="">Proposal Title</label>
+                            <div class = "col-md-10">
+                                {{form.proposal_title}}
+                                <p>You can update the title if you want for the new amendment request</p>
+                                {{form.errors.proposal_title}}
+                            </div>
+                        </div>
+
+                        <div class = "row col-md-10">
+                            <div class="col-md-4">
+                                    <h5 for="">Protocol Version : <strong>{{prop_ver}}</strong> *</h5>
+                                    {% if last_ver_num %}
+                                        <p class="grey">(Last amendment has : {{last_ver_num}})</p>
+                                    {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <h5 for="">Amendment Number : <strong>{{amend_num}}</strong> *</h5>
+                                    {% if last_amend_num %}
+                                        <p>(Last amendment has : {{last_amend_num}})</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <h5 for="">PI Full Name *</h5>
+                                    {{form.pi_name}}
+                                    <p class="grey">You can update the PI Full Name if you want for the new amendment request</p>
+                                    {{form.errors.pi_name}}
+                                </div>
+                            </div>
+                        </div>
+                      
+                    </div>
+
+                    <br>
+                    <h4 class="form-section"><i class="fa fa-paperclip"></i> Attach required documents *</h4>
+                    
+                    <div id="docs_div" class="px-2">
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group ">
+                                <label style="display:block">Request Letter</label>
+                                <div class = "custom-file col-md-10">
+                                        {{form.request_letter}}
+                                        <label class = "custom-file-label" for="id_request_letter">Choose File</label>
+                                        {{form.errors.request_letter}}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 form-group ">
+                                <label style="display:block">Progress Report Document</label>
+                                <div class ="custom-file col-md-10">
+                                    {{form.progress_report}}
+                                    <label class="custom-file-label" for = "id_progress_report" >Choose File</label> 
+                                    {{form.errors.progress_report}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <br>
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group">
+                                <label style="display:block">New proposal with track change</label>
+                                <div class="custom-file col-md-10">
+                                    {{form.track_change}}
+                                    <label class="custom-file-label" for = "id_track_change" >Choose File</label> 
+                                    {{form.errors.track_change}}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <label style="display:block">Amendment Form</label>
+                                <div class="custom-file col-md-10">
+                                    {{form.amend_form}}
+                                    <label class="custom-file-label" for = "id_amend_form" >Choose File</label>
+                                    {{form.errors.amend_form}}
+                                    
+                                </div>
+                                {% if amend_req_form.0 %}
+                                    <label style="display:block">You can <a href= "{{amend_req_form.0.url}}" download >Click here</a> to download the form document, if you don't have it.</label>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div class = "row">
+                            <div class="col-md-6 form-group">
+                                <label style="display:block">Last Approval Letter *</label>
+                                <!--if last approval letter is found, use it else let the user upload it.  -->
+                                {% if app_letter %} 
+                                    <p>
+                                        Your latest approval letter is found, so you don't have to submit it again. We will use from our archive. 
+                                        <strong>You Can Download it if you want:</strong> 
+                                        <a class="ml-1" href="{{app_letter.url}}" download="" >Download Document</a>
+                                    </p>
+                                {% else %}
+                                    <div class="custom-file col-md-10">
+                                        {{form.last_approval_letter}}
+                                        <label class="custom-file-label" for = "id_last_approval_letter" >Choose File</label> 
+                                    </div>
+                                {% endif %}
+                               
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <label style="display: block;">Clean Protocol</label>
+                                <div class="custom-file col-md-10">
+                                    {{form.clean_protocol}}
+                                    <label class="custom-file-label" for = "id_clean_protocol" >Choose File</label>
+                                    {{form.errors.clean_protocol}}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                   
+                </div>
+
+                <div class="form-actions right " >
+                    <a  href="{% url 'amendment:check_prot_num' %}" onclick="return confirm('Are you sure you want to cancel submiting ?')" class="btn btn-light right pl-5 pr-5 mr-5">
+                        Cancel
+                    </a>
+                    <button type="submit" onclick="return confirm('Have you finished entering all the data?')" class="btn btn-success right pl-5 pr-5 mr-5">
+                        <i class="fa fa-check-square-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

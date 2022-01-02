@@ -1,0 +1,66 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/datatable/datatables.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/extensions/buttons.dataTables.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/tables/datatable/buttons.bootstrap4.min.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/forms/listbox/bootstrap-duallistbox.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'staff/css/plugins/forms/dual-listbox.min.css' %}">
+    
+{% endblock %} 
+
+{% block title %} Creating new IRB position {% endblock %}
+{% block breadcrumb %} 
+    <li class="breadcrumb-item "><a href="{% url 'irb:position_list' %}">Position List</a></li>
+    <li class="breadcrumb-item active"><a href="">Position Creation Form</a></li>
+{% endblock %}
+
+{% block content  %} 
+<div class="content-body">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+          
+        <section class="with-multi-selection">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Position Creation Form</h4>
+                        </div>
+                        <div class="card-content ">
+                            <div class="card-body" style="padding:2% 5%;">
+                                <div> 
+                                    <h5>Name :</h5>
+                                    {{form.name}}
+                                </div>
+                                <br>
+                                <p class="text-muted">Choose multiple permissions from the left and click the '>' button to add permissions for the new positon!</p>
+                                <br><br>
+                                <div class="form-group">
+                                    {{form.permissions}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <div>
+                                <a href="{% url 'irb:position_list' %}">
+                                    <button type="button" onclick="return confirm('Are you sure you want to cancel create a new poistion?')" class="btn btn-primary mr-2 mb-2 col-lg-2 col-12 ">Cancel</button>
+                                </a>
+                                <button type="submit" class="btn btn-success mb-2 col-lg-2 col-12 " >Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </form>
+    
+</div>
+{% endblock %}
+
+{% block js %} 
+<script src="{% static 'staff/vendors/js/forms/listbox/jquery.bootstrap-duallistbox.min.js' %}"></script>
+<script src="{% static 'staff/js/scripts/forms/listbox/form-duallistbox.min.js' %}"></script>
+{% endblock %}

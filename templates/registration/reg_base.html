@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="Stack admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, stack admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title> IRB PMS {% block title %} {% endblock %} </title>
+    <link rel="apple-touch-icon" href="{% static 'customer/img/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'admin/libs/jquery/jquery.min.js' %}">
+    
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/vendors.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/forms/icheck/icheck.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/forms/icheck/custom.css' %}">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/bootstrap-extended.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/colors.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/components.min.css' %}">
+    <!-- END: Theme CSS-->
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/core/palette-gradient-&-vertical-menu-modern.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/core/menu/menu-types/vertical-menu-modern.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/core/colors/palette-gradient.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/pages/login-register.min.css' %}">
+    <!-- END: Page CSS-->
+    
+    {% block style %} 
+    {% endblock %}
+
+  </head>
+  <!-- END: Head-->
+
+  <!-- BEGIN: Body-->
+  <body class="vertical-layout vertical-menu-modern 1-column" style="background-color: #fafafa;" data-open="click"  data-menu="vertical-menu-modern" data-col="1-column">
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+      <div class="content-overlay"></div>
+      <div class="content-wrapper">
+         
+          
+          
+        <div class="content-body">
+          <div class="content-header " style="width: 100%;">
+            <div class=" row mr-5" style="margin-left:50%">
+              {% for m in messages %}
+                  {% if 'success' in m.tags  %}
+                    <div class="alert alert-icon-right alert-success alert-dismissible col-md-12" role="alert">
+                  {% elif 'warning' in m.tags %}
+                    <div class="alert alert-icon-right alert-warning alert-dismissible col-md-12" role="alert">
+                  {% elif 'error' in m.tags %}
+                    <div class="alert alert-icon-right alert-danger alert-dismissible col-md-12" role="alert">
+                  {% else %} 
+                    <div class="alert alert-icon-right alert-info alert-dismissible col-md-12" role="alert">
+                  {% endif %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <span>{{m.message}} </span><a href="#" class="alert-link"></a>
+                  </div>
+                
+              {% endfor %}
+            </div>
+          </div>
+          <br>
+            {% block content %}
+            
+            {% endblock %}
+        </div>
+      </div>
+    </div>
+    <!-- END: Content-->
+
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="{% static 'staff/vendors/js/vendors.min.js' %}"></script>
+    <!-- BEGIN Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{% static 'staff/vendors/js/forms/validation/jqBootstrapValidation.js' %}"></script>
+    <script src="{% static 'staff/vendors/js/forms/icheck/icheck.min.js' %}"></script>
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="{% static 'staff/js/core/app-menu.min.js' %}"></script>
+    <script src="{% static 'staff/js/core/app.min.js' %}"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <script src="{% static 'staff/js/scripts/forms/form-login-register.min.js' %}"></script>
+    <!-- END: Page JS-->
+    <script src="{% static 'staff/js/scripts/compiled.min.js' %}"></script>
+  
+    <script>
+        $('#accountCreationForm').submit(function() {
+          if ($('#id_agree_chkbox').is(":checked")){
+            return true;
+          } else {
+            alert('Please read the terms of service and select the checkbox!!!');
+            return false;
+          }
+        });
+        var agree_chkbox = document.getElementById('agree_chkbox')
+        var reg_btn = document.getElementById('reg_btn')
+        
+        agree_chkbox.addEventListener('change', function(){
+            agree_disagree()
+        })
+        function enable_btn(){agree_chkbox.checked = true;  reg_btn.disabled = false}
+        function disable_btn(){agree_chkbox.checked = false; reg_btn.disabled = true}
+
+        function agree_disagree(){
+            
+            if (agree_chkbox.checked ){
+                window.alert("disabling")
+                disable_btn();    
+            }
+            else{
+                window.alert("enabling")
+                enable_btn()
+                
+            }
+        }
+    </script>
+
+  </body>
+  <!-- END: Body-->
+
+</html>

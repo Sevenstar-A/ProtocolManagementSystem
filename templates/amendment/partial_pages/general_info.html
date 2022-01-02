@@ -1,0 +1,139 @@
+{% load static %}
+{% load core_templatetags %}
+ <!-- start amendment detail -->
+ <div role="tabpanel" class="tab-pane active" id="general_info" aria-labelledby="ver_pill" aria-expanded="true">
+    <div class="card-body" id = "card_body">
+            <div class="form-body" >
+                <h4 class="form-section">Detail of : <strong class="mr-5">'{{amend.protocol_number}}'</strong> By : <strong>{{amend.created_by}}</strong> </h4>
+                <br>
+                <h5> Status :- <strong> {{amend.status}}</strong></h5>
+                <h5 title="The number of times this amendment request has been given IRB Comments and re-submitted!"> Submission Number : <strong>{{amend.submission_count}}</strong></h5>
+                
+                <h5 title="Detail of initial submission data related with this protocol number"> Initial Submission Proposal :- 
+                    {% if amend.proposal %} 
+                        <a href="{% url 'proposal:proposal_detail' pk=amend.proposal.id %}" target="blank"> {{amend.proposal.title}}</a>
+                    {% else %} 
+                        <strong> Initial Submission not found on the system </strong>
+                    {% endif %}
+                </h5>
+                
+                <hr></hr>
+                <h5> Title :- {{amend.proposal_title}}</h5>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Proposal Version :- <strong>{{amend.proposal_version}}</strong></h5>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Amendment Number :- <strong>{{amend.amend_num}}</strong></h5>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>PI Full Name :- <strong>{{amend.pi_name}}</strong></h5>
+                    </div>
+                </div>
+                <div >
+                    <br>
+                    <h5 class="col-md-12 text-center "><strong>Amendment Request Documents</strong></h5>
+                    <table class="table table-striped table-bordered ">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Document Type</th>
+                                <th>Document File</th>
+                                <th>Download</th>
+                                <th>Upload date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>Request Letter</td>
+                                    {% if amend.request_letter %} 
+                                        <td><a href = "{{amend.request_letter.url}} " target="_blank" >{{amend.request_letter|get_filename|truncatechars_html:30}}</a></td>
+                                        <td><a href = "{{amend.request_letter.url}} " download >Download</a></td>
+                                    {% else %}
+                                        <td><a  >-</a></td>
+                                        <td><a >Document not found</a></td>
+                                    {% endif %}
+                                    <td>{{amend.created_date}}</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Progress Report</td>
+                                    {% if amend.progress_report %}
+                                        <td><a href = " {{amend.progress_report.url}} " target="_blank" >{{amend.progress_report|get_filename|truncatechars_html:30}}</a></td>
+                                        <td><a href = "{{amend.progress_report.url}} " download >Download</a></td>
+                                    {% else %}
+                                        <td><a  >-</a></td>
+                                        <td><a >Document not found</a></td> 
+                                    {% endif %}
+                                    <td>{{amend.created_date}}</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Amendment Form</td>
+                                    {% if amend.amend_form %} 
+                                        <td><a href = "{{amend.amend_form.url}} " target="_blank" >{{amend.amend_form|get_filename|truncatechars_html:30}}</a></td>
+                                        <td><a href = "{{amend.amend_form.url}} " download >Download</a></td>
+                                    {% else %} 
+                                        <td><a  >-</a></td>
+                                        <td><a >Document not found</a></td> 
+                                    {% endif %}
+                                    <td>{{amend.created_date}}</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Track Change</td>
+                                    {% if amend.track_change %}
+                                        <td><a href = " {{amend.track_change.url}} " target="_blank" >{{amend.track_change|get_filename|truncatechars_html:30}}</a></td>
+                                        <td><a href = " {{amend.track_change.url}} " download >Download</a></td>
+                                    {% else %} 
+                                        <td><a  >-</a></td>
+                                        <td><a >Document not found</a></td> 
+                                    {% endif %}
+                                    
+                                    <td>{{amend.created_date}}</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Last Approval Letter</td>
+                                    {% if amend.last_approval_letter %}
+                                        <td><a href = " {{amend.last_approval_letter.url}} " target="_blank" >{{amend.last_approval_letter|get_filename|truncatechars_html:30}}</a></td>
+                                        <td><a href = " {{amend.last_approval_letter.url}} " download >Download</a></td>
+                                    {% else %} 
+                                        <td><a > - </a></td>
+                                        <td><a >Document not found</a></td> 
+                                    {% endif %}
+                                    
+                                    <td>{{amend.created_date}}</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Clean Protocol</td>
+                                    {% if amend.clean_protocol %} 
+                                        <td><a href = "{{amend.clean_protocol.url}}" target="_blank" >{{amend.clean_protocol|get_filename|truncatechars_html:30}}</a></td>
+                                        <td><a href = "{{amend.clean_protocol.url}} " download >Download</a></td>
+                                    
+                                    {% else %} 
+                                        <td><a > - </a></td>
+                                        <td><a >Document not found</a></td> 
+                                    {% endif %}
+                                    <td>{{amend.created_date}}</td>
+                                    
+                                </tr>
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+</div>
+<!-- end amendment detail -->

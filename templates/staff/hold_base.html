@@ -1,0 +1,317 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+
+    {% include 'staff/head.html'  %}
+    
+    {% block style %}
+    {% endblock %}
+  </head>
+  <!-- END: Head-->
+
+  <!-- BEGIN: Body-->
+  <body class="vertical-layout vertical-menu-modern 2-columns   fixed-navbar" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+    
+    
+    <!-- BEGIN: Header-->
+    {% include 'staff/header.html' %}
+    <!-- END: Header-->
+
+    <!-- BEGIN: Main Menu-->
+    <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
+      <div class="main-menu-content " style="margin-bottom: 40px;">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" style="margin-top: 20px; margin-bottom: 40px;">
+          <li class=" navigation-header"><span>General</span>
+          </li>
+          <li class=" nav-item">
+            <a href="{% url 'irb:dashboard' %}"><i class="fa fa-home"></i><span class="menu-title" >Dashboard</span></a>
+          </li>
+          <li class=" nav-item">
+            <a href="{% url 'customer:dashboard' %}"><i class="fa fa-user"></i><span class="menu-title" >My Profile</span></a>
+          
+          </li>
+        
+          <li class=" navigation-header"><span>Proposal</span></li>
+          {% if user.is_customer %}
+
+            <!-- proposal related -->
+            <li class=" nav-item">
+              <a href="#">
+                <i class="fa fa-th-list"></i><span class="menu-title" >Proposals</span>
+              </a>
+              <ul class="menu-content">
+                <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My Proposals</span></a>
+                </li>
+                <li class=" nav-item">
+                  <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Initial Submission</span></a> 
+                </li>
+              </ul>
+              
+            </li>
+            <!-- end of proposal related -->
+
+            <!-- amendment -->
+            <li class=" nav-item">
+              <a href="#">
+                <i class="fa fa-edit"></i><span class="menu-title" >Amendment</span>
+              </a>
+              <ul class="menu-content">
+                <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My Amendments</span></a>
+                </li>
+                <li class=" nav-item">
+                  <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Request Amendment</span></a> 
+                </li>
+              </ul>
+   
+            </li>
+            <!-- end of amendment -->
+
+            <!-- Renewal related -->
+            <li class=" nav-item">
+              <a href="#">
+                <i class="fa fa-reply-all"></i><span class="menu-title" >Renewal</span>
+              </a>
+              <ul class="menu-content">
+                <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My Renewals</span></a>
+                </li>
+                <li class=" nav-item">
+                  <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Request Re-Newal</span></a> 
+                </li>
+              </ul>
+            </li>
+            <!-- end of renewal related -->
+            
+             <!-- SAE related -->
+             <li class=" nav-item">
+              <a href="#">
+                <i class="fa fa-bug"></i><span class="menu-title" >SAE</span>
+              </a>
+              <ul class="menu-content">
+                <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My SAE</span></a>
+                </li>
+                <li class=" nav-item">
+                  <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Request SAE</span></a> 
+                </li>
+              </ul>
+            </li>
+            <!-- end of SEA related -->
+            
+           
+            <li class=" nav-item">
+              <a href="#"><i class="fa fa-bar-chart"></i><span class="menu-title" > Proposal Report</span></a> 
+            </li>
+
+            <!-- end of customer -->
+
+            <!-- for staffs -->
+          {% else %}
+
+          <!-- proposal related -->
+          <li class=" nav-item">
+            <a href="#">
+              <i class="fa fa-th-list"></i><span class="menu-title" >Proposals</span>
+            </a>
+            <ul class="menu-content">
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >List Proposals</span></a>
+              </li>
+
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My Proposals</span></a>
+              </li>
+              <li class=" nav-item">
+                <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Initial Submission</span></a> 
+              </li>
+            </ul>
+            
+          </li>
+          <!-- end of proposal related -->
+
+          <!-- amendment -->
+          <li class=" nav-item">
+            <a href="#">
+              <i class="fa fa-edit"></i><span class="menu-title" >Amendment</span>
+            </a>
+            <ul class="menu-content">
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >List Amendments</span></a>
+              </li>
+
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My Amendments</span></a>
+              </li>
+              <li class=" nav-item">
+                <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Request Amendment</span></a> 
+              </li>
+            </ul>
+ 
+          </li>
+          <!-- end of amendment -->
+
+          <!-- Renewal related -->
+          <li class=" nav-item">
+            <a href="#">
+              <i class="fa fa-reply-all"></i><span class="menu-title" >Renewal</span>
+            </a>
+            <ul class="menu-content">
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >List Renewals</span></a>
+              </li>
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My Renewals</span></a>
+              </li>
+              <li class=" nav-item">
+                <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Request Re-Newal</span></a> 
+              </li>
+            </ul>
+          </li>
+          <!-- end of renewal related -->
+          
+           <!-- SAE related -->
+           <li class=" nav-item">
+            <a href="#">
+              <i class="fa fa-bug"></i><span class="menu-title" >SAE</span>
+            </a>
+            <ul class="menu-content">
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >List SAE</span></a>
+              </li>
+              <li class=" nav-item"><a href="{% url 'proposal:my_proposals' %} " class="menu-item"><span class="menu-title" >My SAE</span></a>
+              </li>
+              <li class=" nav-item">
+                <a href="{% url 'proposal:proposal_create' %}"><span class="menu-title" >Request SAE</span></a> 
+              </li>
+            </ul>
+          </li>
+          <!-- end of SEA related -->
+          
+         
+          <li class=" nav-item">
+            <a href="#"><i class="fa fa-bar-chart"></i><span class="menu-title" > Proposal Report</span></a> 
+          </li>
+
+
+          <li class=" navigation-header"><span>Collaborations</span></li>
+
+          
+          <li class=" nav-item">
+            <a href="{% url 'irb:email' %}"><i class="fa fa-envelope"></i><span class="menu-title" title="Send email to one or many users, (uses your login email) ">Email</span></a> 
+          </li>
+
+          <li class=" nav-item"><a href="#"><i class="fa fa-share-alt"></i><span class="menu-title" >Collaborations</span></a>
+            <ul class="menu-content">
+              <li><a class="menu-item" href="invoice-view.html" >Events</a>
+              </li>
+              <li><a class="menu-item" href="invoice-add.html" >Download Documents</a>
+              </li>
+              <li><a class="menu-item" href="invoice-add.html" >Media</a>
+              </li>
+              <li><a class="menu-item" href="invoice-list.html">News</a>
+              </li> 
+              <li><a class="menu-item" href="invoice-edit.html">Social Medias</a>
+              </li>
+             
+            </ul>
+          </li>
+          {% endif %}
+          {% if user.is_superadmin %}
+
+          <li class=" navigation-header"><span>System</span></li>
+
+          <li class=" nav-item"><a href="#"><i class="fa fa-users"></i><span class="menu-title" >Users</span></a>
+            <ul class="menu-content">
+              <li><a class="menu-item" href="invoice-list.html">All</a>
+              </li>
+              <li><a class="menu-item" href="invoice-view.html" >Clients</a>
+              </li>
+              <li><a class="menu-item" href="invoice-edit.html">IRB Staffs</a>
+              </li>
+            
+            </ul>
+          </li>
+
+          <li class=" nav-item">
+            <a href="#"><i class="fa fa-briefcase"></i><span class="menu-title" >IRB Positions</span></a> 
+          </li>
+          
+          <li class=" nav-item"><a href="#"><i class="fa fa-cogs"></i><span class="menu-title" >Settings</span></a>
+            <ul class="menu-content">
+              <li><a class="menu-item" href="invoice-list.html">Departments</a>
+              </li>
+              <li><a class="menu-item" href="invoice-view.html">Document Formats</a>
+              </li>
+              <li><a class="menu-item" href="invoice-edit.html">Proposal Types</a>
+              </li>
+              <li><a class="menu-item" href="invoice-edit.html">Study Types</a>
+              </li>
+              
+            </ul>
+          </li>
+          {% endif %}
+        
+        </ul>
+      </div>
+    </div>
+    <!-- END: Main Menu-->
+  
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+
+        <div class="content-wrapper">
+
+          {% if messages %}
+            <div class="content-header row" style="width: 100%;">
+              {% for m in messages %}
+              
+                  {% if 'success' in m.tags  %}
+                  <div class="alert alert-icon-right alert-success alert-dismissible col-md-12" role="alert">
+                  {% elif 'warning' in m.tags %}
+                  <div class="alert alert-icon-right alert-warning alert-dismissible col-md-12" role="alert">
+                  {% elif 'error' in m.tags %}
+                  <div class="alert alert-icon-right alert-danger alert-dismissible col-md-12" role="alert">
+                  {% else %} 
+                  <div class="alert alert-icon-right alert-info alert-dismissible col-md-12" role="alert">
+                  {% endif %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <strong>Success! </strong> {{m}} <a href="#" class="alert-link"></a>
+                  </div>
+                
+              {% endfor %}
+            </div>
+          {% endif %}
+          
+          {% block content %} 
+          {% endblock %}
+
+        </div>
+
+    </div>
+
+    <!-- BEGIN: Footer-->
+    <footer class="footer footer-static footer-light navbar-border">
+      <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">Copyright  &copy; 2021 <a class="text-bold-800 grey darken-2" href="#" target="_blank">DebolTech</a></span><span class="float-md-right d-none d-lg-block">Developed with <i class="fa fa-heart pink"></i></span></p>
+    </footer>
+    <!-- END: Footer-->
+
+
+
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="{% static 'staff/vendors/js/vendors.min.js' %}"></script>
+    <!-- BEGIN Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->    
+    <!-- END: Page Vendor JS-->
+       
+    <script src="{% static 'staff/js/core/app-menu.min.js' %}"></script>
+    <script src="{% static 'staff/js/core/app.min.js' %}"></script>    
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <!-- END: Page JS-->
+    {% block js %} 
+    {% endblock %}
+    <script src="{% static 'staff/js/scripts/compiled.min.js' %}"></script>
+   
+
+  </body>
+  <!-- END: Body-->
+ 
+<!-- Mirrored from pixinvent.com/stack-responsive-bootstrap-4-admin-template/html/ltr/vertical-modern-menu-template/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 13 Aug 2021 10:52:04 GMT -->
+</html>

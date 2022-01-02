@@ -1,0 +1,307 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% load core_templatetags %}
+{% block title %} 
+    {% if is_creator %} List of IRB Comments 
+    {% else %} List of Reviewers review and IRB comments
+    {% endif %}
+ {% endblock %}
+
+{% block breadcrumb %}
+    {% if is_creator %} 
+        <li class="breadcrumb-item "><a href="{% url 'amendment:my_amendments' %}">My Amendments </a></li> 
+    {% elif user.is_staff %} 
+        <li class="breadcrumb-item "><a href="{% url 'amendment:amendment_list' %}">List Amendments </a></li> 
+    {% endif %} 
+        <li class="breadcrumb-item active"><a href="">List Comments </a></li> 
+    
+{% endblock %}
+
+{% block content %}
+    <div class="card p-5" >
+
+        {% if is_creator %} 
+            {% if amend.status == "On Comment" or amend.status == "Pending" %}
+                <div class="right " >
+                    <div id="buttons_div" class="col-md-6 " style="float: right;">
+                        <a  href="{% url 'amendment:update_amend' pk=amend.id %}" style ="float:right; padding-left: 50px; padding-right: 50px;"
+                            class=" btn btn-success ">Update Amendment Request</a>
+                    </div>
+
+                </div>
+            {% elif amend.status == "Approved" %}
+
+                {% if amend.amendmentapproval_set.first %} 
+                    <div id="buttons_div" class="col-md-12 " style="float: right;">
+                        <a class="btn btn-success right" style ="float:right; " href="{{amend.amendmentapproval_set.first.approval_letter.url}}" download="" > 
+                            <i class="fa fa-download"></i>
+                            Download Approval Letter </a>
+                    </div>
+                {% else %} 
+                    <a class="btn btn-warning col-md-6 right text-center" style ="float:right; "> Approval Letter Not Found </a>
+                {% endif %}
+            {% endif %}
+
+
+                
+        {% else %} 
+        <!-- Approving  -->
+            {% if 'irb.can_approve_amendment' in irb_perms %} 
+                <div id="buttons_div" class="col-md-12 right" style="float: right;">
+                    {% if amend.status == 'Approved' %} 
+                        <a href="{% url 'amendment:approve_amend' pk=amend.id %}" style ="float:right; " class="btn btn-success mb-1 right">
+                            <i class="fa fa-check"></i>
+                            Update Approval Letter
+                        </a>
+                    {% elif amend.status == 'On Review' or amend.status == 'Reviewed' %} 
+                        <a href="{% url 'amendment:approve_amend' pk=amend.id %}" style ="float:right; " class="btn btn-success mb-1 right">
+                            <i class="fa fa-check"></i>
+                                Approve Request
+                        </a> 
+                    {% else %} 
+                        <a  style ="float:right; " title="Cannot approve at '{{amend.status}}' status!" class="btn btn-light mb-1 right">
+                            <i class="fa fa-check"></i>
+                                Approve Request
+                        </a> 
+                    {% endif %}
+                </div>
+            {% endif %}
+        <!-- End of Approving -->
+
+            <!-- Sending IRB Comment -->
+            {% if 'irb.can_assign_amendment_reviewers' in irb_perms %}
+                {% if amend.status == 'On Review' or amend.status == 'Reviewed' or amend.status == 'On Comment' %}
+                    <div class="right" >
+                        <div id="buttons_div" class="col-md-6 " style="float: right;">
+                            <button data-target="#compiled_comment" data-toggle="modal" type="button " style ="float:right; padding-left: 50px; padding-right: 50px;"
+                                class=" btn btn-success "> 
+                                {% if amend.status == "On Comment" %}
+                                    Update IRB Comment 
+                                {% else  %}
+                                    Send IRB Comment 
+                                {% endif %}
+                            </button>
+                        </div>
+                       
+                    </div>
+                {% else %} 
+                    <div class="right" >
+                        <button   type="button" disabled="" style ="float:right; padding-left: 50px; padding-right: 50px;"class=" btn btn-light "
+                            title="Can not send IRB Comment on '{{amend.status}}' Status. It Should be 'On Review', 'Reviewed' Or 'On Comment'"> 
+                        Send IRB Comment
+                        </button>
+                        
+                    </div>
+                {% endif %}
+            {% endif %}
+            <!-- End of Sending IRB Comment -->
+
+        {% endif %}
+       
+        <div class="card-content "  >
+            <br>
+            {% if 'irb.can_assign_amendment_reviewers' in irb_perms and not is_creator %}
+                <h4 class="card-title form-section text-center" id="basic-layout-form">Reviewers assessments and IRB Comments for <strong> '{{amend.protocol_number}}'</strong>
+                    (<strong> '{{amend.status}}'</strong>) 
+                </h4>
+                
+                <div class="col-md-12">
+                    <div class="collapsible email-detail-head">
+                        
+                        {% if  reviews|length > 0 %} 
+                            {% for sub_num in submissions %}
+                                <h4  class="ml-2 mb-2"><strong> {{forloop.counter}}.</strong> Submission {{sub_num}} Reviewers assessments</h4>
+                                
+                                <div class="row mt-1">
+                                    {% for r in reviews %}
+                                        {% if r.submission_num == sub_num %}
+                                            <div class="card  col-md-6 collapse-header mb-0" role="tablist">
+                                                <div id="id_item_{{r.id}}" class="card-header box-shadow-1 border-grey border-lighten-2 py-1 d-flex justify-content-between align-items-center" data-toggle="collapse" role="tab" data-target="#item_{{r.id}}" aria-expanded="false" aria-controls="item_{{r.id}}">
+                                                    <div class="collapse-title media">
+                                                    <div class="pr-1">
+                                                        <div class="avatar mr-75">
+                                                        <img src="{{ r.reviewer.profile_image.url }}" alt="avtar img holder" width="30" height="30">
+                                                        </div>
+                                                    </div>
+                                                    <div class="media-body ">
+                                                        <span class="text-primary">{{ r.reviewer }}</span>
+                                                        <span class="d-sm-inline d-none"> &lt;{{r.reviewer.email}}&gt;</span>
+                                                        <p class="text-muted ">Comment : <strong>{{r.comment}}</strong></p>
+                                                    </div>
+                                                    </div>
+                                                    <div class="information d-sm-flex d-none align-items-center">
+                                                    <small class="text-muted mr-50">{{r.updated_date}}</small>
+                                                    </div>
+                                                </div>
+
+                                                <div id="item_{{r.id}}" role="tabpanel" aria-labelledby="headingCollapse5" class="collapse">
+                                                    <div class="card-content">
+                                                        <div class="card-body py-1">
+                                                            <p class="text-bold-500">Note!</p>
+                                                            <textarea class="form-control round col-md-12" style="height: 100px;" disabled>{{r.note}}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <hr>
+                            {% endfor %}
+                        {% else %} 
+                        <br>
+                        <h4 >No Reviewers Comment Yet</h4> 
+                        <br>
+                        {% endif %}
+
+
+                    <!-- start submiting amendment compiled feedback  -->
+                        <div class="modal fade" id="compiled_comment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" >
+                                <div class="modal-content">
+                                        <section class="contact-form">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-center" id="exampleModalLabel">Attach Your Document :- <h4 id='compiled_comment_header'></h4></h5>
+                                                    <button type="button-primary" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="" method="POST" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="modal-body">
+                                                            
+                                                            <fieldset class="form-group col-12">
+                                                                <h5>Please Attach the IRB comment compiled from reviewers comment!</h5>
+                                                                <br>
+                                                                <div class="custom-file col-md-10">
+                                                                    {{form.file_doc}}
+                                                                    <label class="custom-file-label" for="id_file_doc">Choose file.</label>
+                                                                </div>
+                                                            
+                                                            </fieldset>
+                                                            <span id="fav" class="d-none"></span>
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <fieldset class="form-group position-relative has-icon-left mb-0">
+                                                            <button type="button"   class="btn btn-light mr-2" data-dismiss="modal"><i class="fa fa-paper-plane-o d-lg-none"></i>
+                                                                <span class="d-none d-lg-block">Cancel</span>
+                                                            </button>
+                                                            <button type="submit"  onclick= "return confirm('Are you sure you want to submit this document?')"   class="btn btn-success " >
+                                                                <i class="fa fa-paper-plane-o d-lg-none"></i>
+                                                                <span class="d-none d-lg-block">Submit</span>
+                                                            </button>
+                                                        </fieldset>
+                                                    </div>
+                                                </form>
+                                        
+                                        </section>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    <!-- end submitting amendment compiled feedback -->
+
+
+                    
+                    </div>
+                </div>
+                <br><br>
+            {% endif %}
+            
+            <!-- both assigner and creator can see this one -->
+            <h4 class="card-title form-section text-center" id="basic-layout-form">IRB Comments for <strong> '{{amend.protocol_number}}'</strong> 
+                (<strong> '{{amend.status}}'</strong>)
+            </h4>
+            
+            <div class=" row col-md-12 ">
+                {% if amend.amendmentirbcomment_set.all|length > 0 %}
+                
+                    <div class="table-responsive">
+                        <table  class="table  table-striped table-bordered table-hover align-middle mb-0">
+                            <thead class = "table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Submission Num</th>
+                                    <th>Commented On</th>
+                                    <th>Updated</th>
+                                    <th>File Name</th>
+                                    <th>Comment Document</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                {% for comment in amend.amendmentirbcomment_set.all %}
+                                    <tr >
+                                        <th>{{forloop.counter}}</th>
+                                        <td>Submission {{ comment.submission_num }}</td>
+                                        <td>{{ comment.updated_date.date }}</td>
+                                        <td>{% if comment.updated_date and comment.updated_date != comment.created_date %} Yes {% else %} No {% endif %}</td>
+                                        {% if comment.compiled_doc %}
+                                            <td>{{comment.compiled_doc|get_filename}}</td>
+                                            <td>
+                                                <a href="{{ comment.compiled_doc.url }}" download >Download</a>
+                                        {% else %} 
+                                            <td> - </td>
+                                            <td>Document Not Found</td>         
+                                        {% endif %}
+                                        </td>
+                                        
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                
+                {% else %}
+                    <div>
+                        <br>
+                        <h4 >No IRB Comments</h4> 
+                        <br>
+                        {% if is_creator %}
+                            <a class="btn btn-info" href="{% url 'amendment:my_amendments' %}">
+                                <i class="fa fa-"></i>
+                                Back to My Amendments
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                    
+                {% if amend.amendmentrejection_set.first %} 
+                    <h4 class=" col-md-12 mt-3 card-title form-section text-center" >
+                        Amendment Rejections 
+                        (<strong> '{{amend.status}}'</strong>)
+                    </h4>
+                    <div class="table-responsive">
+                        <table  class="table  table-striped table-bordered table-hover align-middle mb-0">
+                            <thead class = "table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Submission Num</th>
+                                    <th>Rejection Comment</th>
+                                    <th>Rejected Date</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                {% for rej in amend.amendmentrejection_set.all %}
+                                    <tr >
+                                        <th>{{forloop.counter}}</th>
+                                        <td>Submission {{ rej.submission_count }}</td>
+                                        <td>{{rej.rejection_comment}}</td>
+                                        <td>{{ rej.rejection_date.date }}</td>                                        
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                {% endif %}
+            </div>
+                
+        </div>
+
+    </div>
+    
+
+{% endblock %}
+

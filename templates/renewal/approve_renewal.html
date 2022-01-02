@@ -1,0 +1,174 @@
+{% extends 'staff/base.html' %}
+{% load static %} 
+{% block title %} Approve Renewal Request {% endblock %} 
+{% block style %} 
+<link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/pickers/daterange/daterangepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/pickers/datetime/bootstrap-datetimepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/vendors/css/pickers/pickadate/pickadate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'staff/css/plugins/pickers/daterange/daterange.min.css' %}">
+   
+{% endblock %}
+{% block breadcrumb %} 
+    <li class="breadcrumb-item "><a href="{% url 'renewal:renewal_list' %}">Renewal List</a></li> 
+    <li class="breadcrumb-item active"><a href="">Approve Renewal</a></li> 
+{% endblock %} 
+{% block content %}
+
+<div class="content-body">
+         
+    <section id="html5">
+        <div class="row ">
+            <div class="col-12 d-flex align-items-center justify-content-center">
+                <div class="col-12">
+                    <div class="card box-shadow-2 border-grey border-lighten-3 px-1 py-2 m-0 round">
+                        <div class="card-header">
+                            <h4 class="card-title"></h4>
+                        </div>
+                        <div class="card-content ">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="card-body card-dashboard">
+                                    <div class="form-group">
+                                        <div class="text-bold-600 text-center font-medium-2 mb-2">
+                                            {% if renewal.has_been_approved %} 
+                                                Update Approval Letter for 
+                                            {% else %}
+                                                Approving 
+                                            {% endif %} 
+                                            '{{renewal.protocol_number}}'
+                                        </div>
+                                    </div>
+                                    <div class="row col-10">
+                                        <div class="col-4">
+                                            <label>Protocol Number : <strong>{{renewal.protocol_number}}</strong></label>
+                                        </div>
+                                        <div class="col-4">
+                                            <label>Protocol Version : <strong>{{renewal.proposal_version}}</strong></label>
+                                        </div>
+                                        <div class="col-4">
+                                            <label>Renewal Number : <strong>{{renewal.renewal_num}}</strong></label>
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                    <div class="row col-10">
+                                        <div class="col-5">
+                                            <label>Investigator : <strong>{{renewal.created_by}}</strong></label>
+                                        </div>
+                                        <div class="col-2"></div>
+                                        <div class="col-5">
+                                            <label>PI Full Name : <strong>{{renewal.pi_name}}</strong></label>
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <div class="row pl-2">
+                                            <div class="col-md-4" >
+                                                <h5><label for="id_start_date">Start Date</label></h5>
+                                                {{form.start_date}}
+                                                {{form.errors.start_date}}
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <h5><label for="id_end_date">End Date</label></h5>
+                                                    {{form.end_date}}
+                                               
+                                                {{form.errors.end_date}}
+                                            </div>
+                                            <div class="col-md-4" >
+                                                <h5><label for="id_progress_report_duration">Progress Report Duration (In Months)</label></h5>
+                                                {{form.progress_report_duration}}
+                                                {{form.errors.progress_report_duration}}
+                                            </div>
+                                            
+                                        </div>
+                                        <br>
+                                        
+                                        <div class="col-md-6 pl-2">
+
+                                            <h5><label>Attach approval letter document</label></h5>
+                                            <div class="custom-file">
+                                                {{form.approval_letter}}
+                                                {{form.errors.approval_letter}}
+                                                <label for="" class="custom-file-label">Choose file </label>
+                                            </div>
+                                            <br><br>
+                                            {% if last_approval_document %} 
+                                                <a href="{{previous_approval_document.approval_letter.url}}" download=""  >Download Previous Approval Document</a>    
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+
+
+                                    <!-- <div class="form-group">
+                                        <label>Disable picker for native calendar</label>
+                                        <div class="row">
+                                            <div class="col-lg-12 mb-1">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <span class="fa fa-calendar-o"></span>
+                                                        </span>
+                                                    </div>
+                                                    <input id="picker_from" class="form-control datepicker" type="date">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <span class="fa fa-calendar-o"></span>
+                                                        </span>
+                                                    </div>
+                                                    <input id="picker_to" class="form-control datepicker" type="date">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">Use <code>.pickadate-nativ</code> class to change date display formats. </small>
+                                    </div> -->
+
+
+
+
+
+                                    
+                                                
+                                </div>
+                                <div class="card-footer text-right">
+                                    <div>
+                                        <a href="{% url 'renewal:renewal_list' %}"  onclick="return confirm('Are you sure you want to cancel approval?')" class="btn btn-light mr-2 mb-2 col-lg-2 col-12 ">Cancel</a>
+                                        <button type="submit" onclick="return confirm('Are you sure you want to approve the request?')" class="btn btn-success mb-2 col-lg-2 col-12 " >Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <!--/ HTML5 export buttons table -->
+
+
+</div>
+
+
+{% endblock %}
+{% block js %} 
+ <!-- BEGIN: Page Vendor JS-->
+ <script src="{% static 'staff/vendors/js/pickers/dateTime/moment-with-locales.min.js' %}"></script>
+ <script src="{% static 'staff/vendors/js/pickers/dateTime/bootstrap-datetimepicker.min.js' %}"></script>
+ <script src="{% static 'staff/vendors/js/pickers/pickadate/picker.js' %}"></script>
+ <script src="{% static 'staff/vendors/js/pickers/pickadate/picker.date.js' %}"></script>
+ <script src="{% static 'staff/vendors/js/pickers/pickadate/picker.time.js' %}"></script>
+ <script src="{% static 'staff/vendors/js/pickers/pickadate/legacy.js' %}"></script>
+ <script src="{% static 'staff/vendors/js/pickers/daterange/daterangepicker.js' %}"></script>
+ <script src="{% static 'staff/js/scripts/pickers/dateTime/bootstrap-datetime.min.js' %}"></script>
+<script src="{% static 'staff/js/scripts/pickers/dateTime/pick-a-datetime.min.js' %}"></script>
+    
+ <!-- END: Page Vendor JS-->
+
+{% endblock %}

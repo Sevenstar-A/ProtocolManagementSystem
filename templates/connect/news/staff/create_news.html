@@ -1,0 +1,51 @@
+{% extends "staff/base.html" %}
+{% load static %}
+
+{% block title %} Create NEWS {% endblock %}
+
+{% block content %}
+
+<div class="col-md-10">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title" id="basic-layout-form">CREATE NEWS</h4>
+            <a class="heading-elements-toggle"><i class=""></i></a>
+        </div>
+        <div class="card-content collapse show">
+            <div class="card-body">
+                <!-- <div class="card-text">
+                    <h3 class="form-section"> Create NEWS</h3>
+                </div> -->
+
+                <form action="" method="POST" class="form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-body">
+                        {% for field in news_form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" > 
+                                    {% if field.label == 'Published' %} 
+                                        Publish:   
+                                    {% else %}
+                                        {{ field.label }} 
+                                    {% endif %}
+                                </label>
+                                {{ field }}
+                                {{ field.errors}}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-actions right">
+                        
+                        <button type="reset" class="btn btn-warning mr-1">
+                            Cancel
+                        </button>
+                        <button type="submit"  class="btn btn-primary">
+                            <i class="fa fa-check-square-o"></i> Create
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,369 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% load core_templatetags %}
+
+{% block title %} Manage Amendment {% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'amendment:amendment_list' %}"> Amendment List </a></li> 
+<li class="breadcrumb-item active"><a href=""> Amendment Management Page</a></li> 
+{% endblock %}
+
+{% block content  %} 
+
+        <!-- BEGIN: Content-->
+        <div class="content-overlay"></div>
+            <div class="content-wrapper">
+              
+              <div class="content-body">
+                <!-- account setting page start -->
+                  <section >
+                      <div class="row">
+                          <!-- left menu section -->
+                          <div class="col-md-3 mb-2 py-2 round bg-white" >
+                              <h4><strong>Management Tabs</strong></h4>
+                              <ul class="nav nav-pills flex-column mt-md-0 mt-1">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex active" id="amendment-general-tab" data-toggle="pill"
+                                            href="#general_info" aria-expanded="true">
+                                            <i class="fa fa-globe"></i>
+                                            General
+                                        </a>
+                                    </li>
+                                    {% if user != amend.created_by %}
+
+                                        {% if 'irb.can_list_amendment' in irb_perms %} 
+                                            <!-- special note -->
+                                            <li class="nav-item">
+                                                <a class="nav-link d-flex " id="special-note" data-toggle="pill"
+                                                    href="#special_note_div" aria-expanded="true">
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                    Special Note
+                                                </a>
+
+                                            </li>
+                                            <!-- end of special note -->
+                                        {% endif %} 
+
+                                        {% if 'irb.can_accept_amendment' in irb_perms %}
+                                            <!-- start of acceptance page -->
+                                            <li class="nav-item">
+                                                {% if amend.status == 'Pending' %}
+                                                <a class="nav-link d-flex" id="acceptance_page_pill" onclick="return confirm('Are you sure you want to accept this amendment request?')" 
+                                                    href="{% url 'amendment:accept_amend' pk=amend.id %}" aria-expanded="false">
+                                                {% else %} 
+                                                <a class="nav-link d-flex" title="Can't Accept on '{{amend.status}}' Status!"
+                                                    aria-expanded="false">
+                                                {% endif %}
+                                                    <i class="fa fa-check"></i>
+                                                    Accept Request
+                                                </a>
+                                            </li>
+                                            <!-- end of acceptance page -->
+
+                                            <!-- start to pending -->
+                                            <li class="nav-item">
+                                                {% if amend.status == 'Pending' or amend.status == 'Rejected' %}
+                                                <a class="nav-link d-flex"  title="Cannot revert to 'Pending' at '{{amend.status}}' status!" aria-expanded="true">
+                                                    <i class="fa fa-exclamation yellow"></i>
+                                                {% else %}
+                                                <a class="nav-link d-flex"  onclick = "return confirm('Are you sure you want to revert the status to Pending?')" 
+                                                    href="{% url 'amendment:to_pending' pk=amend.id %}" aria-expanded="true">
+                                                    <i class="fa fa-exclamation "></i>
+                                                {% endif %}
+                                                    Change Status to Pending
+                                                </a>
+                                            </li>
+                                            <!-- end to pending -->
+        
+                                            <!-- start correction comment -->
+                                            <li class="nav-item">
+                                                {% if amend.status != "Approved" and amend.status != "Rejected" %}
+                                                    <a class="nav-link d-flex" id="correction_comment_pill" data-toggle="pill"
+                                                        href="#correction_comment" aria-expanded="false">
+                                                {% else %} 
+                                                    <a  class="nav-link d-flex" title="Can't send correction comment at '{{amend.status}}' status!">
+        
+                                                {% endif %}
+                                                    <i class="fa fa-envelope"></i>
+                                                    Send Correction Comment
+                                                </a>
+                                            </li>
+                                            <!-- end correction comment -->
+
+                                        {% endif %}
+
+                                            <!-- Start Assigning Reviewers -->
+                                        {% if 'irb.can_assign_amendment_reviewers' in irb_perms %} 
+
+                                        <!-- start assigning reviewers -->
+                                            <li class="nav-item ">
+                                                {% if amend.status == 'Submited' or amend.status == 'On Review' or amend.status == 'Reviewed' %}
+                                                    <a class="nav-link d-flex " href="{% url 'amendment:assign_reviewers' pk=amend.id %}">
+                                                {% else %} 
+
+                                                    <a class="nav-link d-flex " title="Can't assign reviewers at '{{amend.status}}' Status!" >        
+                                                {% endif %}
+                                                <i class="fa fa-users"></i>
+                                                    Assign Reviewers
+                                                </a>
+                                            </li>
+                                        <!-- end assigning reviewers -->
+
+                                        <!-- start reviewers assassment and IRB Comment -->
+                                            <li class="nav-item">
+                                                <a class="nav-link d-flex"  
+                                                    href="{% url 'amendment:list_assessment_reviews' pk=amend.id %}">
+                                                    <i class="fa fa-list-alt"></i>
+                                                    IRB Comments List
+                                                </a>
+                                            </li>
+                                        <!-- end reviewers assassment and IRB Comment -->
+                                        {% endif %}
+                                            
+                                        
+                                       
+                                        {% if 'irb.can_approve_amendment'  in irb_perms %}
+                                        <!-- start Approving -->
+                                        <!-- if has not been approved and first time submission, status should be reviewed,
+                                            else for other submission numbers status could b either submitted or reviewed 
+                                        -->
+
+                                            {% if app_code == 1 or app_code == 3 %} 
+                                                <li class="nav-item">
+                                                    <a class="nav-link d-flex" id="account-pill-notifications" 
+                                                        href="{% url 'amendment:approve_amend' pk=amend.id %}"aria-expanded="false">
+                                                        <i class="fa fa-check"></i>
+                                                        Approve Amendent Request
+                                                    </a>
+                                                </li>
+                                            {% elif app_code == 5 %}
+                                                <li class="nav-item">
+                                                    <a class="nav-link d-flex" id="account-pill-notifications" 
+                                                        href="{% url 'amendment:approve_amend' pk=amend.id %}"aria-expanded="false">
+                                                        <i class="fa fa-check"></i>
+                                                        Update Approval Letter
+                                                    </a>
+                                                </li>
+                                            {% elif app_code in err_codes %}
+                                                <li class="nav-item">
+                                                    <a class="nav-link d-flex" title="{{app_msg}}" aria-expanded="false">
+                                                        <i class="fa fa-check"></i>
+                                                        Approve Protocol
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            <!-- End of Approving -->
+
+                                            <!-- Start Reject -->
+                                            <li class="nav-item">
+                                                {% if amend.status != 'Rejected'  %}
+                                                    <a class="nav-link d-flex" id="account-pill-notifications" data-toggle="pill"
+                                                    href="#reject_tab" aria-expanded="True">
+                                                {% else %}
+                                                    <a class="nav-link d-flex" title="Already Rejected!" 
+                                                    aria-expanded="false">
+                                                {% endif %}
+                                                    <i class="fa fa-times red"></i>
+                                                    Reject Amendment Request
+                                                    </a>
+                                            </li>
+                                            <!-- End Rejecting -->
+                                        {% endif %}
+
+
+                                    {% else %} 
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex" aria-expanded="false">
+                                                <i class="feather icon-lock"></i>
+                                                You can't manage this protocol since you are the creator!
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                              </ul>
+                          </div>
+                          <!-- right content section -->
+                            <div class="col-md-9">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="tab-content">
+                                                {% include 'amendment/partial_pages/general_info.html' %}
+
+                                                <!-- Send correction comment  -->
+                                                <div role="tabpanel" class="tab-pane " id="correction_comment" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Protocol Number : '{{amend.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{amend.status}}</strong></h5>
+                                                            <h5> Latest Submission Number :- <strong>{{amend.submission_count}}</strong></h5>
+                                                            
+                                                            <div>
+                                                                <div class="card-body">
+                                                                    <div class="col-lg-12">
+                                                                        <h5 class="col-12">Enter your correction comment</h5>
+                                                                        <br>
+                                                                        {{correction_form.correction_comment}}
+                                                                        <p class="text-danger">{{correction_form.errors.correction_comment}}</p>
+                                                                    </div> 
+                                                                </div>
+
+                                                                <div class="card-footer col-md-12">
+                                                                    <fieldset class="form-group" style="float:right" >
+                                                                        <button type="button" onclick="send_comment()"   class="btn btn-success px-3 " >
+                                                                            Send Comment
+                                                                        </button>
+                                                                    </fieldset>
+                                                                    
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of send correction comment -->
+
+
+                                                <!-- Update special note  -->
+                                                <div role="tabpanel" class="tab-pane " id="special_note_div" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Protocol Number : '{{amend.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{amend.status}}</strong></h5>
+                                                            <h5> Latest Submission Number :- <strong>{{amend.submission_count}}</strong></h5>
+                                                            
+                                                            <div>
+                                                                <div class="card-body">
+                                                                    <div class="col-lg-12">
+                                                                        <h5 class="col-12">Special Note on this Amendment request</h5>
+                                                                        <br>
+                                                                        {{note_form.special_note}}
+                                                                        <p class="text-danger">{{note_form.errors.special_note}}</p>
+                                                                    </div> 
+                                                                </div>
+                                                               
+                                                                <div class="card-footer col-md-12">
+                                                                    <fieldset class="form-group" style="float:right" >
+                                                                        <button type="button" onclick="update_special_note()"   class="btn btn-success px-3 " >
+                                                                            Update Note
+                                                                        </button>
+                                                                    </fieldset>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of update special note -->
+
+                                                 <!-- start rejecting -->
+                                                 <div role="tabpanel" class="tab-pane " id="reject_tab" aria-labelledby="general_pill" aria-expanded="true"> 
+                                                    <div class="card-body col-lg-12">
+                                                        <div class="form-body" >
+                                                            <h4 class="form-section">Protocol Number : '{{amend.protocol_number}}' </h4>
+                                                            <h5> Status :- <strong>{{amend.status}}</strong></h5>
+                                                            <h5> Latest Submission Number :- <strong>{{amend.submission_count}}</strong></h5>
+                                                            <form action="{% url 'amendment:reject_amendment' pk=amend.id %}" method="POST" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <div>
+                                                                    <div class="card-body">
+                                                                        <div class="col-lg-12">
+                                                                            <h5 class="col-12">Please enter rejection comment.</h5>
+                                                                            <br>
+                                                                            {{rejection_form.rejection_comment}}
+                                                                            {{rejection_form.errors.rejection_comment}}
+                                                                        </div> 
+                                                                    </div>
+
+                                                                    <div class="card-footer col-md-12">
+                                                                        <fieldset class="form-group" style="float:right" >
+                                                                            <button type="submit" onclick="return confirm('Are you sure you want to reject this protocol?')"   class="btn btn-warning px-3 " >
+                                                                                Reject amendment
+                                                                            </button>
+                                                                        </fieldset>
+                                                                        
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of rejecting -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                  </section>
+                <!-- account setting page end -->
+              </div>
+            </div>
+          <!-- END: Content-->
+{% endblock %}
+
+{% block js %} 
+<script>
+    function send_comment() {
+        try{
+            if(confirm("Send Comment Now..."))
+            var comment = document.getElementById('id_correction_comment').value
+            var a_id = "{{amend.id}}"
+            if( comment != ''){
+                fetch("{% url 'amendment:correction_comment'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'comment': comment, 'a_id': a_id})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully sent your comment!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some comment on the comment area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+            
+        }
+
+    
+    function update_special_note() {
+        try{
+            if(confirm("Updating Special Note..."))
+            var note = document.getElementById('id_special_note').value
+            
+            var a_id = "{{amend.id}}"
+            if( note != ''){
+                fetch("{% url 'amendment:update_special_note'  %}",
+                        {   method:"POST",credentials: 'same-origin',
+                            headers:{
+                                "content-Type":'application/json',
+                                'X-CSRFToken':'{{csrf_token}}'
+                            },
+                            body:JSON.stringify({ 'note': note, 'a_id': a_id})
+                        }
+                        ).then(e => e.json()).then(result=>{
+                            if (result['error'] == false) {window.alert('Successfully updated note!')}     
+                            else {window.alert('Internal Server Error has occured')}                         
+                            });    
+            }
+            else{window.alert("Please write some note on the text area!")}
+        }
+        
+        catch (error){window.alert("Sorry Counldn't send comment. Please try again later!")}
+       
+            
+        }
+
+    
+</script>
+{% endblock %}

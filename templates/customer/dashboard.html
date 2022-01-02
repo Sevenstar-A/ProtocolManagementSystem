@@ -1,0 +1,494 @@
+{% extends 'staff/base.html' %} 
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" type="text/css" href="{% static 'staff/css/pages/card-statistics.min.css' %}">
+    
+{% endblock %}
+{% block content %} 
+<!-- BEGIN: Content-->
+    
+    <div class="content-body"><!-- Grouped multiple cards for statistics starts here -->
+
+      <div class="row grouped-multiple-statistics-card">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-6 col-xl-3 col-sm-6 col-12">
+                  <div class="d-flex align-items-start mb-sm-1 mb-xl-0 border-right-blue-grey border-right-lighten-5">
+                    <span class="card-icon primary d-flex justify-content-center mr-3">
+                      <i class="fa fa-list font-large-1 "></i>
+                    </span>
+                    <div class="stats-amount mr-3">
+                      <h3 class="heading-text text-bold-600">250</h3>
+                      <p class="sub-heading">Total Proposal</p>
+                    </div>
+                    <span class="inc-dec-percentage">
+                      <small class="success"><i class="fa fa-long-arrow-up"></i> 5.2%</small>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-3 col-sm-6 col-12">
+                  <div class="d-flex align-items-start mb-sm-1 mb-xl-0 border-right-blue-grey border-right-lighten-5">
+                    <span class="card-icon danger d-flex justify-content-center mr-3">
+                      <i class="fa fa-eye font-large-2" style="color:#918b42"></i>
+                    </span>
+                    <div class="stats-amount mr-3">
+                      <h3 class="heading-text text-bold-600">157</h3>
+                      <p class="sub-heading">On Review</p>
+                    </div>
+                    <span class="inc-dec-percentage">
+                      <small class="danger"><i class="fa fa-long-arrow-down"></i> 2.0%</small>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-3 col-sm-6 col-12">
+                  <div class="d-flex align-items-start border-right-blue-grey border-right-lighten-5">
+                    <span class="card-icon success d-flex justify-content-center mr-3">
+                      <i class="fa fa-check-circle font-large-2 "></i>
+                    </span>
+                    <div class="stats-amount mr-3">
+                      <h3 class="heading-text text-bold-600">73</h3>
+                      <p class="sub-heading">Approved</p>
+                    </div>
+                    <span class="inc-dec-percentage">
+                      <small class="success"><i class="fa fa-long-arrow-up"></i> 10.0%</small>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-3 col-sm-6 col-12">
+                  <div class="d-flex align-items-start">
+                    <span class="card-icon warning d-flex justify-content-center mr-3">
+                      <i class="fa fa-ban font-large-2"></i>
+                    </span>
+                    <div class="stats-amount mr-3">
+                      <h3 class="heading-text text-bold-600">20</h3>
+                      <p class="sub-heading">Rejected</p>
+                    </div>
+                    <span class="inc-dec-percentage">
+                      <small class="danger"><i class="fa fa-long-arrow-down"></i> 13.6%</small>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row minimal-modern-charts">
+            <!-- power consumption chart -->
+            <div class="col-xxl-9 col-xl-9 col-lg-9 col-md-12 col-12 power-consumption-stats-chart">
+              <div class="card">
+                <div class="card-content pt-2 px-1">
+                  <div class="row">
+                    <div class="col-8 d-flex">
+                      <div class="ml-1">
+                        <h4 class="power-consumption-stats-title text-bold-500">Yearly Proposal Submission of 2021</h4>
+                      </div>
+              
+                    </div>
+
+
+                    <div class="col-4 d-flex justify-content-end pr-3">
+                    
+                      <div class="light-text ml-2">
+                        <h5>Month</h5>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div id="spline-chart"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- region stats chart -->
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-12 region-stats-chart">
+              <div class="card statistic-card">
+                <div class="card-content">
+                  <div class="top-row statistics-card-title border-bottom-blue-grey border-bottom-lighten-5">
+                    <div class="py-1 pl-2 primary">
+                      <span class="mb-1">User statistic</span>
+                    </div>
+                  </div>
+                  <div class="statistics-chart d-flex justify-content-center align-self-center">
+                    <div id="sales_in_region_pie_donut"></div>
+                  </div>
+                  <div class="statistics-chart-data d-flex justify-content-center ml-auto mr-auto pb-50 mb-2">
+                    <div class="collection mr-1">
+                      <span class="bullet bullet-xs bullet-warning"></span>
+                      <span class="font-weight-bold">2%</span>
+                    </div>
+                    <div class="collection mr-1">
+                      <span class="bullet bullet-xs bullet-danger"></span>
+                      <span class="font-weight-bold">8%</span>
+                    </div>
+                    <div class="collection mr-1">
+                      <span class="bullet bullet-xs bullet-primary"></span>
+                      <span class="font-weight-bold">90%</span>
+                    </div>
+                  </div>
+                  <div class="statistic-card-footer d-flex">
+                    <div class="column-data py-1 text-center border-top-blue-grey border-top-lighten-5 flex-grow-1 text-center border-right-blue-grey border-right-lighten-5">
+                      <p class="font-large-1 mb-0">730 </p>
+                      <span>Total Users</span>
+                    </div>
+                    <div class="column-data py-1 flex-grow-1 text-center border-top-blue-grey border-top-lighten-5">
+                      <p class="font-large-1 mb-0">657</p>
+                      <span>Clients</span>
+                    </div>
+                    <div class="column-data py-1 flex-grow-1 text-center border-top-blue-grey border-top-lighten-5 border-left-blue-grey border-left-lighten-5">
+                      <p class="font-large-1 mb-0">60</p>
+                      <span>Staff Users</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 class="card-title">Number of proposals for each year (last 10 years)</h4>
+                          <a class="heading-elements-toggle"><i class=""></i></a>
+                          <div class="heading-elements">
+                              <ul class="list-inline mb-0">
+                                  <li><a data-action="collapse"><i class="fa fa-minus"></i></a></li>
+                                  <!-- <li><a data-action="expand"><i class="fa fas-expand-alt"></i></a></li> -->
+                                  <li><a data-action="close"><i class="fa fa-close"></i></a></li>
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="card-content collapse show">
+                          <div class="card-body">
+                              <div class="height-400"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                  <canvas id="column-chart" width="1483" height="500" style="display: block; height: 400px; width: 1187px;" class="chartjs-render-monitor"></canvas>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+
+
+            <section id="chartjs-pie-charts">
+              <div class="row">
+                  <!-- Simple Pie Chart -->
+                  <div class="col-md-6 col-sm-12">
+                      <div class="card">
+                          <div class="card-header">
+                              <h4 class="card-title">Simple Pie Chart</h4>
+                              <a class="heading-elements-toggle"><i class=""></i></a>
+                              <div class="heading-elements">
+                                  <ul class="list-inline mb-0">
+                                      <li><a data-action="collapse"><i class="fa fa-minus"></i></a></li>
+                                      <li><a data-action="expand"><i class="feather icon-maximize"></i></a></li>
+                                      <li><a data-action="close"><i class="feather icon-x"></i></a></li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="card-content collapse show">
+                              <div class="card-body">
+                                  <div class="height-400"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                      <canvas id="simple-pie-chart" width="697" height="500" style="display: block; height: 400px; width: 558px;" class="chartjs-render-monitor"></canvas>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+          
+                  
+                  <div class="col-md-6 col-sm-12">
+                      <div class="card">
+                          <div class="card-header">
+                              <h4 class="card-title">Simple Doughnut Chart</h4>
+                              <a class="heading-elements-toggle"><i class=""></i></a>
+                              <div class="heading-elements">
+                                  <ul class="list-inline mb-0">
+                                      <li><a data-action="collapse"><i class="feather icon-minus"></i></a></li>
+                                      <li><a data-action="reload"><i class="feather icon-rotate-cw"></i></a></li>
+                                      <li><a data-action="expand"><i class="feather icon-maximize"></i></a></li>
+                                      <li><a data-action="close"><i class="feather icon-x"></i></a></li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="card-content collapse show">
+                              <div class="card-body">
+                                  <div class="height-400"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                      <canvas id="simple-doughnut-chart" width="697" height="500" style="display: block; height: 400px; width: 558px;" class="chartjs-render-monitor"></canvas>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          
+            
+          </section>
+
+
+
+
+          <!-- active users and my task timeline cards starts here -->
+          <div class="row match-height">
+              <!-- active users card -->
+              <div class="col-xl-8 col-lg-12">
+              <div class="card active-users">
+                <div class="card-header border-0">
+                  <h4 class="card-title">Latest Proposals</h4>
+                  <a class="heading-elements-toggle"><i class=""></i></a>
+                  <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                    
+                    </ul>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <div id="audience-list-scroll" class="table-responsive position-relative">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>User</th>
+                          <th>Proposal Title</th>
+                          <th>Department</th>
+                          <th>Created Date</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="text-truncate">
+                            <div class="avatar avatar-md mr-1">
+                              <img class="rounded-circle" src="{% static 'customer/img/user.png' %}"  alt="Generic placeholder image">
+                            </div>
+                            <span class="text-truncate">Dr. Ayele </span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Proposal Title 1</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Pathology</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Sept. 1, 2021</span>
+                          </td>
+                          <td class="align-middle">
+                            <span class="badge badge-success">Approved</span>
+                          </td>                
+                          <td class="align-middle">
+                            <div class="dropdown">
+                              <span class="fa fa-more-vertical dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              </span>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">View Detail</a>
+                              
+                              </div>
+                            </div>
+                            </span>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td class="text-truncate">
+                              <div class="avatar avatar-md mr-1">
+                                  <img class="rounded-circle" src="{% static 'customer/img/user.png' %}"  alt="Generic placeholder image">
+                              </div>
+                              <span class="text-truncate">Dr. Birhanu Chala</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Proposal Title 2</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Dentistry </span>
+                          </td>
+                          <td class="align-middle">
+                              <span>Sept. 3, 2021</span>
+                          </td>
+                          <td class="align-middle">
+                            <span class="badge badge-warning">Pending</span>
+                          </td>
+                          <td class="align-middle">
+                            <div class="dropdown">
+                              <span class="fa fa-more-vertical dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              </span>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">View Detail</a>
+                              
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td class="text-truncate">
+                              <div class="avatar avatar-md mr-1">
+                                  <img class="rounded-circle" src="{% static 'customer/img/user.png' %}"  alt="Generic placeholder image">
+                              </div>
+                              <span class="text-truncate">Ato Mandefro Gizaw</span>
+                          </td>
+                          <td class="align-middle">
+                            <span> Proposal Title 3</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Emergency Medicine</span>
+                          </td>
+                          <td class="align-middle">
+                              <span>Sept. 5, 2021</span>
+                          </td>
+                          <td class="align-middle">
+                            <span class="badge badge-danger">Rejected</span>
+                          </td>
+                          <td class="align-middle">
+                            <div class="dropdown">
+                              <span class="fa fa-more-vertical dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              </span>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Subscription</a>
+                                <a class="dropdown-item" href="#">Extras</a>
+                                <a class="dropdown-item" href="#">Newslatter</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td class="text-truncate">
+                              <div class="avatar avatar-md mr-1">
+                                  <img class="rounded-circle" src="{% static 'customer/img/user.png' %}"  alt="Generic placeholder image">
+                              </div>
+                              <span class="text-truncate">Dr. Meseret Hailu</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Proposal 4</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Surgery</span>
+                          </td>
+                          <td class="align-middle">
+                            <span>Sep. 14, 2021</span>
+                          </td>
+                          <td class="align-middle">
+                            <span class="badge badge-success">Approved</span>
+                          </td>
+                          <td class="align-middle">
+                            <div class="dropdown">
+                              <span class="fa fa-more-vertical dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              </span>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">View Detail</a>
+                              
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      
+                    
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- my task Timeline -->
+            <div class="col-xl-4 col-lg-12">
+              <div class="card">
+                <div class="card-header border-0">
+                  <h4 class="card-title">My Tasks</h4>
+                  <div class="heading-elements">
+                    <ul class="list-inline">
+                    
+                    </ul>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <div class="card-body">
+                    <div class="widget-timeline">
+                      <ul>
+                        <li class="timeline-items timeline-icon-success">
+                          <p class="timeline-time">Monday 12:12pm</p>
+                          <div class="timeline-title">Catch Up With Brain</div>
+                          <div class="timeline-subtitle">Mobile Project</div>
+                          <div>
+                            <ul class="list-unstyled users-list cursor-pointer m-0 d-flex align-items-center">
+                              <li class="avatar avatar-sm pull-up my-0">
+                                <img class="rounded-circle" src="{% static 'staff/images/portrait/small/avatar-s-20.png' %}" alt="Generic placeholder image" data-toggle="tooltip" data-placement="top" title="Ogasawara">
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                        <li class="timeline-items timeline-icon-danger">
+                          <p class="timeline-time">2 days ago</p>
+                          <div class="timeline-title">Make new icons</div>
+                          <div class="timeline-subtitle">Web Apps</div>
+                        </li>
+                        <li class="timeline-items timeline-icon-warning">
+                          <p class="timeline-time">Yesterday</p>
+                          <div class="timeline-title">
+                            <span>Design explorations</span>
+                            <span class="badge badge-pill badge-sm badge-success">Completed</span>
+                          </div>
+                          <div class="timeline-subtitle">Company Website</div>
+                        </li>
+                        <li class="timeline-items timeline-icon-info">
+                          <p class="timeline-time">5 hours ago</p>
+                          <div class="timeline-title">Lunch with Mary</div>
+                          <div class="timeline-subtitle">Grill House</div>
+                          <div>
+                            <ul class="list-unstyled users-list cursor-pointer m-0 d-flex align-items-center">
+                              <li class="avatar avatar-sm pull-up my-0">
+                                <img class="rounded-circle" src="{% static 'staff/images/portrait/small/avatar-s-20.png' %}" alt="Generic placeholder image" data-toggle="tooltip" data-placement="top" title="Ogasawara">
+                              </li>
+                              <li class="avatar avatar-sm pull-up my-0">
+                                <img class="rounded-circle" src="{% static 'staff/images/portrait/small/avatar-s-21.png' %}" alt="Generic placeholder image" data-toggle="tooltip" data-placement="top" title="Stepan">
+                              </li>
+                              <li class="avatar avatar-sm pull-up my-0">
+                                <img class="rounded-circle" src="{% static 'staff/images/portrait/small/avatar-s-22.png' %}" alt="Generic placeholder image" data-toggle="tooltip" data-placement="top" title="Kimberly">
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- active users and my task timeline cards ends here -->
+      </div>
+
+    </div>
+  
+
+<!-- END: Content-->
+{% endblock %}
+{% block js %}
+<script src="{% static 'staff/vendors/js/charts/chart.min.js' %}"></script>
+<script src="{% static 'staff/vendors/js/charts/apexcharts/unminify.js' %}"></script>
+
+ <!-- BEGIN: Page JS-->
+ <script src="{% static 'staff/js/scripts/cards/card-statistics.min.js' %}"></script>
+ <!-- BEGIN: Page JS-->
+
+<script src="{% static 'staff/vendors/js/pickers/dateTime/moment-with-locales.min.js' %}"></script>
+<script src="{% static 'staff/vendors/js/pickers/daterange/daterangepicker.js' %}"></script>
+<script src="{% static 'staff/vendors/js/pickers/pickadate/picker.js' %}"></script>
+<script src="{% static 'staff/vendors/js/pickers/pickadate/picker.date.js' %}"></script>
+
+
+    
+<script src="{% static 'staff/vendors/js/extensions/dropzone.min.js' %}"></script>
+<script src="{% static 'staff/vendors/js/ui/prism.min.js' %}"></script>
+<script src="{% static 'staff/js/scripts/charts/chartjs/line/line-area.min.js' %}"></script>
+<script src="{% static 'staff/js/scripts/charts/chartjs/bar/column.js' %}"></script>
+<script src="{% static 'staff/js/scripts/charts/chartjs/pie-doughnut/pie-simple.min.js' %}"></script>
+<script src="{% static 'staff/js/scripts/charts/chartjs/pie-doughnut/doughnut-simple.min.js' %}"></script> 
+{% endblock %}
